@@ -5,7 +5,7 @@
 //  Created by d-exclaimation on 20 Nov 2022
 //
 
-import { random } from "../../common/random";
+import { random } from "@dino/common";
 import { NexusGenEnums, NexusGenObjects } from "../../nexus";
 
 type DinoArenaArgs = {

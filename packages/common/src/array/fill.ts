@@ -1,6 +1,6 @@
 //
 //  fill.ts
-//  nexus-prisma
+//  dino-league
 //
 //  Created by d-exclaimation on 19 Nov 2022
 //

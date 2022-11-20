@@ -1,0 +1,10 @@
+{
+  "extends": "@dino/tsconfig/base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "target": "ES2020",
+    "lib": ["esnext"],
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}

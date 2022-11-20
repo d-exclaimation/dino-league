@@ -5,9 +5,7 @@
 //  Created by d-exclaimation on 19 Nov 2022
 //
 
-import { fill } from "../../common/fill";
-import { InMemoryStorage } from "../../common/inmemory";
-import { randomElement, randomInt } from "../../common/random";
+import { fill, InMemoryStorage, randomElement, randomInt } from "@dino/common";
 import { NexusGenEnums, NexusGenObjects } from "../../nexus";
 import { Dino } from "../core";
 

@@ -10,9 +10,29 @@ importers:
       prettier: 2.7.1
       turbo: 1.6.3
 
+  packages/common:
+    specifiers:
+      '@dino/tsconfig': workspace:^0.0.0
+    devDependencies:
+      '@dino/tsconfig': link:../tsconfig
+
+  packages/prisma:
+    specifiers:
+      '@dino/common': '*'
+      '@dino/tsconfig': '*'
+      '@types/node': ^18.11.9
+      prisma: ^4.6.1
+    dependencies:
+      '@dino/common': link:../common
+    devDependencies:
+      '@dino/tsconfig': link:../tsconfig
+      '@types/node': 18.11.9
+      prisma: 4.6.1
+
   packages/server:
     specifiers:
       '@apollo/server': ^4.1.1
+      '@dino/common': workspace:^1.0.0
       '@dino/tsconfig': '*'
       '@types/body-parser': ^1.19.2
       '@types/express': ^4.17.14
@@ -28,6 +48,7 @@ importers:
       uuid: ^9.0.0
     dependencies:
       '@apollo/server': 4.1.1_graphql@16.6.0
+      '@dino/common': link:../common
       body-parser: 1.20.1
       express: 4.18.2
       graphql: 16.6.0
@@ -281,6 +302,11 @@ packages:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.0
       '@jridgewell/sourcemap-codec': 1.4.14
+    dev: true
+
+  /@prisma/engines/4.6.1:
+    resolution: {integrity: sha512-3u2/XxvxB+Q7cMXHnKU0CpBiUK1QWqpgiBv28YDo1zOIJE3FCF8DI2vrp6vuwjGt5h0JGXDSvmSf4D4maVjJdw==}
+    requiresBuild: true
     dev: true
 
   /@protobufjs/aspromise/1.1.2:
@@ -994,6 +1020,15 @@ packages:
     resolution: {integrity: sha512-ujppO+MkdPqoVINuDFDRLClm7D78qbDt0/NR+wp5FqEZOoTNAjPHWj17QRhu7geIHJfcNhRk1XVQmF8Bp3ye+g==}
     engines: {node: '>=10.13.0'}
     hasBin: true
+    dev: true
+
+  /prisma/4.6.1:
+    resolution: {integrity: sha512-BR4itMCuzrDV4tn3e2TF+nh1zIX/RVU0isKtKoN28ADeoJ9nYaMhiuRRkFd2TZN8+l/XfYzoRKyHzUFXLQhmBQ==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+    requiresBuild: true
+    dependencies:
+      '@prisma/engines': 4.6.1
     dev: true
 
   /proxy-addr/2.0.7:
