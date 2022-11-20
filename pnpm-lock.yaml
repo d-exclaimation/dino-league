@@ -18,21 +18,34 @@ importers:
 
   packages/prisma:
     specifiers:
+      '@apollo/server': ^4.1.1
       '@dino/common': '*'
       '@dino/tsconfig': '*'
+      '@prisma/client': ^4.6.1
       '@types/node': ^18.11.9
+      '@types/uuid': ^8.3.4
+      graphql: ^16.6.0
       prisma: ^4.6.1
+      rimraf: ^3.0.2
+      uuid: ^9.0.0
     dependencies:
+      '@apollo/server': 4.1.1_graphql@16.6.0
       '@dino/common': link:../common
+      '@prisma/client': 4.6.1_prisma@4.6.1
+      graphql: 16.6.0
+      uuid: 9.0.0
     devDependencies:
       '@dino/tsconfig': link:../tsconfig
       '@types/node': 18.11.9
+      '@types/uuid': 8.3.4
       prisma: 4.6.1
+      rimraf: 3.0.2
 
   packages/server:
     specifiers:
       '@apollo/server': ^4.1.1
-      '@dino/common': workspace:^1.0.0
+      '@dino/common': '*'
+      '@dino/prisma': workspace:^1.0.0
       '@dino/tsconfig': '*'
       '@types/body-parser': ^1.19.2
       '@types/express': ^4.17.14
@@ -49,6 +62,7 @@ importers:
     dependencies:
       '@apollo/server': 4.1.1_graphql@16.6.0
       '@dino/common': link:../common
+      '@dino/prisma': link:../prisma
       body-parser: 1.20.1
       express: 4.18.2
       graphql: 16.6.0
@@ -304,10 +318,27 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.14
     dev: true
 
+  /@prisma/client/4.6.1_prisma@4.6.1:
+    resolution: {integrity: sha512-M1+NNrMzqaOIxT7PBGcTs3IZo7d1EW/+gVQd4C4gUgWBDGgD9AcIeZnUSidgWClmpMSgVUdnVORjsWWGUameYA==}
+    engines: {node: '>=14.17'}
+    requiresBuild: true
+    peerDependencies:
+      prisma: '*'
+    peerDependenciesMeta:
+      prisma:
+        optional: true
+    dependencies:
+      '@prisma/engines-version': 4.6.1-3.694eea289a8462c80264df36757e4fdc129b1b32
+      prisma: 4.6.1
+    dev: false
+
+  /@prisma/engines-version/4.6.1-3.694eea289a8462c80264df36757e4fdc129b1b32:
+    resolution: {integrity: sha512-HUCmkXAU2jqp2O1RvNtbE+seLGLyJGEABZS/R38rZjSAafAy0WzBuHq+tbZMnD+b5OSCsTVtIPVcuvx1ySxcWQ==}
+    dev: false
+
   /@prisma/engines/4.6.1:
     resolution: {integrity: sha512-3u2/XxvxB+Q7cMXHnKU0CpBiUK1QWqpgiBv28YDo1zOIJE3FCF8DI2vrp6vuwjGt5h0JGXDSvmSf4D4maVjJdw==}
     requiresBuild: true
-    dev: true
 
   /@protobufjs/aspromise/1.1.2:
     resolution: {integrity: sha512-j+gKExEuLmKwvz3OgROXtrJ2UG2x8Ch2YZUxahh+s1F2HZ+wAceUNLkvy6zKCPVRkU++ZWQrdxsUeQXmcg4uoQ==}
@@ -1029,7 +1060,6 @@ packages:
     requiresBuild: true
     dependencies:
       '@prisma/engines': 4.6.1
-    dev: true
 
   /proxy-addr/2.0.7:
     resolution: {integrity: sha512-llQsMLSUDUPT44jdrU/O37qlnifitDP+ZwrmmZcoSKyLKvtZxpyV0n2/bD/N4tBAAZ/gJEdZU7KMraoK1+XYAg==}

@@ -5,8 +5,8 @@
 //  Created by d-exclaimation on 20 Nov 2022
 //
 
-import { BasicDinoStorage } from "./dino/storage/basic";
+import { PrismaStorage } from "@dino/prisma";
 
 export type Context = {
-  storage: BasicDinoStorage;
+  prisma: PrismaStorage;
 };
