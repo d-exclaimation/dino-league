@@ -9,8 +9,6 @@
     "generate": "prisma generate",
     "clean": "rimraf .turbo node_modules dist",
     "format": "prisma format",
-    "prebuild": "npm run generate",
-    "predev": "npm run generate",
     "studio": "prisma studio"
   },
   "keywords": [],

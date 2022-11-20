@@ -19,7 +19,8 @@
     },
     "generate": {
       "env": ["DATABASE_URL"],
-      "dependsOn": ["^generate"]
+      "dependsOn": ["^generate"],
+      "cache": false
     }
   }
 }
