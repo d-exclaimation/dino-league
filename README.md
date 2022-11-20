@@ -1,4 +1,4 @@
-# 🦕 Dino League 🦖 
+# Dino League 🦕
 
 A online  dinosaur game with adventures and online battles 
 
