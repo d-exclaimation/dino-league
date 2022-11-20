@@ -11,7 +11,7 @@ import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHt
 import { json } from "body-parser";
 import express from "express";
 import { createServer } from "http";
-import { __PORT__ } from "./constant/artifacts";
+import { __port__ } from "./constant/artifacts";
 import type { Context } from "./context";
 import { BasicDinoStorage } from "./dino/storage/basic";
 import { schema } from "./schema";
@@ -34,10 +34,10 @@ async function main() {
   );
 
   await new Promise<void>((resolve) =>
-    http.listen({ port: __PORT__ }, resolve)
+    http.listen({ port: __port__ }, resolve)
   );
 }
 
 main()
   .catch((reason) => console.log(reason))
-  .then(() => console.log(`🚀 Running at http://localhost:${__PORT__}`));
+  .then(() => console.log(`🚀 Running at http://localhost:${__port__}`));
