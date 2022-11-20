@@ -7,15 +7,18 @@
       "outputs": ["dist/**", ".next/**"]
     },
     "dev": {
+      "env": ["DATABASE_URL"],
       "cache": false
     },
     "clean": {
       "cache": false
     },
     "migrate": {
+      "env": ["DATABASE_URL"],
       "outputs": []
     },
     "generate": {
+      "env": ["DATABASE_URL"],
       "dependsOn": ["^generate"]
     }
   }
