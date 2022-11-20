@@ -22,19 +22,20 @@ export const DinoQueries = extendType({
           })
         ),
       },
-      resolve: (_root, { input: { take, arena, variant } }, { storage }) => {
-        if (storage.isEmpty) {
-          storage.generate();
-        }
-        return storage
-          .select(([_, dino]) => {
-            const isCorrectArena = !!arena ? dino.arena === arena : true;
-            const isCorrectVariant = !!variant
-              ? dino.variant === variant
-              : true;
-            return isCorrectArena && isCorrectVariant;
-          })
-          .slice(0, take);
+      resolve: async (
+        _root,
+        { input: { take, arena, variant } },
+        { prisma }
+      ) => {
+        return await prisma.dino.findMany({
+          where: {
+            OR: {
+              arena: !!arena ? arena : undefined,
+              variant: !!variant ? variant : undefined,
+            },
+          },
+          take,
+        });
       },
     });
 
@@ -49,7 +50,13 @@ export const DinoQueries = extendType({
           })
         ),
       },
-      resolve: (_root, { input: { id } }, { storage }) => storage.find(id),
+      resolve: async (_root, { input: { id } }, { prisma }) => {
+        return await prisma.dino.findUnique({
+          where: {
+            id,
+          },
+        });
+      },
     });
   },
 });

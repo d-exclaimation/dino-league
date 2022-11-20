@@ -8,36 +8,40 @@
 import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
+import { ApolloServerPrismaPlugin, createPrisma } from "@dino/prisma";
 import { json } from "body-parser";
 import express from "express";
 import { createServer } from "http";
-import { __PORT__ } from "./constant/artifacts";
+import { __port__ } from "./constant/artifacts";
 import type { Context } from "./context";
-import { BasicDinoStorage } from "./dino/storage/basic";
 import { schema } from "./schema";
 
 async function main() {
   const app = express();
   const http = createServer(app);
+  const prisma = createPrisma();
 
   const server = new ApolloServer<Context>({
     schema,
-    plugins: [ApolloServerPluginDrainHttpServer({ httpServer: http })],
+    plugins: [
+      ApolloServerPluginDrainHttpServer({ httpServer: http }),
+      ApolloServerPrismaPlugin(prisma),
+    ],
   });
   await server.start();
 
   app.use(json());
   app.use(
     expressMiddleware(server, {
-      context: async () => ({ storage: new BasicDinoStorage() }),
+      context: async () => ({ prisma }),
     })
   );
 
   await new Promise<void>((resolve) =>
-    http.listen({ port: __PORT__ }, resolve)
+    http.listen({ port: __port__ }, resolve)
   );
 }
 
 main()
   .catch((reason) => console.log(reason))
-  .then(() => console.log(`🚀 Running at http://localhost:${__PORT__}`));
+  .then(() => console.log(`🚀 Running at http://localhost:${__port__}`));

@@ -3,9 +3,60 @@
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  referentialIntegrity = "prisma"
+}
+
+model User {
+  id        String    @id
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  username  String    @db.VarChar(100)
+  email     String 
+  hash      String
+  dinos     Dino[]
+  party     Party[]
+}
+
+model Dino {
+  id        String    @id
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  name      String    @db.VarChar(100)
+  variant   Variant
+  level     Int
+  hp        Float
+  attack    Float
+  arena     Arena
+  userId    String
+  user      User    @relation(fields: [userId], references: [id])
+  party     Party?
+}
+
+model Party {
+  userId    String
+  dinoId    String  @unique
+  user      User    @relation(fields: [userId], references: [id])
+  dino      Dino    @relation(fields: [dinoId], references: [id])
+
+  @@id([userId, dinoId])
+}
+
+enum Arena {
+  DESERT
+  GRASSLAND
+  HILLS
+  OCEAN
+  URBAN
+}
+
+enum Variant {
+  aardonyx
+  abelisaurus
+  alosaur
 }

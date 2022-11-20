@@ -1,5 +1,6 @@
 {
   "$schema": "https://turbo.build/schema.json",
+  "globalEnv": ["NODE_ENV"],
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
@@ -10,6 +11,12 @@
     },
     "clean": {
       "cache": false
+    },
+    "migrate": {
+      "outputs": []
+    },
+    "generate": {
+      "dependsOn": ["^generate"]
     }
   }
 }

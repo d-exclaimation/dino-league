@@ -6,10 +6,16 @@
     "apps/*",
     "packages/*"
   ],
+  "prisma": {
+    "schema": "packages/prisma/prisma/schema.prisma"
+  },
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
     "clean": "turbo run clean",
+    "migrate": "turbo run migrate",
+    "migrate:dev": "turbo run migrate:dev",
+    "generate": "turbo run generate",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "new": "chmod +x ./scripts/*.sh; ./scripts/new-workspace.sh"
   },
