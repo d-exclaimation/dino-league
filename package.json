@@ -10,7 +10,8 @@
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
     "clean": "turbo run clean",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "new": "chmod +x ./scripts/*.sh; ./scripts/new-workspace.sh"
   },
   "devDependencies": {
     "prettier": "latest",
