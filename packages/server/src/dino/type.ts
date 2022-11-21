@@ -5,7 +5,7 @@
 //  Created by d-exclaimation on 19 Nov 2022
 //
 
-import { enumType, objectType } from "nexus";
+import { enumType, objectType, unionType } from "nexus";
 
 export const DinoType = objectType({
   name: "Dino",
@@ -59,4 +59,29 @@ export const ArenaType = enumType({
   name: "Arena",
   description: "The battlefield environment",
   members: ["GRASSLAND", "HILLS", "OCEAN", "URBAN", "DESERT"],
+});
+
+export const NewDinoType = objectType({
+  name: "NewDino",
+  description: "New Dino has been created",
+  definition(t) {
+    t.nonNull.field("dino", {
+      type: "Dino",
+      description: "The new Dino created",
+    });
+  },
+});
+
+export const CreateDinoType = unionType({
+  name: "CreateDino",
+  description: "Create Dino mutation result",
+  definition(t) {
+    t.members("Unauthorized", "NewDino");
+  },
+  resolveType(source) {
+    if ("dino" in source) {
+      return "NewDino";
+    }
+    return "Unauthorized";
+  },
 });

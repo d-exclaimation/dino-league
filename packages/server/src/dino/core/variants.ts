@@ -5,10 +5,10 @@
 //  Created by d-exclaimation on 19 Nov 2022
 //
 
-import { id } from "../../identifiable/utils/id";
+import { v4 as uuid } from "uuid";
 import type { NexusGenEnums, NexusGenObjects } from "../../nexus";
 
-const did = () => id("Dino");
+const dinoId = () => `Dino#${uuid()}`;
 
 type NewDino = (args: {
   level: number;
@@ -17,7 +17,7 @@ type NewDino = (args: {
 
 const variants: Record<NexusGenEnums["Variant"], NewDino> = {
   alosaur: ({ level, name }) => ({
-    id: did(),
+    id: dinoId(),
     name: name ?? "Alosaur",
     arena: "GRASSLAND",
     level,
@@ -26,7 +26,7 @@ const variants: Record<NexusGenEnums["Variant"], NewDino> = {
     variant: "alosaur",
   }),
   aardonyx: ({ level, name }) => ({
-    id: did(),
+    id: dinoId(),
     name: name ?? "Aardonyx",
     arena: "DESERT",
     level,
@@ -35,7 +35,7 @@ const variants: Record<NexusGenEnums["Variant"], NewDino> = {
     variant: "aardonyx",
   }),
   abelisaurus: ({ level, name }) => ({
-    id: did(),
+    id: dinoId(),
     name: name ?? "Abelisaurus",
     arena: "URBAN",
     level,

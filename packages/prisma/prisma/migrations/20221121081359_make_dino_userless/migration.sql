@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Dino" ALTER COLUMN "userId" DROP NOT NULL;

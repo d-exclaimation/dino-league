@@ -6,6 +6,7 @@
 //
 
 import { arg, extendType, nonNull } from "nexus";
+import { NexusGenEnums } from "../nexus";
 import { Dino } from "./core";
 
 export const DinoQueries = extendType({
@@ -30,8 +31,8 @@ export const DinoQueries = extendType({
         return await prisma.dino.findMany({
           where: {
             OR: {
-              arena: !!arena ? arena : undefined,
-              variant: !!variant ? variant : undefined,
+              arena: arena ?? undefined,
+              variant: variant ?? undefined,
             },
           },
           take,
@@ -56,6 +57,32 @@ export const DinoQueries = extendType({
             id,
           },
         });
+      },
+    });
+  },
+});
+
+export const DinoMutations = extendType({
+  type: "Mutation",
+  definition(t) {
+    t.nonNull.field("createDino", {
+      type: "CreateDino",
+      description: "Create a Dino",
+      resolve: async (_root, _args, { prisma }) => {
+        const options: NexusGenEnums["Variant"][] = [
+          "aardonyx",
+          "abelisaurus",
+          "alosaur",
+        ];
+        const dino = await prisma.dino.create({
+          data: {
+            ...Dino.create(options[0], {
+              level: 1,
+              name: options[0],
+            }),
+          },
+        });
+        return { dino };
       },
     });
   },

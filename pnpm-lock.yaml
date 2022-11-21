@@ -12,7 +12,7 @@ importers:
 
   packages/common:
     specifiers:
-      '@dino/tsconfig': workspace:^0.0.0
+      '@dino/tsconfig': '*'
     devDependencies:
       '@dino/tsconfig': link:../tsconfig
 
