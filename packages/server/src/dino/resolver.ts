@@ -5,9 +5,9 @@
 //  Created by d-exclaimation on 19 Nov 2022
 //
 
+import { Dino_ } from "@dino/prisma";
 import { arg, extendType, nonNull } from "nexus";
 import { NexusGenEnums } from "../nexus";
-import { Dino } from "./core";
 
 export const DinoQueries = extendType({
   type: "Query",
@@ -74,13 +74,8 @@ export const DinoMutations = extendType({
           "abelisaurus",
           "alosaur",
         ];
-        const dino = await prisma.dino.create({
-          data: {
-            ...Dino.create(options[0], {
-              level: 1,
-              name: options[0],
-            }),
-          },
+        const dino = await prisma.createDino(options[0], {
+          level: 1,
         });
         return { dino };
       },
@@ -102,7 +97,7 @@ export const DinoFieldResolvers = extendType({
         ),
       },
       resolve: (dino, { arena }) =>
-        Dino.damage({
+        Dino_.damage({
           dino,
           arena,
         }),

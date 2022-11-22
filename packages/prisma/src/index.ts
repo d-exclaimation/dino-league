@@ -8,4 +8,6 @@
 export { PrismaClient } from "@prisma/client";
 export * from "./apollo";
 export * from "./client";
+export * from "./common";
+export * from "./dino";
 export * from "./types";
