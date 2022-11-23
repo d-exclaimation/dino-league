@@ -5,8 +5,9 @@
 //  Created by d-exclaimation on 20 Nov 2022
 //
 
-import { PrismaStorage } from "@dino/prisma";
+import { PrismaStorage, User } from "@dino/prisma";
 
 export type Context = {
   prisma: PrismaStorage;
+  user?: User;
 };

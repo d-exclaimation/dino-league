@@ -25,3 +25,23 @@ export const DinoFilterInput = inputObjectType({
     });
   },
 });
+
+export const DinoCreateInput = inputObjectType({
+  name: "DinoCreate",
+  description: "Creation argument(s) for Dino(s)",
+  definition(t) {
+    t.nonNull.field("variant", {
+      type: "Variant",
+      description: "The variant of the Dino",
+    });
+
+    t.nonNull.int("level", {
+      description: "The level of the Dino",
+      default: 1,
+    });
+
+    t.string("name", {
+      description: "The optional nickname of the Dino",
+    });
+  },
+});

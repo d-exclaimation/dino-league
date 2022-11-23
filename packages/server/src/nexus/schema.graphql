@@ -11,6 +11,9 @@ enum Arena {
   URBAN
 }
 
+"""Create Dino mutation result"""
+union CreateDino = NewDino | Unauthorized
+
 type Dino implements Identifiable {
   """The arena environment this Dinosaur most effective in"""
   arena: Arena!
@@ -40,6 +43,18 @@ type Dino implements Identifiable {
   variant: Variant!
 }
 
+"""Creation argument(s) for Dino(s)"""
+input DinoCreate {
+  """The level of the Dino"""
+  level: Int! = 1
+
+  """The optional nickname of the Dino"""
+  name: String
+
+  """The variant of the Dino"""
+  variant: Variant!
+}
+
 """Filter argument(s) for Dino(s)"""
 input DinoFilter {
   """The arena of choice of one or many Dino(s)"""
@@ -55,6 +70,23 @@ input DinoFilter {
 interface Identifiable {
   """A unique ID for this entity"""
   id: ID!
+}
+
+type Mutation {
+  """Create a Dino"""
+  createDino(
+    """The arguments to create a dino"""
+    input: DinoCreate!
+  ): CreateDino!
+
+  """Create a randomly generated Dino"""
+  createRandomDino: CreateDino!
+}
+
+"""New Dino has been created"""
+type NewDino {
+  """The new Dino created"""
+  dino: Dino!
 }
 
 type Query {
@@ -75,6 +107,12 @@ type Query {
 input SearchByID {
   """The ID to be search against"""
   id: ID!
+}
+
+"""An operation is made by an unauthorized user"""
+type Unauthorized {
+  """What operation is done that caused an unauthorized error"""
+  operation: String!
 }
 
 """The variant of dinosaur"""

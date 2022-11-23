@@ -33,7 +33,20 @@ async function main() {
   app.use(json());
   app.use(
     expressMiddleware(server, {
-      context: async () => ({ prisma }),
+      async context({ req }) {
+        const id = req.headers["authorization"]?.split(" ")?.at(-1);
+        if (!id) {
+          return { prisma };
+        }
+        const user = await prisma.user.findUnique({
+          where: { id },
+        });
+
+        return {
+          prisma,
+          user: user ?? undefined,
+        };
+      },
     })
   );
 

@@ -14,6 +14,11 @@ declare global {
 }
 
 export interface NexusGenInputs {
+  DinoCreate: { // input type
+    level: number; // Int!
+    name?: string | null; // String
+    variant: NexusGenEnums['Variant']; // Variant!
+  }
   DinoFilter: { // input type
     arena?: NexusGenEnums['Arena'] | null; // Arena
     take: number; // Int!
@@ -47,7 +52,14 @@ export interface NexusGenObjects {
     name: string; // String!
     variant: NexusGenEnums['Variant']; // Variant!
   }
+  Mutation: {};
+  NewDino: { // root type
+    dino: NexusGenRootTypes['Dino']; // Dino!
+  }
   Query: {};
+  Unauthorized: { // root type
+    operation: string; // String!
+  }
 }
 
 export interface NexusGenInterfaces {
@@ -55,9 +67,10 @@ export interface NexusGenInterfaces {
 }
 
 export interface NexusGenUnions {
+  CreateDino: NexusGenRootTypes['NewDino'] | NexusGenRootTypes['Unauthorized'];
 }
 
-export type NexusGenRootTypes = NexusGenInterfaces & NexusGenObjects
+export type NexusGenRootTypes = NexusGenInterfaces & NexusGenObjects & NexusGenUnions
 
 export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnums
 
@@ -72,9 +85,19 @@ export interface NexusGenFieldTypes {
     name: string; // String!
     variant: NexusGenEnums['Variant']; // Variant!
   }
+  Mutation: { // field return type
+    createDino: NexusGenRootTypes['CreateDino']; // CreateDino!
+    createRandomDino: NexusGenRootTypes['CreateDino']; // CreateDino!
+  }
+  NewDino: { // field return type
+    dino: NexusGenRootTypes['Dino']; // Dino!
+  }
   Query: { // field return type
     dinosaur: NexusGenRootTypes['Dino'] | null; // Dino
     dinosaurs: NexusGenRootTypes['Dino'][]; // [Dino!]!
+  }
+  Unauthorized: { // field return type
+    operation: string; // String!
   }
   Identifiable: { // field return type
     id: string; // ID!
@@ -92,9 +115,19 @@ export interface NexusGenFieldTypeNames {
     name: 'String'
     variant: 'Variant'
   }
+  Mutation: { // field return type name
+    createDino: 'CreateDino'
+    createRandomDino: 'CreateDino'
+  }
+  NewDino: { // field return type name
+    dino: 'Dino'
+  }
   Query: { // field return type name
     dinosaur: 'Dino'
     dinosaurs: 'Dino'
+  }
+  Unauthorized: { // field return type name
+    operation: 'String'
   }
   Identifiable: { // field return type name
     id: 'ID'
@@ -105,6 +138,11 @@ export interface NexusGenArgTypes {
   Dino: {
     damage: { // args
       arena: NexusGenEnums['Arena']; // Arena!
+    }
+  }
+  Mutation: {
+    createDino: { // args
+      input: NexusGenInputs['DinoCreate']; // DinoCreate!
     }
   }
   Query: {
@@ -118,6 +156,7 @@ export interface NexusGenArgTypes {
 }
 
 export interface NexusGenAbstractTypeMembers {
+  CreateDino: "NewDino" | "Unauthorized"
   Identifiable: "Dino"
 }
 
@@ -135,11 +174,11 @@ export type NexusGenInterfaceNames = keyof NexusGenInterfaces;
 
 export type NexusGenScalarNames = keyof NexusGenScalars;
 
-export type NexusGenUnionNames = never;
+export type NexusGenUnionNames = keyof NexusGenUnions;
 
 export type NexusGenObjectsUsingAbstractStrategyIsTypeOf = never;
 
-export type NexusGenAbstractsUsingStrategyResolveType = "Identifiable";
+export type NexusGenAbstractsUsingStrategyResolveType = "CreateDino" | "Identifiable";
 
 export type NexusGenFeaturesConfig = {
   abstractTypeStrategies: {
