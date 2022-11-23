@@ -8,7 +8,7 @@
 import * as props from "./properties";
 import * as variant from "./variant";
 
-export const Dino_ = {
+export const DinoModule = {
   ...props,
   ...variant,
 };

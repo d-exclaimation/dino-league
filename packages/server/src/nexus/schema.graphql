@@ -43,6 +43,18 @@ type Dino implements Identifiable {
   variant: Variant!
 }
 
+"""Creation argument(s) for Dino(s)"""
+input DinoCreate {
+  """The level of the Dino"""
+  level: Int! = 1
+
+  """The optional nickname of the Dino"""
+  name: String
+
+  """The variant of the Dino"""
+  variant: Variant!
+}
+
 """Filter argument(s) for Dino(s)"""
 input DinoFilter {
   """The arena of choice of one or many Dino(s)"""
@@ -62,7 +74,13 @@ interface Identifiable {
 
 type Mutation {
   """Create a Dino"""
-  createDino: CreateDino!
+  createDino(
+    """The arguments to create a dino"""
+    input: DinoCreate!
+  ): CreateDino!
+
+  """Create a randomly generated Dino"""
+  createRandomDino: CreateDino!
 }
 
 """New Dino has been created"""

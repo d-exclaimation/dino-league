@@ -5,8 +5,9 @@
 //  Created by d-exclaimation on 20 Nov 2022
 //
 
-import { Prisma, PrismaClient, Variant } from "@prisma/client";
-import { Dino_ } from "./dino";
+import { randomElement, randomInt } from "@dino/common";
+import { Prisma, PrismaClient, User, Variant } from "@prisma/client";
+import { DinoModule } from "./dino";
 
 export const createPrisma = <
   T extends Prisma.PrismaClientOptions = Prisma.PrismaClientOptions,
@@ -29,6 +30,7 @@ export const createPrisma = <
 type CreateDinoArgs = {
   level: number;
   name?: string;
+  user?: User;
 };
 
 /**
@@ -49,15 +51,24 @@ export class PrismaStorage<
     ? T["rejectOnNotFound"]
     : false
 > extends PrismaClient<T, U, GlobalReject> {
-  async createDino(variant: Variant, { level, name }: CreateDinoArgs) {
-    const { hp, ...rest } = Dino_.variants[variant];
-    return await this.dino.create({
+  async createDino(variant: Variant, { level, name, user }: CreateDinoArgs) {
+    const { hp, ...rest } = DinoModule.variants[variant];
+    return this.dino.create({
       data: {
         name: name ?? variant,
         level,
         hp: Math.pow(1.01, level - 1) * hp,
+        userId: user?.id,
         ...rest,
       },
+    });
+  }
+
+  async createRandomDino({ level, ...rest }: CreateDinoArgs) {
+    const variant = randomElement(DinoModule.ALL_VARIANTS);
+    return this.createDino(variant, {
+      level: randomInt({ start: Math.ceil(level / 2), end: level }),
+      ...rest,
     });
   }
 }

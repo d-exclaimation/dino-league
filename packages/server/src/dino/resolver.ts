@@ -5,9 +5,8 @@
 //  Created by d-exclaimation on 19 Nov 2022
 //
 
-import { Dino_ } from "@dino/prisma";
+import { DinoModule } from "@dino/prisma";
 import { arg, extendType, nonNull } from "nexus";
-import { NexusGenEnums } from "../nexus";
 
 export const DinoQueries = extendType({
   type: "Query",
@@ -68,14 +67,37 @@ export const DinoMutations = extendType({
     t.nonNull.field("createDino", {
       type: "CreateDino",
       description: "Create a Dino",
-      resolve: async (_root, _args, { prisma }) => {
-        const options: NexusGenEnums["Variant"][] = [
-          "aardonyx",
-          "abelisaurus",
-          "alosaur",
-        ];
-        const dino = await prisma.createDino(options[0], {
-          level: 1,
+      args: {
+        input: nonNull(
+          arg({
+            description: "The arguments to create a dino",
+            type: "DinoCreate",
+          })
+        ),
+      },
+      async resolve(_, { input: { level, name, variant } }, { prisma, user }) {
+        if (!user) {
+          return { operation: "createDino" };
+        }
+        const dino = await prisma.createDino(variant, {
+          level,
+          name: name ?? undefined,
+          user: user,
+        });
+        return { dino };
+      },
+    });
+
+    t.nonNull.field("createRandomDino", {
+      type: "CreateDino",
+      description: "Create a randomly generated Dino",
+      async resolve(_r, _a, { prisma, user }) {
+        if (!user) {
+          return { operation: "createDino" };
+        }
+        const dino = await prisma.createRandomDino({
+          level: 10,
+          user: user,
         });
         return { dino };
       },
@@ -97,7 +119,7 @@ export const DinoFieldResolvers = extendType({
         ),
       },
       resolve: (dino, { arena }) =>
-        Dino_.damage({
+        DinoModule.damage({
           dino,
           arena,
         }),

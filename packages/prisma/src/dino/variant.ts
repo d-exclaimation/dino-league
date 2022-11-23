@@ -38,3 +38,5 @@ export const variants: Record<Variant, DefaultDinoProps> = {
     variant: "abelisaurus",
   },
 };
+
+export const ALL_VARIANTS: Variant[] = ["aardonyx", "abelisaurus", "alosaur"];

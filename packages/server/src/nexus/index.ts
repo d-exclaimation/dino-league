@@ -14,6 +14,11 @@ declare global {
 }
 
 export interface NexusGenInputs {
+  DinoCreate: { // input type
+    level: number; // Int!
+    name?: string | null; // String
+    variant: NexusGenEnums['Variant']; // Variant!
+  }
   DinoFilter: { // input type
     arena?: NexusGenEnums['Arena'] | null; // Arena
     take: number; // Int!
@@ -82,6 +87,7 @@ export interface NexusGenFieldTypes {
   }
   Mutation: { // field return type
     createDino: NexusGenRootTypes['CreateDino']; // CreateDino!
+    createRandomDino: NexusGenRootTypes['CreateDino']; // CreateDino!
   }
   NewDino: { // field return type
     dino: NexusGenRootTypes['Dino']; // Dino!
@@ -111,6 +117,7 @@ export interface NexusGenFieldTypeNames {
   }
   Mutation: { // field return type name
     createDino: 'CreateDino'
+    createRandomDino: 'CreateDino'
   }
   NewDino: { // field return type name
     dino: 'Dino'
@@ -131,6 +138,11 @@ export interface NexusGenArgTypes {
   Dino: {
     damage: { // args
       arena: NexusGenEnums['Arena']; // Arena!
+    }
+  }
+  Mutation: {
+    createDino: { // args
+      input: NexusGenInputs['DinoCreate']; // DinoCreate!
     }
   }
   Query: {
