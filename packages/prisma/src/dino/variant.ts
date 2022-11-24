@@ -6,7 +6,7 @@
 //
 
 import type { Dino, Variant } from "@prisma/client";
-import type { Within } from "../common";
+import type { Within } from "@dino/common";
 
 type DefaultDinoProps = Within<
   Dino,

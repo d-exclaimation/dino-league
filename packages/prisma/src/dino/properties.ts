@@ -5,9 +5,8 @@
 //  Created by d-exclaimation on 22 Nov 2022
 //
 
-import { random } from "@dino/common";
+import { random, Within } from "@dino/common";
 import type { Arena, Dino } from "@prisma/client";
-import type { Within } from "../common";
 
 type DinoDamageArgs = Within<
   Dino,

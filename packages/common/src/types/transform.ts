@@ -1,8 +1,8 @@
 //
-//  common.ts
+//  transform.ts
 //  dino-league
 //
-//  Created by d-exclaimation on 22 Nov 2022
+//  Created by d-exclaimation on 25 Nov 2022
 //
 
 /**
@@ -22,12 +22,4 @@ export type Include<T, U> = T extends U ? T : never;
  */
 export type Within<T extends object, U extends object> = {
   [P in Include<keyof T, keyof U>]: T[P];
-};
-
-/**
- * Common properties when working with createdAt and updatedAt
- */
-export type KeyDates = {
-  createdAt?: string | Date;
-  updatedAt?: string | Date;
 };
