@@ -47,11 +47,7 @@ export const DinoQueries = extendType({
         ),
       },
       async resolve(_r, { input: { id } }, { prisma }) {
-        return prisma.dino.findUnique({
-          where: {
-            id,
-          },
-        });
+        return prisma.dino.findUnique({ where: { id } });
       },
     });
   },
