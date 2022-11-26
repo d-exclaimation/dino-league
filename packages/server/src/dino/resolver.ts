@@ -23,6 +23,9 @@ export const DinoQueries = extendType({
         ),
       },
       async resolve(_r, { input: { take, arena, variant } }, { prisma }) {
+        if (!arena && !variant) {
+          return prisma.dino.findMany({ take });
+        }
         return prisma.dino.findMany({
           where: {
             OR: {
@@ -47,11 +50,7 @@ export const DinoQueries = extendType({
         ),
       },
       async resolve(_r, { input: { id } }, { prisma }) {
-        return prisma.dino.findUnique({
-          where: {
-            id,
-          },
-        });
+        return prisma.dino.findUnique({ where: { id } });
       },
     });
   },

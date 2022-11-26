@@ -7,4 +7,6 @@
 
 export * from "./array/fill";
 export * from "./random";
+export * from "./types/result";
 export * from "./types/transform";
+export * from "./types/typed";
