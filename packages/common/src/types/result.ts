@@ -5,7 +5,8 @@
 //  Created by d-exclaimation on 26 Nov 2022
 //
 
-import { Pattern } from "./union";
+import { typed } from "./typed";
+import type { Pattern } from "./union";
 
 /**
  * Resulting union types
@@ -64,11 +65,11 @@ export class Result<T, E = never> {
   }
 
   public static ok<T>(data: T): Result<T, never> {
-    return new Ok({ __type: "ok", data });
+    return new Ok(typed("ok", { data }));
   }
 
   public static err<E>(error: E): Result<never, E> {
-    return new Err({ __type: "err", error });
+    return new Err(typed("err", { error }));
   }
 
   public static from<T>(op: () => T): Result<T, unknown> {
