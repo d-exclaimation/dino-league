@@ -19,14 +19,14 @@ type Res<T, E = never> =
  * Result class type
  */
 export abstract class Result<T, E = never> {
-  constructor(public readonly result: Res<T, E>) {}
+  constructor(public readonly union: Res<T, E>) {}
 
   /**
    * Check if the result is an ok
    * @returns True if this Result is am Ok
    */
   public isOk(): this is Ok<T> {
-    return this.result.__type === "ok";
+    return this.union.__type === "ok";
   }
 
   /**
@@ -34,7 +34,7 @@ export abstract class Result<T, E = never> {
    * @returns True if this Result is am Err
    */
   public isErr(): this is Err<E> {
-    return this.result.__type === "err";
+    return this.union.__type === "err";
   }
 
   /**
@@ -43,10 +43,10 @@ export abstract class Result<T, E = never> {
    * @throws The error if the result is an error
    */
   public unwrap(): T {
-    if (this.result.__type === "err") {
-      throw this.result.error;
+    if (this.union.__type === "err") {
+      throw this.union.error;
     }
-    return this.result.data;
+    return this.union.data;
   }
 
   /**
@@ -55,8 +55,8 @@ export abstract class Result<T, E = never> {
    * @throws An error if the result is an ok
    */
   public unwrapErr(): E {
-    if (this.result.__type === "err") {
-      return this.result.error;
+    if (this.union.__type === "err") {
+      return this.union.error;
     }
     throw new Error("No error from this result");
   }
@@ -67,10 +67,10 @@ export abstract class Result<T, E = never> {
    * @returns The result with the mapped value
    */
   public map<U>(func: (data: T) => U): Result<U, E> {
-    if (this.result.__type == "ok") {
-      return Result.ok(func(this.result.data));
+    if (this.union.__type == "ok") {
+      return Result.ok(func(this.union.data));
     }
-    return Result.err(this.result.error);
+    return Result.err(this.union.error);
   }
 
   /**
@@ -79,10 +79,10 @@ export abstract class Result<T, E = never> {
    * @returns The new result
    */
   public then<U, F>(func: (data: T) => Result<U, F>): Result<U, E | F> {
-    if (this.result.__type == "ok") {
-      return func(this.result.data);
+    if (this.union.__type == "ok") {
+      return func(this.union.data);
     }
-    return Result.err(this.result.error);
+    return Result.err(this.union.error);
   }
 
   /**
@@ -91,10 +91,10 @@ export abstract class Result<T, E = never> {
    * @returns The new result
    */
   public catch<U, F>(func: (error: E) => Result<U, F>): Result<U | T, E | F> {
-    if (this.result.__type == "err") {
-      return func(this.result.error);
+    if (this.union.__type == "err") {
+      return func(this.union.error);
     }
-    return Result.ok(this.result.data);
+    return Result.ok(this.union.data);
   }
 
   /**
@@ -103,10 +103,10 @@ export abstract class Result<T, E = never> {
    * @returns The new or old result
    */
   public or<U, F>(res: Result<U, F>): Result<T | U, F> {
-    if (this.result.__type === "err") {
+    if (this.union.__type === "err") {
       return res;
     }
-    return Result.ok(this.result.data);
+    return Result.ok(this.union.data);
   }
 
   /**
@@ -115,10 +115,10 @@ export abstract class Result<T, E = never> {
    * @returns The new or old value
    */
   public else(res: T): T {
-    if (this.result.__type === "err") {
+    if (this.union.__type === "err") {
       return res;
     }
-    return this.result.data;
+    return this.union.data;
   }
 
   /**
@@ -181,10 +181,10 @@ export class Ok<T> extends Result<T, never> {
    * Get the data from this ok result
    */
   public get data(): T {
-    if (this.result.__type === "err") {
-      throw this.result.error;
+    if (this.union.__type === "err") {
+      throw this.union.error;
     }
-    return this.result.data;
+    return this.union.data;
   }
 }
 
@@ -200,9 +200,9 @@ export class Err<E> extends Result<never, E> {
    * Get the error from this error result
    */
   public get error(): E {
-    if (this.result.__type === "ok") {
+    if (this.union.__type === "ok") {
       throw new Error("No error from this result");
     }
-    return this.result.error;
+    return this.union.error;
   }
 }
