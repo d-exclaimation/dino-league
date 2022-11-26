@@ -19,7 +19,7 @@ type Res<T, E = never> =
  * Result class type
  */
 export abstract class Result<T, E = never> {
-  constructor(public result: Res<T, E>) {}
+  constructor(public readonly result: Res<T, E>) {}
 
   /**
    * Check if the result is an ok
