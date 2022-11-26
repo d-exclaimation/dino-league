@@ -8,6 +8,9 @@
 /**
  * Pattern matchable type for union
  */
-export type Pattern<Type extends string, Value = never> = Value extends never
+export type Pattern<
+  Type extends string,
+  Value = undefined
+> = Value extends undefined
   ? { __type: Type }
   : { __type: Type } & (Value extends object ? Value : { payload: Value });
