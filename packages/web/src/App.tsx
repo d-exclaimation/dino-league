@@ -5,42 +5,10 @@
 //  Created by d-exclaimation on 25 Nov 2022
 //
 
-import { gql, useQuery } from "@apollo/client";
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 
 const App: FC = () => {
-  const { loading, data, error } = useQuery(gql`
-    query {
-      dinosaurs(input: {}) {
-        id
-        name
-        variant
-      }
-    }
-  `);
   const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    if (!loading) {
-      setCount(data?.dinosaurs?.length ?? 0);
-    }
-  }, [loading, data, setCount]);
-
-  if (loading) {
-    return (
-      <div className="flex flex-col items-center justify-center w-screen h-screen bg-slate-800">
-        loading...
-      </div>
-    );
-  }
-
-  if (!!error && !data) {
-    return (
-      <div className="flex flex-col items-center justify-center w-screen h-screen bg-slate-800">
-        {JSON.stringify(error)}
-      </div>
-    );
-  }
 
   return (
     <div className="flex flex-col items-center justify-center w-screen h-screen bg-slate-800">
