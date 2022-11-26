@@ -18,7 +18,7 @@ type Res<T, E = never> =
 /**
  * Result class type
  */
-export class Result<T, E = never> {
+export abstract class Result<T, E = never> {
   constructor(public result: Res<T, E>) {}
 
   public isOk(): this is Ok<T> {
