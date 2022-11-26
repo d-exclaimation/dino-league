@@ -23,6 +23,9 @@ export const DinoQueries = extendType({
         ),
       },
       async resolve(_r, { input: { take, arena, variant } }, { prisma }) {
+        if (!arena && !variant) {
+          return prisma.dino.findMany({ take });
+        }
         return prisma.dino.findMany({
           where: {
             OR: {
