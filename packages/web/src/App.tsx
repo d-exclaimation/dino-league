@@ -5,10 +5,43 @@
 //  Created by d-exclaimation on 25 Nov 2022
 //
 
-import { FC, useState } from "react";
+import { gql, useQuery } from "@apollo/client";
+import { FC, useEffect, useState } from "react";
 
 const App: FC = () => {
+  const { loading, data, error } = useQuery(gql`
+    query {
+      dinosaurs(input: {}) {
+        id
+        name
+        variant
+      }
+    }
+  `);
   const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    if (!loading) {
+      setCount(data?.dinosaurs?.length ?? 0);
+    }
+  }, [loading, data, setCount]);
+
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center w-screen h-screen bg-slate-800">
+        loading...
+      </div>
+    );
+  }
+
+  if (!!error && !data) {
+    return (
+      <div className="flex flex-col items-center justify-center w-screen h-screen bg-slate-800">
+        {JSON.stringify(error)}
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col items-center justify-center w-screen h-screen bg-slate-800">
       <div className="flex items-center justify-center">
@@ -27,7 +60,8 @@ const App: FC = () => {
           className="
           w-28 h-12 font-mono
           text-white bg-slate-700
-        "
+         "
+          disabled
         >
           {count}
         </button>
