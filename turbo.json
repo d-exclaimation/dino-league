@@ -21,10 +21,6 @@
       "env": ["DATABASE_URL"],
       "dependsOn": ["^generate"],
       "cache": false
-    },
-    "studio": {
-      "env": ["DATABASE_URL"],
-      "cache": false
     }
   }
 }
