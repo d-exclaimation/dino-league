@@ -19,6 +19,7 @@ const App: FC = () => {
           text-white bg-teal-700
           hover:bg-teal-600
           active:bg-teal-600 active:scale-95
+          active:text-opacity-90
         "
           onClick={() => setCount((count) => count + 1)}
         >
