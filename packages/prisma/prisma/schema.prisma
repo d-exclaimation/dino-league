@@ -3,13 +3,11 @@
 
 generator client {
   provider = "prisma-client-js"
-  previewFeatures = ["referentialIntegrity"]
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  referentialIntegrity = "prisma"
 }
 
 model User {
@@ -33,7 +31,7 @@ model Dino {
   hp        Float
   attack    Float
   arena     Arena
-  userId    String?
+  userId    String?  
   user      User?    @relation(fields: [userId], references: [id])
   party     Party?
 }

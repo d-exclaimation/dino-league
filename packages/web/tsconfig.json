@@ -1,7 +1,8 @@
 {
   "extends": "@dino/tsconfig/react-library.json",
   "include": ["src"],
+  "exclude": ["node_modules"],
   "references": [
     { "path": "./tsconfig.node.json" }
-  ]
+  ],
 }

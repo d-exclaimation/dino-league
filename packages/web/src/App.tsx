@@ -5,39 +5,25 @@
 //  Created by d-exclaimation on 25 Nov 2022
 //
 
-import { gql, useQuery } from "@apollo/client";
-import { FC, useEffect, useState } from "react";
+import { useDinosaursQuery } from "@dino/apollo";
+import { FC, useState } from "react";
 
 const App: FC = () => {
-  const { loading, data, error } = useQuery(gql`
-    query {
-      dinosaurs(input: {}) {
-        id
-        name
-        variant
-      }
-    }
-  `);
-  const [count, setCount] = useState(0);
+  const { data, error, loading } = useDinosaursQuery({});
+  const [count, setCount] = useState(data?.dinosaurs.length ?? 0);
 
-  useEffect(() => {
-    if (!loading) {
-      setCount(data?.dinosaurs?.length ?? 0);
-    }
-  }, [loading, data, setCount]);
-
-  if (loading) {
+  if (loading || !data) {
     return (
       <div className="flex flex-col items-center justify-center w-screen h-screen bg-slate-800">
-        loading...
+        <text className="text-white text-md font-mono">Loading...</text>
       </div>
     );
   }
 
-  if (!!error && !data) {
+  if (error) {
     return (
       <div className="flex flex-col items-center justify-center w-screen h-screen bg-slate-800">
-        {JSON.stringify(error)}
+        <text className="text-white text-md font-mono">{error.message}</text>
       </div>
     );
   }
@@ -51,6 +37,7 @@ const App: FC = () => {
           text-white bg-teal-700
           hover:bg-teal-600
           active:bg-teal-600 active:scale-95
+          active:text-opacity-90
         "
           onClick={() => setCount((count) => count + 1)}
         >

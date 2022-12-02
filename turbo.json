@@ -1,29 +1,24 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalEnv": ["NODE_ENV"],
+  "globalDependencies": [".env"],
+  "globalEnv": ["NODE_ENV", "DATABASE_URL"],
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**", ".next/**"]
     },
     "dev": {
-      "env": ["DATABASE_URL"],
       "cache": false
     },
     "clean": {
       "cache": false
     },
     "migrate": {
-      "env": ["DATABASE_URL"],
       "outputs": []
     },
     "generate": {
       "env": ["DATABASE_URL"],
       "dependsOn": ["^generate"],
-      "cache": false
-    },
-    "studio": {
-      "env": ["DATABASE_URL"],
       "cache": false
     }
   }

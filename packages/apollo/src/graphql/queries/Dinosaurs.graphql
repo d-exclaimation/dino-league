@@ -1,0 +1,11 @@
+query Dinosaurs {
+  dinosaurs(input: {}) {
+    id
+    name
+    level
+    hp
+    variant
+    attack
+    arena
+  }
+}
