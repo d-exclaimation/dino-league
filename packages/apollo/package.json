@@ -1,10 +1,12 @@
 {
-  "name": "@dino/state-management",
+  "name": "@dino/apollo",
   "version": "1.0.0",
   "description": "",
   "main": "src/index.tsx",
   "types": "src/index.tsx",
-  "scripts": {},
+  "scripts": {
+    "generate": "graphql-codegen"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",

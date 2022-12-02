@@ -6,4 +6,4 @@
 //
 
 export { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
-export * from "./apollo/http";
+export * from "./client/http";
