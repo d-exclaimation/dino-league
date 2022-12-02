@@ -28,7 +28,7 @@ export enum Arena {
 export type CreateDino = NewDino | Unauthorized;
 
 export type Dino = Identifiable & {
-  __typename?: 'Dino';
+  __typename: 'Dino';
   /** The arena environment this Dinosaur most effective in */
   arena: Arena;
   /** The base attack for this class of Dinosaur */
@@ -78,7 +78,7 @@ export type Identifiable = {
 };
 
 export type Mutation = {
-  __typename?: 'Mutation';
+  __typename: 'Mutation';
   /** Create a Dino */
   createDino: CreateDino;
   /** Create a randomly generated Dino */
@@ -92,13 +92,13 @@ export type MutationCreateDinoArgs = {
 
 /** New Dino has been created */
 export type NewDino = {
-  __typename?: 'NewDino';
+  __typename: 'NewDino';
   /** The new Dino created */
   dino: Dino;
 };
 
 export type Query = {
-  __typename?: 'Query';
+  __typename: 'Query';
   /** Find a Dino by their ID */
   dinosaur?: Maybe<Dino>;
   /** Get all dinosaurs */
@@ -123,7 +123,7 @@ export type SearchById = {
 
 /** An operation is made by an unauthorized user */
 export type Unauthorized = {
-  __typename?: 'Unauthorized';
+  __typename: 'Unauthorized';
   /** What operation is done that caused an unauthorized error */
   operation: Scalars['String'];
 };
@@ -141,7 +141,7 @@ export enum Variant {
 export type DinosaursQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type DinosaursQuery = { __typename?: 'Query', dinosaurs: Array<{ __typename?: 'Dino', id: string, name: string, level: number, hp: number, variant: Variant, attack: number, arena: Arena }> };
+export type DinosaursQuery = { __typename: 'Query', dinosaurs: Array<{ __typename: 'Dino', id: string, name: string, level: number, hp: number, variant: Variant, attack: number, arena: Arena }> };
 
 
 export const DinosaursDocument = gql`
