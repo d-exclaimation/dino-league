@@ -10,7 +10,7 @@ import {
   ApolloProvider,
   createHttpWithAuthLink,
   InMemoryCache,
-} from "@dino/state-management";
+} from "@dino/apollo";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";

@@ -5,10 +5,28 @@
 //  Created by d-exclaimation on 25 Nov 2022
 //
 
+import { useDinosaursQuery } from "@dino/apollo";
 import { FC, useState } from "react";
 
 const App: FC = () => {
-  const [count, setCount] = useState(0);
+  const { data, error, loading } = useDinosaursQuery({});
+  const [count, setCount] = useState(data?.dinosaurs.length ?? 0);
+
+  if (loading || !data) {
+    return (
+      <div className="flex flex-col items-center justify-center w-screen h-screen bg-slate-800">
+        <text className="text-white text-md font-mono">Loading...</text>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center w-screen h-screen bg-slate-800">
+        <text className="text-white text-md font-mono">{error.message}</text>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col items-center justify-center w-screen h-screen bg-slate-800">
