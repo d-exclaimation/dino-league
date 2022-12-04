@@ -3,6 +3,7 @@
   "compilerOptions": {
     "target": "ES2020",
     "lib": ["esnext"],
+    "strict": true
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist"]
