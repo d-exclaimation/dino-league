@@ -35,7 +35,10 @@ importers:
 
   packages/common:
     specifiers:
+      '@d-exclaimation/union': 0.1.1
       '@dino/tsconfig': '*'
+    dependencies:
+      '@d-exclaimation/union': 0.1.1
     devDependencies:
       '@dino/tsconfig': link:../tsconfig
 
@@ -998,6 +1001,10 @@ packages:
     dependencies:
       '@jridgewell/trace-mapping': 0.3.9
     dev: true
+
+  /@d-exclaimation/union/0.1.1:
+    resolution: {integrity: sha512-LiDmvuAppY7FQ31qdAhDKPyVY/NLqSH5lb1I/zba3lxYrVMgSkcV3Url9TNNVtTp8q1hQExjvv8vog6tC/zh5g==}
+    dev: false
 
   /@esbuild/android-arm/0.15.15:
     resolution: {integrity: sha512-JJjZjJi2eBL01QJuWjfCdZxcIgot+VoK6Fq7eKF9w4YHm9hwl7nhBR1o2Wnt/WcANk5l9SkpvrldW1PLuXxcbw==}
