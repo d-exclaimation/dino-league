@@ -10,5 +10,8 @@
   "license": "ISC",
   "devDependencies": {
     "@dino/tsconfig": "*"
+  },
+  "dependencies": {
+    "@d-exclaimation/union": "0.1.1"
   }
 }
