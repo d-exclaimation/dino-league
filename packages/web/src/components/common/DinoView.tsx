@@ -9,6 +9,10 @@ import { FC, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import MinoDinoView from "./MinoDinoView";
 
+/**
+ * TODO:
+ *  - Take an actual dino and party
+ */
 const DinoView: FC = () => {
   const [searchParam] = useSearchParams();
 
@@ -23,26 +27,32 @@ const DinoView: FC = () => {
         <div />
         <div className="flex flex-col items-start justify-center">
           <span className="text-8xl text-white border-b-2 border-white my-2">
-            2
+            2 {/* TODO: Level */}
           </span>
-          <span className="text-white/70">Bluey</span>
+          <span className="text-white/70">Bluey {/* TODO: Name */}</span>
         </div>
         <img className="w-64 md:w-72" alt="Image" src={imageSrc} />
       </div>
       <div className="w-full h-[55%] bg-white">
         <div className="flex items-center justify-evenly h-40 overflow-x-scroll p-2">
           <div className="flex items-center justify-center flex-col">
-            <span className="text-3xl font-semibold">99</span>
+            <span className="text-3xl font-semibold">
+              99 {/* TODO: HP num + color */}
+            </span>
             <span className="text-neutral-400">HP</span>
           </div>
           <span className="border-r-2 border-r-neutral-500/10 h-[50%] m-2" />
           <div className="flex items-center justify-center flex-col">
-            <span className="text-3xl font-semibold">40</span>
+            <span className="text-3xl font-semibold">
+              40 {/* TODO: Attack */}
+            </span>
             <span className="text-neutral-400">Attack</span>
           </div>
           <span className="border-r-2 border-r-neutral-500/10 h-[50%] m-2" />
           <div className="flex items-center justify-center flex-col">
-            <span className="text-2xl font-semibold">Grassland</span>
+            <span className="text-2xl font-semibold">
+              Grassland {/* TODO: Arena */}
+            </span>
             <span className="text-neutral-400">Arena</span>
           </div>
         </div>
