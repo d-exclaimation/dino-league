@@ -17,7 +17,7 @@ const router = createBrowserRouter([
 
 const App: FC = () => {
   return (
-    <div className="flex flex-col items-center justify-center w-screen h-screen bg-slate-800">
+    <div className="flex flex-col items-center justify-center w-screen h-screen">
       <RouterProvider router={router} />
     </div>
   );
