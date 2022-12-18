@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="dino-league.png" >
+</p>
+
 # Dino League 🦕
 
 A online  dinosaur game with adventures and online battles 
