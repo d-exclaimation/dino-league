@@ -18,7 +18,7 @@ const PartyView: FC<Props> = ({ shownId }) => {
   return (
     <div className="py-2">
       <span className="mx-4 text-xl font-semibold">Party</span>
-      <div className="flex flex-row w-full overflow-scroll p-2">
+      <div className="flex flex-row w-full overflow-scroll p-2 min-h-[11rem]">
         {(data?.dinosaurs ?? []).map((props) => (
           <Fragment key={props.id}>
             <MinoDinoView
