@@ -1,0 +1,14 @@
+query PartyView($dino: SearchByID!) {
+  dinosaur(input: $dino) {
+    ...FullDinoInfo
+  }
+  me {
+    id
+    party {
+      ...QuickDinoInfo
+    }
+    box {
+      ...QuickDinoInfo
+    }
+  }
+}

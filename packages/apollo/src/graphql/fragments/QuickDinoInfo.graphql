@@ -1,0 +1,7 @@
+fragment QuickDinoInfo on Dino {
+  id
+  name
+  hp
+  percentage
+  variant
+}

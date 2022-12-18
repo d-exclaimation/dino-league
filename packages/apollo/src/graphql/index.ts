@@ -111,6 +111,7 @@ export type Query = {
   dinosaur?: Maybe<Dino>;
   /** Get all dinosaurs */
   dinosaurs: Array<Dino>;
+  me?: Maybe<User>;
 };
 
 
@@ -136,6 +137,16 @@ export type Unauthorized = {
   operation: Scalars['String'];
 };
 
+export type User = Identifiable & {
+  __typename: 'User';
+  /** Get all Dinosaur in this user's party */
+  box: Array<Dino>;
+  /** A unique ID for this entity */
+  id: Scalars['ID'];
+  /** Get all Dinosaur in this user's party */
+  party: Array<Dino>;
+};
+
 /** The variant of dinosaur */
 export enum Variant {
   /** Bold comes in black */
@@ -156,6 +167,10 @@ export enum Variant {
   Yellow = 'yellow'
 }
 
+export type FullDinoInfoFragment = { __typename: 'Dino', level: number, attack: number, speed: number, healing: number, arena: Arena, id: string, name: string, hp: number, percentage: number, variant: Variant };
+
+export type QuickDinoInfoFragment = { __typename: 'Dino', id: string, name: string, hp: number, percentage: number, variant: Variant };
+
 export type DinosaurQueryVariables = Exact<{
   input: SearchById;
 }>;
@@ -163,12 +178,37 @@ export type DinosaurQueryVariables = Exact<{
 
 export type DinosaurQuery = { __typename: 'Query', dinosaur?: { __typename: 'Dino', id: string, level: number, hp: number, attack: number, speed: number, healing: number, arena: Arena, variant: Variant, name: string, percentage: number } | null };
 
+export type PartyViewQueryVariables = Exact<{
+  dino: SearchById;
+}>;
+
+
+export type PartyViewQuery = { __typename: 'Query', dinosaur?: { __typename: 'Dino', level: number, attack: number, speed: number, healing: number, arena: Arena, id: string, name: string, hp: number, percentage: number, variant: Variant } | null, me?: { __typename: 'User', id: string, party: Array<{ __typename: 'Dino', id: string, name: string, hp: number, percentage: number, variant: Variant }>, box: Array<{ __typename: 'Dino', id: string, name: string, hp: number, percentage: number, variant: Variant }> } | null };
+
 export type PlaceholderPartyQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type PlaceholderPartyQuery = { __typename: 'Query', dinosaurs: Array<{ __typename: 'Dino', id: string, name: string, hp: number, percentage: number, variant: Variant }> };
 
-
+export const QuickDinoInfoFragmentDoc = gql`
+    fragment QuickDinoInfo on Dino {
+  id
+  name
+  hp
+  percentage
+  variant
+}
+    `;
+export const FullDinoInfoFragmentDoc = gql`
+    fragment FullDinoInfo on Dino {
+  ...QuickDinoInfo
+  level
+  attack
+  speed
+  healing
+  arena
+}
+    ${QuickDinoInfoFragmentDoc}`;
 export const DinosaurDocument = gql`
     query Dinosaur($input: SearchByID!) {
   dinosaur(input: $input) {
@@ -215,6 +255,54 @@ export type DinosaurLazyQueryHookResult = ReturnType<typeof useDinosaurLazyQuery
 export type DinosaurQueryResult = Apollo.QueryResult<DinosaurQuery, DinosaurQueryVariables>;
 export function refetchDinosaurQuery(variables: DinosaurQueryVariables) {
       return { query: DinosaurDocument, variables: variables }
+    }
+export const PartyViewDocument = gql`
+    query PartyView($dino: SearchByID!) {
+  dinosaur(input: $dino) {
+    ...FullDinoInfo
+  }
+  me {
+    id
+    party {
+      ...QuickDinoInfo
+    }
+    box {
+      ...QuickDinoInfo
+    }
+  }
+}
+    ${FullDinoInfoFragmentDoc}
+${QuickDinoInfoFragmentDoc}`;
+
+/**
+ * __usePartyViewQuery__
+ *
+ * To run a query within a React component, call `usePartyViewQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePartyViewQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePartyViewQuery({
+ *   variables: {
+ *      dino: // value for 'dino'
+ *   },
+ * });
+ */
+export function usePartyViewQuery(baseOptions: Apollo.QueryHookOptions<PartyViewQuery, PartyViewQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PartyViewQuery, PartyViewQueryVariables>(PartyViewDocument, options);
+      }
+export function usePartyViewLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PartyViewQuery, PartyViewQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PartyViewQuery, PartyViewQueryVariables>(PartyViewDocument, options);
+        }
+export type PartyViewQueryHookResult = ReturnType<typeof usePartyViewQuery>;
+export type PartyViewLazyQueryHookResult = ReturnType<typeof usePartyViewLazyQuery>;
+export type PartyViewQueryResult = Apollo.QueryResult<PartyViewQuery, PartyViewQueryVariables>;
+export function refetchPartyViewQuery(variables: PartyViewQueryVariables) {
+      return { query: PartyViewDocument, variables: variables }
     }
 export const PlaceholderPartyDocument = gql`
     query PlaceholderParty {

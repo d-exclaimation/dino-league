@@ -1,0 +1,8 @@
+fragment FullDinoInfo on Dino {
+    ...QuickDinoInfo
+    level
+    attack
+    speed
+    healing
+    arena
+}
