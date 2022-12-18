@@ -52,14 +52,13 @@ export class PrismaStorage<
     : false
 > extends PrismaClient<T, U, GlobalReject> {
   async createDino(variant: Variant, { level, name, user }: CreateDinoArgs) {
-    const { hp, ...rest } = DinoModule.variants[variant];
+    const props = DinoModule.adjusted(DinoModule.variants[variant], level);
     return this.dino.create({
       data: {
         name: name ?? variant,
         level,
-        hp: Math.pow(1.01, level - 1) * hp,
         userId: user?.id,
-        ...rest,
+        ...props,
       },
     });
   }

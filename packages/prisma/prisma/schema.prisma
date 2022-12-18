@@ -30,6 +30,9 @@ model Dino {
   level     Int
   hp        Float
   attack    Float
+  speed     Float
+  healing   Float
+  price     Float
   arena     Arena
   userId    String?  
   user      User?    @relation(fields: [userId], references: [id])
@@ -41,6 +44,7 @@ model Party {
   dinoId    String  @unique
   user      User    @relation(fields: [userId], references: [id])
   dino      Dino    @relation(fields: [dinoId], references: [id])
+  order     Int     @unique @default(0)
 
   @@id([userId, dinoId])
 }
@@ -54,7 +58,12 @@ enum Arena {
 }
 
 enum Variant {
-  aardonyx
-  abelisaurus
-  alosaur
+  blue
+  black
+  green
+  pink
+  red
+  slate
+  white
+  yellow
 }
