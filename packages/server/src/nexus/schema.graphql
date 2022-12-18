@@ -113,6 +113,7 @@ type Query {
     """The filter to apply"""
     input: DinoFilter!
   ): [Dino!]!
+  me: User
 }
 
 """Search an Identifiable by the ID"""
@@ -125,6 +126,17 @@ input SearchByID {
 type Unauthorized {
   """What operation is done that caused an unauthorized error"""
   operation: String!
+}
+
+type User implements Identifiable {
+  """Get all Dinosaur in this user's party"""
+  box: [Dino!]!
+
+  """A unique ID for this entity"""
+  id: ID!
+
+  """Get all Dinosaur in this user's party"""
+  party: [Dino!]!
 }
 
 """The variant of dinosaur"""

@@ -62,10 +62,13 @@ export interface NexusGenObjects {
   Unauthorized: { // root type
     operation: string; // String!
   }
+  User: { // root type
+    id: string; // ID!
+  }
 }
 
 export interface NexusGenInterfaces {
-  Identifiable: NexusGenRootTypes['Dino'];
+  Identifiable: NexusGenRootTypes['Dino'] | NexusGenRootTypes['User'];
 }
 
 export interface NexusGenUnions {
@@ -101,9 +104,15 @@ export interface NexusGenFieldTypes {
   Query: { // field return type
     dinosaur: NexusGenRootTypes['Dino'] | null; // Dino
     dinosaurs: NexusGenRootTypes['Dino'][]; // [Dino!]!
+    me: NexusGenRootTypes['User'] | null; // User
   }
   Unauthorized: { // field return type
     operation: string; // String!
+  }
+  User: { // field return type
+    box: NexusGenRootTypes['Dino'][]; // [Dino!]!
+    id: string; // ID!
+    party: NexusGenRootTypes['Dino'][]; // [Dino!]!
   }
   Identifiable: { // field return type
     id: string; // ID!
@@ -135,9 +144,15 @@ export interface NexusGenFieldTypeNames {
   Query: { // field return type name
     dinosaur: 'Dino'
     dinosaurs: 'Dino'
+    me: 'User'
   }
   Unauthorized: { // field return type name
     operation: 'String'
+  }
+  User: { // field return type name
+    box: 'Dino'
+    id: 'ID'
+    party: 'Dino'
   }
   Identifiable: { // field return type name
     id: 'ID'
@@ -167,11 +182,12 @@ export interface NexusGenArgTypes {
 
 export interface NexusGenAbstractTypeMembers {
   CreateDino: "NewDino" | "Unauthorized"
-  Identifiable: "Dino"
+  Identifiable: "Dino" | "User"
 }
 
 export interface NexusGenTypeInterfaces {
   Dino: "Identifiable"
+  User: "Identifiable"
 }
 
 export type NexusGenObjectNames = keyof NexusGenObjects;

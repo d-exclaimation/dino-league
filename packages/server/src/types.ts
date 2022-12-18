@@ -11,3 +11,5 @@ export * from "./dino/resolver";
 export * from "./dino/type";
 export * from "./identifiable/input";
 export * from "./identifiable/type";
+export * from "./user/resolver";
+export * from "./user/type";
