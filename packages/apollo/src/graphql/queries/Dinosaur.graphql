@@ -1,0 +1,14 @@
+query Dinosaur($input: SearchByID!) {
+  dinosaur(input: $input) {
+    id
+    level
+    hp
+    attack
+    speed
+    healing
+    arena
+    variant
+    name
+    percentage
+  }
+}

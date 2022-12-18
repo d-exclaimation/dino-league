@@ -18,7 +18,7 @@ type Dino implements Identifiable {
   """The arena environment this Dinosaur most effective in"""
   arena: Arena!
 
-  """The base attack for this class of Dinosaur"""
+  """The attack for this class of Dinosaur"""
   attack: Float!
 
   """The damage dealt by this Dinosaur"""
@@ -26,6 +26,9 @@ type Dino implements Identifiable {
     """The active arena"""
     arena: Arena!
   ): Float!
+
+  """The amount of healing this class Dinosaur gain when resting"""
+  healing: Float!
 
   """The current health of this Dinosaur"""
   hp: Float!
@@ -36,8 +39,17 @@ type Dino implements Identifiable {
   """The current level of this Dinosaur, which affects its attack and HP"""
   level: Int!
 
+  """The max hp of this Dinosaur"""
+  maxHp: Float!
+
   """The name of this Dinosaur"""
   name: String!
+
+  """The hp percentage of this Dinosaur"""
+  percentage: Int!
+
+  """The speed for this class of Dinosaur"""
+  speed: Float!
 
   """The variance for this Dinosaur"""
   variant: Variant!
@@ -117,12 +129,27 @@ type Unauthorized {
 
 """The variant of dinosaur"""
 enum Variant {
-  """An early stage in the evolution of sauropods"""
-  AARDONYX
+  """Bold comes in black"""
+  black
 
-  """"Abel's lizard" has been reconstructed from a single skull"""
-  ABELISAURUS
+  """Jumping expert"""
+  blue
 
-  """A versatile dinosaur"""
-  ALOSAUR
+  """Runs swiftly"""
+  green
+
+  """Ouch.."""
+  pink
+
+  """A good offense in the best defense"""
+  red
+
+  """Boom"""
+  slate
+
+  """Jack of all trades"""
+  white
+
+  """Can't lose if you don't get hit"""
+  yellow
 }

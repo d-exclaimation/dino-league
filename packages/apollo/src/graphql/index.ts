@@ -31,18 +31,26 @@ export type Dino = Identifiable & {
   __typename: 'Dino';
   /** The arena environment this Dinosaur most effective in */
   arena: Arena;
-  /** The base attack for this class of Dinosaur */
+  /** The attack for this class of Dinosaur */
   attack: Scalars['Float'];
   /** The damage dealt by this Dinosaur */
   damage: Scalars['Float'];
+  /** The amount of healing this class Dinosaur gain when resting */
+  healing: Scalars['Float'];
   /** The current health of this Dinosaur */
   hp: Scalars['Float'];
   /** A unique ID for this entity */
   id: Scalars['ID'];
   /** The current level of this Dinosaur, which affects its attack and HP */
   level: Scalars['Int'];
+  /** The max hp of this Dinosaur */
+  maxHp: Scalars['Float'];
   /** The name of this Dinosaur */
   name: Scalars['String'];
+  /** The hp percentage of this Dinosaur */
+  percentage: Scalars['Int'];
+  /** The speed for this class of Dinosaur */
+  speed: Scalars['Float'];
   /** The variance for this Dinosaur */
   variant: Variant;
 };
@@ -130,60 +138,122 @@ export type Unauthorized = {
 
 /** The variant of dinosaur */
 export enum Variant {
-  /** An early stage in the evolution of sauropods */
-  Aardonyx = 'AARDONYX',
-  /** "Abel's lizard" has been reconstructed from a single skull */
-  Abelisaurus = 'ABELISAURUS',
-  /** A versatile dinosaur */
-  Alosaur = 'ALOSAUR'
+  /** Bold comes in black */
+  Black = 'black',
+  /** Jumping expert */
+  Blue = 'blue',
+  /** Runs swiftly */
+  Green = 'green',
+  /** Ouch.. */
+  Pink = 'pink',
+  /** A good offense in the best defense */
+  Red = 'red',
+  /** Boom */
+  Slate = 'slate',
+  /** Jack of all trades */
+  White = 'white',
+  /** Can't lose if you don't get hit */
+  Yellow = 'yellow'
 }
 
-export type DinosaursQueryVariables = Exact<{ [key: string]: never; }>;
+export type DinosaurQueryVariables = Exact<{
+  input: SearchById;
+}>;
 
 
-export type DinosaursQuery = { __typename: 'Query', dinosaurs: Array<{ __typename: 'Dino', id: string, name: string, level: number, hp: number, variant: Variant, attack: number, arena: Arena }> };
+export type DinosaurQuery = { __typename: 'Query', dinosaur?: { __typename: 'Dino', id: string, level: number, hp: number, attack: number, speed: number, healing: number, arena: Arena, variant: Variant, name: string, percentage: number } | null };
+
+export type PlaceholderPartyQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export const DinosaursDocument = gql`
-    query Dinosaurs {
-  dinosaurs(input: {}) {
+export type PlaceholderPartyQuery = { __typename: 'Query', dinosaurs: Array<{ __typename: 'Dino', id: string, name: string, hp: number, percentage: number, variant: Variant }> };
+
+
+export const DinosaurDocument = gql`
+    query Dinosaur($input: SearchByID!) {
+  dinosaur(input: $input) {
     id
-    name
     level
     hp
-    variant
     attack
+    speed
+    healing
     arena
+    variant
+    name
+    percentage
   }
 }
     `;
 
 /**
- * __useDinosaursQuery__
+ * __useDinosaurQuery__
  *
- * To run a query within a React component, call `useDinosaursQuery` and pass it any options that fit your needs.
- * When your component renders, `useDinosaursQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useDinosaurQuery` and pass it any options that fit your needs.
+ * When your component renders, `useDinosaurQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useDinosaursQuery({
+ * const { data, loading, error } = useDinosaurQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useDinosaurQuery(baseOptions: Apollo.QueryHookOptions<DinosaurQuery, DinosaurQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<DinosaurQuery, DinosaurQueryVariables>(DinosaurDocument, options);
+      }
+export function useDinosaurLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DinosaurQuery, DinosaurQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<DinosaurQuery, DinosaurQueryVariables>(DinosaurDocument, options);
+        }
+export type DinosaurQueryHookResult = ReturnType<typeof useDinosaurQuery>;
+export type DinosaurLazyQueryHookResult = ReturnType<typeof useDinosaurLazyQuery>;
+export type DinosaurQueryResult = Apollo.QueryResult<DinosaurQuery, DinosaurQueryVariables>;
+export function refetchDinosaurQuery(variables: DinosaurQueryVariables) {
+      return { query: DinosaurDocument, variables: variables }
+    }
+export const PlaceholderPartyDocument = gql`
+    query PlaceholderParty {
+  dinosaurs(input: {take: 5}) {
+    id
+    name
+    hp
+    percentage
+    variant
+  }
+}
+    `;
+
+/**
+ * __usePlaceholderPartyQuery__
+ *
+ * To run a query within a React component, call `usePlaceholderPartyQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePlaceholderPartyQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePlaceholderPartyQuery({
  *   variables: {
  *   },
  * });
  */
-export function useDinosaursQuery(baseOptions?: Apollo.QueryHookOptions<DinosaursQuery, DinosaursQueryVariables>) {
+export function usePlaceholderPartyQuery(baseOptions?: Apollo.QueryHookOptions<PlaceholderPartyQuery, PlaceholderPartyQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<DinosaursQuery, DinosaursQueryVariables>(DinosaursDocument, options);
+        return Apollo.useQuery<PlaceholderPartyQuery, PlaceholderPartyQueryVariables>(PlaceholderPartyDocument, options);
       }
-export function useDinosaursLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DinosaursQuery, DinosaursQueryVariables>) {
+export function usePlaceholderPartyLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PlaceholderPartyQuery, PlaceholderPartyQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<DinosaursQuery, DinosaursQueryVariables>(DinosaursDocument, options);
+          return Apollo.useLazyQuery<PlaceholderPartyQuery, PlaceholderPartyQueryVariables>(PlaceholderPartyDocument, options);
         }
-export type DinosaursQueryHookResult = ReturnType<typeof useDinosaursQuery>;
-export type DinosaursLazyQueryHookResult = ReturnType<typeof useDinosaursLazyQuery>;
-export type DinosaursQueryResult = Apollo.QueryResult<DinosaursQuery, DinosaursQueryVariables>;
-export function refetchDinosaursQuery(variables?: DinosaursQueryVariables) {
-      return { query: DinosaursDocument, variables: variables }
+export type PlaceholderPartyQueryHookResult = ReturnType<typeof usePlaceholderPartyQuery>;
+export type PlaceholderPartyLazyQueryHookResult = ReturnType<typeof usePlaceholderPartyLazyQuery>;
+export type PlaceholderPartyQueryResult = Apollo.QueryResult<PlaceholderPartyQuery, PlaceholderPartyQueryVariables>;
+export function refetchPlaceholderPartyQuery(variables?: PlaceholderPartyQueryVariables) {
+      return { query: PlaceholderPartyDocument, variables: variables }
     }

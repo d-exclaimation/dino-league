@@ -6,17 +6,12 @@
 //
 import { FC } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import DinoView from "./components/common/DinoView";
-import MinoDinoView from "./components/common/MinoDinoView";
+import PartyPage from "./components/party";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <DinoView />,
-  },
-  {
-    path: "/bin",
-    element: <MinoDinoView />,
+    element: <PartyPage />,
   },
 ]);
 

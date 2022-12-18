@@ -1,0 +1,9 @@
+query PlaceholderParty {
+  dinosaurs(input: { take: 5 }) {
+    id
+    name
+    hp
+    percentage
+    variant
+  }
+}

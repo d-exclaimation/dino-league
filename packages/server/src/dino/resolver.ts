@@ -119,5 +119,18 @@ export const DinoFieldResolvers = extendType({
           arena,
         }),
     });
+
+    t.nonNull.float("maxHp", {
+      description: "The max hp of this Dinosaur",
+      resolve: (dino) => DinoModule.maxHp(dino.variant, dino.level),
+    });
+
+    t.nonNull.int("percentage", {
+      description: "The hp percentage of this Dinosaur",
+      resolve: (dino) =>
+        Math.round(
+          (dino.hp * 100) / DinoModule.maxHp(dino.variant, dino.level)
+        ),
+    });
   },
 });

@@ -31,7 +31,7 @@ export interface NexusGenInputs {
 
 export interface NexusGenEnums {
   Arena: "DESERT" | "GRASSLAND" | "HILLS" | "OCEAN" | "URBAN"
-  Variant: "aardonyx" | "abelisaurus" | "alosaur"
+  Variant: "black" | "blue" | "green" | "pink" | "red" | "slate" | "white" | "yellow"
 }
 
 export interface NexusGenScalars {
@@ -46,10 +46,12 @@ export interface NexusGenObjects {
   Dino: { // root type
     arena: NexusGenEnums['Arena']; // Arena!
     attack: number; // Float!
+    healing: number; // Float!
     hp: number; // Float!
     id: string; // ID!
     level: number; // Int!
     name: string; // String!
+    speed: number; // Float!
     variant: NexusGenEnums['Variant']; // Variant!
   }
   Mutation: {};
@@ -79,10 +81,14 @@ export interface NexusGenFieldTypes {
     arena: NexusGenEnums['Arena']; // Arena!
     attack: number; // Float!
     damage: number; // Float!
+    healing: number; // Float!
     hp: number; // Float!
     id: string; // ID!
     level: number; // Int!
+    maxHp: number; // Float!
     name: string; // String!
+    percentage: number; // Int!
+    speed: number; // Float!
     variant: NexusGenEnums['Variant']; // Variant!
   }
   Mutation: { // field return type
@@ -109,10 +115,14 @@ export interface NexusGenFieldTypeNames {
     arena: 'Arena'
     attack: 'Float'
     damage: 'Float'
+    healing: 'Float'
     hp: 'Float'
     id: 'ID'
     level: 'Int'
+    maxHp: 'Float'
     name: 'String'
+    percentage: 'Int'
+    speed: 'Float'
     variant: 'Variant'
   }
   Mutation: { // field return type name
