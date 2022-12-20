@@ -9,7 +9,7 @@ import { Field, ID, InputType, InterfaceType } from "type-graphql";
 
 @InterfaceType()
 export abstract class Identifiable {
-  @Field(() => ID)
+  @Field(() => ID, { description: "A unique ID for this entity" })
   readonly id: string;
 
   constructor(id: string) {
@@ -19,6 +19,6 @@ export abstract class Identifiable {
 
 @InputType()
 export class SearchById {
-  @Field(() => ID)
+  @Field(() => ID, { description: "A unique ID for this entity" })
   readonly id!: string;
 }

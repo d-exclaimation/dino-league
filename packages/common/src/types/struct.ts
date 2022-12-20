@@ -8,7 +8,7 @@
 /**
  * Infer the properties of a class of objects
  */
-type InferProps<T extends Record<string, any>> = Omit<
+export type PropsOf<T extends Record<string, any>> = Omit<
   T,
   {
     [Key in keyof T]: T[Key] extends (...args: any[]) => any ? Key : never;
@@ -22,7 +22,7 @@ type InferProps<T extends Record<string, any>> = Omit<
  */
 export const struct = <T extends new (...args: any[]) => any>(cl: T) =>
   class extends cl {
-    static new(props: InferProps<InstanceType<T>>): InstanceType<T> {
+    static new(props: PropsOf<InstanceType<T>>): InstanceType<T> {
       return Object.assign(new this(), props);
     }
   };
@@ -34,7 +34,7 @@ export const struct = <T extends new (...args: any[]) => any>(cl: T) =>
  */
 export function create<T extends new (...args: any[]) => any>(
   cl: T,
-  props: InferProps<InstanceType<T>>
+  props: PropsOf<InstanceType<T>>
 ): InstanceType<T> {
   return Object.assign(new cl(), props);
 }

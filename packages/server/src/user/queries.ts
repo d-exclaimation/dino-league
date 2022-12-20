@@ -11,10 +11,6 @@ import { User } from "./graphql";
 
 @Resolver(User)
 export class UserQueries {
-  /**
-   * Get the current authenticated user
-   * @returns User or null if not authenticated
-   */
   @Query(() => User, {
     nullable: true,
     description: "Get the current authenticated user",
