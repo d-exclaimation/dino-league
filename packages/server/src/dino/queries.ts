@@ -7,7 +7,7 @@
 
 import { Arg, Ctx, Query, Resolver } from "type-graphql";
 import { Context } from "../context";
-import { SearchById } from "../identifiable/graphql";
+import { SearchByID } from "../identifiable/graphql";
 import { Dino, DinoFilter } from "./graphql";
 
 @Resolver()
@@ -17,7 +17,7 @@ export class DinoQueries {
     description: "Find a Dino by their ID",
   })
   async dinosaur(
-    @Arg("input") { id }: SearchById,
+    @Arg("input") { id }: SearchByID,
     @Ctx() { prisma }: Context
   ): Promise<Dino | undefined> {
     const res = await prisma.dino.findUnique({ where: { id } });

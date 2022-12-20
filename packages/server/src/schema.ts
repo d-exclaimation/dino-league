@@ -11,4 +11,7 @@ import { DinoQueries } from "./dino/queries";
 import { UserQueries } from "./user/queries";
 
 export const createSchema = async () =>
-  buildSchema({ resolvers: [DinoQueries, DinoMutations, UserQueries] });
+  buildSchema({
+    resolvers: [DinoQueries, DinoMutations, UserQueries],
+    validate: false,
+  });

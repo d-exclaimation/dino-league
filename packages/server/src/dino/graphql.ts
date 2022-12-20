@@ -192,10 +192,6 @@ export class DinoFilter {
     defaultValue: 20,
   })
   take!: number;
-
-  constructor({ ...props }: PropsOf<DinoFilter>) {
-    Object.assign(this, props);
-  }
 }
 
 @InputType({
@@ -218,8 +214,4 @@ export class DinoCreate {
       "The current level of this Dinosaur, which affects its attack and HP",
   })
   level!: number;
-
-  constructor({ ...props }: PropsOf<DinoCreate>) {
-    Object.assign(this, props);
-  }
 }

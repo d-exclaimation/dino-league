@@ -18,7 +18,7 @@ export abstract class Identifiable {
 }
 
 @InputType()
-export class SearchById {
+export class SearchByID {
   @Field(() => ID, { description: "A unique ID for this entity" })
   readonly id!: string;
 }
