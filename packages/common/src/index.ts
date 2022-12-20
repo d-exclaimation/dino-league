@@ -8,4 +8,5 @@
 export * from "@d-exclaimation/union";
 export * from "./array/fill";
 export * from "./random";
+export * from "./types/struct";
 export * from "./types/transform";
