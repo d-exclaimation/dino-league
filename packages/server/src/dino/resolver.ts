@@ -8,54 +8,6 @@
 import { DinoModule } from "@dino/prisma";
 import { arg, extendType, nonNull } from "nexus";
 
-export const DinoQueries = extendType({
-  type: "Query",
-  definition(t) {
-    t.nonNull.list.nonNull.field("dinosaurs", {
-      type: "Dino",
-      description: "Get all dinosaurs",
-      args: {
-        input: nonNull(
-          arg({
-            type: "DinoFilter",
-            description: "The filter to apply",
-          })
-        ),
-      },
-      async resolve(_r, { input: { take, arena, variant } }, { prisma }) {
-        if (!arena && !variant) {
-          return prisma.dino.findMany({ take });
-        }
-        return prisma.dino.findMany({
-          where: {
-            OR: {
-              arena: arena ?? undefined,
-              variant: variant ?? undefined,
-            },
-          },
-          take,
-        });
-      },
-    });
-
-    t.field("dinosaur", {
-      type: "Dino",
-      description: "Find a Dino by their ID",
-      args: {
-        input: nonNull(
-          arg({
-            description: "The ID of a Dino to be found",
-            type: "SearchByID",
-          })
-        ),
-      },
-      async resolve(_r, { input: { id } }, { prisma }) {
-        return prisma.dino.findUnique({ where: { id } });
-      },
-    });
-  },
-});
-
 export const DinoMutations = extendType({
   type: "Mutation",
   definition(t) {

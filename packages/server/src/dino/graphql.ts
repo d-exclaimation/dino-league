@@ -6,7 +6,17 @@
 //
 
 import { PropsOf } from "@dino/common";
-import { Field, Float, Int, ObjectType, registerEnumType } from "type-graphql";
+import type { Dino as _Dino } from "@dino/prisma";
+import {
+  createUnionType,
+  Field,
+  Float,
+  InputType,
+  Int,
+  ObjectType,
+  registerEnumType,
+} from "type-graphql";
+import { Unauthorized } from "../common/graphql";
 import { Identifiable } from "../identifiable/graphql";
 
 @ObjectType({ implements: Identifiable })
@@ -59,6 +69,14 @@ export class Dino extends Identifiable {
     super(id);
     Object.assign(this, rest);
   }
+
+  static new({ variant, arena, ...props }: _Dino) {
+    return new Dino({
+      variant: Variant[variant],
+      arena: Arena[arena],
+      ...props,
+    });
+  }
 }
 
 export enum Variant {
@@ -103,3 +121,54 @@ registerEnumType(Arena, {
   name: "Arena",
   description: "The battlefield environment",
 });
+
+@ObjectType({ description: "New Dino has been created" })
+export class NewDino {
+  @Field(() => Dino, { description: "The new Dino created" })
+  dino: Dino;
+
+  constructor(dino: Dino) {
+    this.dino = dino;
+  }
+}
+
+export type CreateDino = typeof CreateDino;
+export const CreateDino = createUnionType({
+  name: "CreateDino",
+  description: "Create Dino mutation result",
+  types: () => [Unauthorized, NewDino],
+  resolveType(source) {
+    if ("dino" in source) {
+      return "NewDino";
+    }
+    return "Unauthorized";
+  },
+});
+
+@InputType({
+  description: "Filter argument(s) for Dino(s)",
+})
+export class DinoFilter {
+  @Field(() => Variant, {
+    nullable: true,
+    description: "The variant of one or many Dino(s)",
+  })
+  variant?: Variant;
+
+  @Field(() => Arena, {
+    nullable: true,
+
+    description: "The arena of choice of one or many Dino(s)",
+  })
+  arena?: Arena;
+
+  @Field(() => Int, {
+    description: "The limit of result to take",
+    defaultValue: 20,
+  })
+  take!: number;
+
+  constructor({ ...props }: PropsOf<DinoFilter>) {
+    Object.assign(this, props);
+  }
+}
