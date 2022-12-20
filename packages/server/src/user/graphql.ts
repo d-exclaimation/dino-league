@@ -5,8 +5,40 @@
 //  Created by d-exclaimation on 20 Dec 2022
 //
 
-import { ObjectType } from "type-graphql";
+import { Ctx, Field, ObjectType } from "type-graphql";
+import { Context } from "../context";
+import { Dino } from "../dino/graphql";
 import { Identifiable } from "../identifiable/graphql";
 
 @ObjectType({ implements: Identifiable })
-export class User extends Identifiable {}
+export class User extends Identifiable {
+  @Field(() => [Dino], {
+    description: "Get all Dinosaur in this user's party",
+  })
+  async party(@Ctx() { prisma }: Context) {
+    // TODO: Error handling
+    const res = await prisma.party.findMany({
+      where: {
+        userId: this.id,
+      },
+      select: {
+        dino: true,
+      },
+    });
+    return res.map(({ dino }) => dino);
+  }
+
+  @Field(() => [Dino], {
+    description: "Get all Dinosaur in this user's party",
+  })
+  async box(@Ctx() { prisma }: Context) {
+    // TODO: Handle error
+    const res = await prisma.dino.findMany({
+      where: {
+        userId: this.id,
+        party: null,
+      },
+    });
+    return res;
+  }
+}

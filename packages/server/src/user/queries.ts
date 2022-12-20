@@ -9,7 +9,7 @@ import { Ctx, Query, Resolver } from "type-graphql";
 import { Context } from "../context";
 import { User } from "./graphql";
 
-@Resolver(User)
+@Resolver()
 export class UserQueries {
   @Query(() => User, {
     nullable: true,

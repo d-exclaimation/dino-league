@@ -7,7 +7,7 @@
 
 import { randomElement, randomInt } from "@dino/common";
 import { Prisma, PrismaClient, User, Variant } from "@prisma/client";
-import { DinoModule } from "./dino";
+import { DinoLib } from "./dino";
 
 export const createPrisma = <
   T extends Prisma.PrismaClientOptions = Prisma.PrismaClientOptions,
@@ -52,7 +52,7 @@ export class PrismaStorage<
     : false
 > extends PrismaClient<T, U, GlobalReject> {
   async createDino(variant: Variant, { level, name, user }: CreateDinoArgs) {
-    const props = DinoModule.adjusted(DinoModule.variants[variant], level);
+    const props = DinoLib.adjusted(DinoLib.variants[variant], level);
     return this.dino.create({
       data: {
         name: name ?? variant,
@@ -64,7 +64,7 @@ export class PrismaStorage<
   }
 
   async createRandomDino({ level, ...rest }: CreateDinoArgs) {
-    const variant = randomElement(DinoModule.ALL_VARIANTS);
+    const variant = randomElement(DinoLib.ALL_VARIANTS);
     return this.createDino(variant, {
       level: randomInt({ start: Math.ceil(level / 2), end: level }),
       ...rest,

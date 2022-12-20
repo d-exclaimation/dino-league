@@ -5,9 +5,10 @@
 //  Created by d-exclaimation on 20 Dec 2022
 //
 
-import { PropsOf } from "@dino/common";
-import type { Dino as _Dino } from "@dino/prisma";
+import { PropsOf, random } from "@dino/common";
+import { Dino as _Dino, DinoLib } from "@dino/prisma";
 import {
+  Arg,
   createUnionType,
   Field,
   Float,
@@ -76,6 +77,30 @@ export class Dino extends Identifiable {
       arena: Arena[arena],
       ...props,
     });
+  }
+
+  @Field(() => Float, {
+    description: "The damage dealt by this Dinosaur",
+  })
+  damage(@Arg("arena", () => Arena) arena: Arena): number {
+    const boost = arena === this.arena ? 1.5 : 1;
+    const base = this.attack * boost;
+    return random({ start: this.attack, end: base });
+  }
+
+  @Field(() => Float, {
+    description: "The max hp of this Dinosaur",
+  })
+  maxHp(): number {
+    const scale = Math.pow(1.01, this.level - 1);
+    return DinoLib.variants[this.variant].hp * scale;
+  }
+
+  @Field(() => Float, {
+    description: "The hp percentage of this Dinosaur",
+  })
+  percentage(): number {
+    return Math.round((this.hp * 100) / this.maxHp());
   }
 }
 
@@ -169,6 +194,32 @@ export class DinoFilter {
   take!: number;
 
   constructor({ ...props }: PropsOf<DinoFilter>) {
+    Object.assign(this, props);
+  }
+}
+
+@InputType({
+  description: "Filter argument(s) for Dino(s)",
+})
+export class DinoCreate {
+  @Field(() => Variant, {
+    description: "The variant of one or many Dino(s)",
+  })
+  variant!: Variant;
+
+  @Field(() => String, {
+    nullable: true,
+    description: "The name of this Dinosaur",
+  })
+  name?: string;
+
+  @Field(() => Int, {
+    description:
+      "The current level of this Dinosaur, which affects its attack and HP",
+  })
+  level!: number;
+
+  constructor({ ...props }: PropsOf<DinoCreate>) {
     Object.assign(this, props);
   }
 }
