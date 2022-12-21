@@ -5,15 +5,29 @@
 //  Created by d-exclaimation on 20 Dec 2022
 //
 
-/**
- * Infer the properties of a class of objects
- */
-export type PropsOf<T extends Record<string, any>> = Omit<
-  T,
-  {
-    [Key in keyof T]: T[Key] extends (...args: any[]) => any ? Key : never;
-  }[keyof T]
->;
+export namespace Struct {
+  /**
+   * Infer the properties of a class of objects
+   */
+  export type infer<T extends Record<string, any>> = Omit<
+    T,
+    {
+      [Key in keyof T]: T[Key] extends (...args: any[]) => any ? Key : never;
+    }[keyof T]
+  >;
+
+  /**
+   * Create a struct class
+   * @param cl Class espression
+   * @returns The same class with extra features such as constructor from object
+   */
+  export const of = <T extends new (...args: any[]) => any>(cl: T) =>
+    class extends cl {
+      static new(props: Struct.infer<InstanceType<T>>): InstanceType<T> {
+        return Object.assign(new this(), props);
+      }
+    };
+}
 
 /**
  * Create a struct class
@@ -22,7 +36,7 @@ export type PropsOf<T extends Record<string, any>> = Omit<
  */
 export const struct = <T extends new (...args: any[]) => any>(cl: T) =>
   class extends cl {
-    static new(props: PropsOf<InstanceType<T>>): InstanceType<T> {
+    static new(props: Struct.infer<InstanceType<T>>): InstanceType<T> {
       return Object.assign(new this(), props);
     }
   };
@@ -34,7 +48,7 @@ export const struct = <T extends new (...args: any[]) => any>(cl: T) =>
  */
 export function create<T extends new (...args: any[]) => any>(
   cl: T,
-  props: PropsOf<InstanceType<T>>
+  props: Struct.infer<InstanceType<T>>
 ): InstanceType<T> {
   return Object.assign(new cl(), props);
 }

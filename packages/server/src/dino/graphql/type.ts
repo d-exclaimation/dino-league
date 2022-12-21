@@ -5,7 +5,7 @@
 //  Created by d-exclaimation on 21 Dec 2022
 //
 
-import { PropsOf, random } from "@dino/common";
+import { random, Struct } from "@dino/common";
 import { Dino as _Dino, DinoLib } from "@dino/prisma";
 import { Arg, Field, Float, Int, ObjectType } from "type-graphql";
 import { Identifiable } from "../../identifiable/graphql";
@@ -81,7 +81,7 @@ export class Dino extends Identifiable {
     return Math.round((this.hp * 100) / this.maxHp());
   }
 
-  constructor({ id, ...rest }: PropsOf<Dino>) {
+  constructor({ id, ...rest }: Struct.infer<Dino>) {
     super({ id });
     Object.assign(this, rest);
   }
