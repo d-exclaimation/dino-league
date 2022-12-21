@@ -17,6 +17,7 @@ import "reflect-metadata";
 import { __port__ } from "./constant/artifacts";
 import type { Context } from "./context";
 import { createSchema } from "./schema";
+import { User } from "./user/graphql";
 
 async function main() {
   const app = express();
@@ -66,9 +67,13 @@ async function main() {
           where: { id },
         });
 
+        if (!user) {
+          return { prisma };
+        }
+
         return {
           prisma,
-          user: user ?? undefined,
+          user: new User({ ...user }),
         };
       },
     })

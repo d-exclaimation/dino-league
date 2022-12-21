@@ -41,4 +41,17 @@ export class User extends Identifiable {
     });
     return res.map((each) => Dino.from(each));
   }
+
+  @Field(() => Boolean, {
+    description: "True if the user has a full party",
+  })
+  async hasFullParty(@Ctx() { prisma }: Context): Promise<boolean> {
+    const count = await prisma.party.count({
+      where: {
+        userId: this.id,
+      },
+    });
+
+    return count > 6;
+  }
 }

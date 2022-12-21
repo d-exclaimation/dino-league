@@ -22,12 +22,20 @@ export class DinoMutations {
     if (!user) {
       return new Unauthorized({ operation: "createDino" });
     }
-    const dino = await prisma.createDino(variant, {
+    const hasFullParty = await user.hasFullParty({ prisma, user });
+
+    const res = await prisma.createDino(variant, {
       level,
       name: name ?? undefined,
-      user: user,
+      userId: user.id,
     });
-    return new NewDino({ dino: Dino.from(dino) });
+
+    // New dino add to party if available
+    if (!hasFullParty) {
+      await prisma.addToParty({ dinoId: res.id, userId: user.id });
+    }
+
+    return new NewDino({ dino: Dino.from(res) });
   }
 
   @Mutation(() => CreateDino, {
@@ -39,7 +47,7 @@ export class DinoMutations {
     }
     const dino = await prisma.createRandomDino({
       level: 10,
-      user: user,
+      userId: user.id,
     });
     return new NewDino({ dino: Dino.from(dino) });
   }

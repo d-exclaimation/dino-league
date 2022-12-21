@@ -6,7 +6,7 @@
 //
 
 import { randomElement, randomInt } from "@dino/common";
-import { Prisma, PrismaClient, User, Variant } from "@prisma/client";
+import { Dino, Prisma, PrismaClient, User, Variant } from "@prisma/client";
 import { DinoLib } from "./dino";
 
 export const createPrisma = <
@@ -30,7 +30,13 @@ export const createPrisma = <
 type CreateDinoArgs = {
   level: number;
   name?: string;
-  user?: User;
+  userId?: User["id"];
+};
+
+type CreatePartyArgs = {
+  userId: User["id"];
+  dinoId: Dino["id"];
+  order?: number;
 };
 
 /**
@@ -51,13 +57,22 @@ export class PrismaStorage<
     ? T["rejectOnNotFound"]
     : false
 > extends PrismaClient<T, U, GlobalReject> {
-  async createDino(variant: Variant, { level, name, user }: CreateDinoArgs) {
+  async addToParty({ dinoId, userId }: CreatePartyArgs) {
+    return this.party.create({
+      data: {
+        dinoId,
+        userId,
+      },
+    });
+  }
+
+  async createDino(variant: Variant, { level, name, userId }: CreateDinoArgs) {
     const props = DinoLib.adjusted(DinoLib.variants[variant], level);
     return this.dino.create({
       data: {
         name: name ?? variant,
         level,
-        userId: user?.id,
+        userId,
         ...props,
       },
     });
