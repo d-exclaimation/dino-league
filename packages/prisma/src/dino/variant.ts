@@ -97,11 +97,6 @@ export function adjusted(
   };
 }
 
-export function maxHp(variant: Variant, level: number) {
-  const scale = Math.pow(1.01, level - 1);
-  return variants[variant].hp * scale;
-}
-
 export const ALL_VARIANTS: Variant[] = [
   "black",
   "blue",

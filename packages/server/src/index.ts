@@ -13,14 +13,16 @@ import { json } from "body-parser";
 import cors from "cors";
 import express from "express";
 import { createServer } from "http";
+import "reflect-metadata";
 import { __port__ } from "./constant/artifacts";
 import type { Context } from "./context";
-import { schema } from "./schema";
+import { createSchema } from "./schema";
 
 async function main() {
   const app = express();
   const http = createServer(app);
   const prisma = createPrisma();
+  const schema = await createSchema();
 
   const server = new ApolloServer<Context>({
     schema,
