@@ -122,6 +122,9 @@ type User implements Identifiable {
 
   """Get all Dinosaur in this user's party"""
   box: [Dino!]!
+
+  """True if the user has a full party"""
+  hasFullParty: Boolean!
 }
 
 type Mutation {

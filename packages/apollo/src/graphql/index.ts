@@ -48,7 +48,9 @@ export type Dino = Identifiable & {
   /** The name of this Dinosaur */
   name: Scalars['String'];
   /** The hp percentage of this Dinosaur */
-  percentage: Scalars['Int'];
+  percentage: Scalars['Float'];
+  /** The price of this dinosaur */
+  price: Scalars['Float'];
   /** The speed for this class of Dinosaur */
   speed: Scalars['Float'];
   /** The variance for this Dinosaur */
@@ -60,13 +62,13 @@ export type DinoDamageArgs = {
   arena: Arena;
 };
 
-/** Creation argument(s) for Dino(s) */
+/** Filter argument(s) for Dino(s) */
 export type DinoCreate = {
-  /** The level of the Dino */
+  /** The current level of this Dinosaur, which affects its attack and HP */
   level?: Scalars['Int'];
-  /** The optional nickname of the Dino */
+  /** The name of this Dinosaur */
   name?: InputMaybe<Scalars['String']>;
-  /** The variant of the Dino */
+  /** The variant of one or many Dino(s) */
   variant: Variant;
 };
 
@@ -111,6 +113,7 @@ export type Query = {
   dinosaur?: Maybe<Dino>;
   /** Get all dinosaurs */
   dinosaurs: Array<Dino>;
+  /** Get the current authenticated user */
   me?: Maybe<User>;
 };
 
@@ -124,9 +127,8 @@ export type QueryDinosaursArgs = {
   input: DinoFilter;
 };
 
-/** Search an Identifiable by the ID */
 export type SearchById = {
-  /** The ID to be search against */
+  /** A unique ID for this entity */
   id: Scalars['ID'];
 };
 
@@ -141,6 +143,8 @@ export type User = Identifiable & {
   __typename: 'User';
   /** Get all Dinosaur in this user's party */
   box: Array<Dino>;
+  /** True if the user has a full party */
+  hasFullParty: Scalars['Boolean'];
   /** A unique ID for this entity */
   id: Scalars['ID'];
   /** Get all Dinosaur in this user's party */

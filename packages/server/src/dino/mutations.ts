@@ -51,4 +51,8 @@ export class DinoMutations {
     });
     return new NewDino({ dino: Dino.from(dino) });
   }
+
+  async switchDino() {
+    // TODO: Implement, remember use reorganise party from user
+  }
 }

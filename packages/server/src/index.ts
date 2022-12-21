@@ -67,13 +67,9 @@ async function main() {
           where: { id },
         });
 
-        if (!user) {
-          return { prisma };
-        }
-
         return {
           prisma,
-          user: new User({ ...user }),
+          user: user ? new User({ ...user }) : undefined,
         };
       },
     })

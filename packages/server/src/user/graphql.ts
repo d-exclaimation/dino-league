@@ -5,6 +5,7 @@
 //  Created by d-exclaimation on 20 Dec 2022
 //
 
+import { PrismaStorage } from "@dino/prisma";
 import { Ctx, Field, ObjectType } from "type-graphql";
 import { Context } from "../context";
 import { Dino } from "../dino/graphql";
@@ -53,5 +54,25 @@ export class User extends Identifiable {
     });
 
     return count > 6;
+  }
+
+  private async reoganiseParty(prisma: PrismaStorage) {
+    const res = await prisma.party.findMany({
+      where: { userId: this.id },
+      orderBy: { order: "asc" },
+      select: { dinoId: true },
+    });
+    const ids = res.map(({ dinoId }) => dinoId);
+
+    // Make sure order doesn't skip a number
+    await prisma.party.deleteMany({
+      where: {
+        userId: this.id,
+        dinoId: { in: ids },
+      },
+    });
+    await prisma.party.createMany({
+      data: ids.map((dinoId, order) => ({ userId: this.id, dinoId, order })),
+    });
   }
 }
