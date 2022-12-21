@@ -48,6 +48,7 @@ export class DinoCreate {
   name?: string;
 
   @Field(() => Int, {
+    defaultValue: 1,
     description:
       "The current level of this Dinosaur, which affects its attack and HP",
   })

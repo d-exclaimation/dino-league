@@ -9,7 +9,7 @@ A online  dinosaur game with adventures and online battles
 
 ## API Reference
 
-API Reference can be done through GraphQL Introspection or check the [schema](./packages/server/src/nexus/schema.graphql) in GraphQL SDL
+API Reference can be done through GraphQL Introspection or check the [schema](./packages/server/src/schema.graphql) in GraphQL SDL
 
 ## Authors
 
