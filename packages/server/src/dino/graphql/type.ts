@@ -86,7 +86,7 @@ export class Dino extends Identifiable {
     Object.assign(this, rest);
   }
 
-  static new({ variant, arena, ...props }: _Dino) {
+  static from({ variant, arena, ...props }: _Dino) {
     return new Dino({
       variant: Variant[variant],
       arena: Arena[arena],

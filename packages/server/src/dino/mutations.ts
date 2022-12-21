@@ -27,7 +27,7 @@ export class DinoMutations {
       name: name ?? undefined,
       user: user,
     });
-    return new NewDino({ dino: Dino.new(dino) });
+    return new NewDino({ dino: Dino.from(dino) });
   }
 
   @Mutation(() => CreateDino, {
@@ -41,6 +41,6 @@ export class DinoMutations {
       level: 10,
       user: user,
     });
-    return new NewDino({ dino: Dino.new(dino) });
+    return new NewDino({ dino: Dino.from(dino) });
   }
 }

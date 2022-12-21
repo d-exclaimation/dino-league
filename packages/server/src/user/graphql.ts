@@ -15,7 +15,7 @@ export class User extends Identifiable {
   @Field(() => [Dino], {
     description: "Get all Dinosaur in this user's party",
   })
-  async party(@Ctx() { prisma }: Context) {
+  async party(@Ctx() { prisma }: Context): Promise<Dino[]> {
     // TODO: Error handling
     const res = await prisma.party.findMany({
       where: {
@@ -25,13 +25,13 @@ export class User extends Identifiable {
         dino: true,
       },
     });
-    return res.map(({ dino }) => dino);
+    return res.map(({ dino }) => Dino.from(dino));
   }
 
   @Field(() => [Dino], {
     description: "Get all Dinosaur in this user's party",
   })
-  async box(@Ctx() { prisma }: Context) {
+  async box(@Ctx() { prisma }: Context): Promise<Dino[]> {
     // TODO: Handle error
     const res = await prisma.dino.findMany({
       where: {
@@ -39,6 +39,6 @@ export class User extends Identifiable {
         party: null,
       },
     });
-    return res;
+    return res.map((each) => Dino.from(each));
   }
 }

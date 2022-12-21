@@ -24,7 +24,7 @@ export class DinoQueries {
     if (!res) {
       return undefined;
     }
-    return Dino.new(res);
+    return Dino.from(res);
   }
 
   @Query(() => [Dino], {
@@ -36,7 +36,7 @@ export class DinoQueries {
   ): Promise<Dino[]> {
     if (!arena && !variant) {
       return (await prisma.dino.findMany({ take })).map((each) =>
-        Dino.new(each)
+        Dino.from(each)
       );
     }
     const res = await prisma.dino.findMany({
@@ -48,6 +48,6 @@ export class DinoQueries {
       },
       take,
     });
-    return res.map((each) => Dino.new(each));
+    return res.map((each) => Dino.from(each));
   }
 }
