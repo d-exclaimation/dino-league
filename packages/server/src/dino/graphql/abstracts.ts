@@ -5,6 +5,7 @@
 //  Created by d-exclaimation on 21 Dec 2022
 //
 
+import { PropsOf } from "@dino/common";
 import { createUnionType, Field, ObjectType } from "type-graphql";
 import { Unauthorized } from "../../common/graphql";
 import { Dino } from "./type";
@@ -14,7 +15,7 @@ export class NewDino {
   @Field(() => Dino, { description: "The new Dino created" })
   dino: Dino;
 
-  constructor(dino: Dino) {
+  constructor({ dino }: PropsOf<NewDino>) {
     this.dino = dino;
   }
 }

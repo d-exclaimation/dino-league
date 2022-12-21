@@ -5,6 +5,7 @@
 //  Created by d-exclaimation on 20 Dec 2022
 //
 
+import { PropsOf } from "@dino/common";
 import { Field, ObjectType } from "type-graphql";
 
 @ObjectType({
@@ -16,7 +17,7 @@ export class Unauthorized {
   })
   operation!: string;
 
-  constructor(operation: string) {
+  constructor({ operation }: PropsOf<Unauthorized>) {
     this.operation = operation;
   }
 }

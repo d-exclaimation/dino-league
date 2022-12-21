@@ -82,7 +82,7 @@ export class Dino extends Identifiable {
   }
 
   constructor({ id, ...rest }: PropsOf<Dino>) {
-    super(id);
+    super({ id });
     Object.assign(this, rest);
   }
 

@@ -20,14 +20,14 @@ export class DinoMutations {
     @Ctx() { prisma, user }: Context
   ) {
     if (!user) {
-      return new Unauthorized("createDino");
+      return new Unauthorized({ operation: "createDino" });
     }
     const dino = await prisma.createDino(variant, {
       level,
       name: name ?? undefined,
       user: user,
     });
-    return new NewDino(Dino.new(dino));
+    return new NewDino({ dino: Dino.new(dino) });
   }
 
   @Mutation(() => CreateDino, {
@@ -35,12 +35,12 @@ export class DinoMutations {
   })
   async createRandomDino(@Ctx() { prisma, user }: Context) {
     if (!user) {
-      return new Unauthorized("createDino");
+      return new Unauthorized({ operation: "createDino" });
     }
     const dino = await prisma.createRandomDino({
       level: 10,
       user: user,
     });
-    return new NewDino(Dino.new(dino));
+    return new NewDino({ dino: Dino.new(dino) });
   }
 }
