@@ -6,10 +6,18 @@
 
 A online  dinosaur game with adventures and online battles 
 
+## Overview
+
+All things about `dino-league` is on [Notion](https://dexclaimation.notion.site/Dino-League-40648761313f4b589eec7e44fc6efc29) which includes:
+- Idea tracking
+- Game balancing
+- Game overview
+- Engineering overview
+
 
 ## API Reference
 
-API Reference can be done through GraphQL Introspection or check the [schema](./packages/server/src/schema.graphql) in GraphQL SDL
+API Reference can be done through GraphQL Introspection or check the [schema](./packages/server/src/schema.gql) in GraphQL SDL
 
 ## Authors
 
