@@ -16,6 +16,8 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import "./index.css";
 
+window?.localStorage?.setItem("token", "clbsjknn400007tafsdic8alh");
+
 const client = new ApolloClient({
   link: createHttpWithAuthLink({
     uri: "http://localhost:4000/graphql",

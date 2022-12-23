@@ -5,21 +5,21 @@
 //  Created by d-exclaimation on 18 Dec 2022
 //
 
-import { Dino, usePlaceholderPartyQuery } from "@dino/apollo";
+import { Dino, QuickDinoInfoFragment } from "@dino/apollo";
 import { FC, Fragment } from "react";
 import MinoDinoView from "./MinoDinoView";
 
 type Props = {
+  data: QuickDinoInfoFragment[] | undefined;
   shownId?: Dino["id"] | null;
 };
 
-const BoxView: FC<Props> = ({ shownId }) => {
-  const { data } = usePlaceholderPartyQuery();
+const BoxView: FC<Props> = ({ data, shownId }) => {
   return (
     <div className="py-2">
       <span className="mx-4 text-xl font-semibold">Box</span>
       <div className="flex flex-row w-full overflow-scroll p-2">
-        {(data?.dinosaurs ?? []).map((props) => (
+        {(data ?? []).map((props) => (
           <Fragment key={props.id}>
             <MinoDinoView
               bg="bg-white"

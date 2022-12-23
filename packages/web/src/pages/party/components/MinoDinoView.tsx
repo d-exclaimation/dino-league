@@ -17,7 +17,7 @@ import { Float } from "@headlessui-float/react";
 import { Menu } from "@headlessui/react";
 import { FC } from "react";
 import { Link } from "react-router-dom";
-import type { Color } from "../../common/Styling";
+import type { Color } from "../../../common/Styling";
 
 type Props = {
   bg: Color.Bg;

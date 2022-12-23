@@ -5,26 +5,28 @@
 //  Created by d-exclaimation on 03 Dec 2022
 //
 
-import { useDinosaurQuery } from "@dino/apollo";
+import { usePartyViewQuery } from "@dino/apollo";
 import { FC, useMemo } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import BoxView from "./BoxView";
-import DinoStat from "./DinoStat";
-import PartyView from "./PartyView";
+import BoxView from "./components/BoxView";
+import DinoStat from "./components/DinoStat";
+import PartyView from "./components/PartyView";
 
-const DinoView: FC = () => {
+const PartyPage: FC = () => {
   const nav = useNavigate();
   const [searchParam] = useSearchParams();
   const id = useMemo(() => searchParam.get("id"), [searchParam]);
-  const { data, error } = useDinosaurQuery({
+  const { data, error } = usePartyViewQuery({
     variables: {
-      input: {
+      dino: {
         id: id ?? "claxchxpc00017trcssa6v46b",
       },
     },
   });
 
   const dino = useMemo(() => data?.dinosaur, [data]);
+  const party = useMemo(() => data?.me?.party, [data]);
+  const box = useMemo(() => data?.me?.box, [data]);
 
   const health = useMemo(() => {
     if (!dino) return undefined;
@@ -99,12 +101,12 @@ const DinoView: FC = () => {
           </button>
         </div>
         <div className="w-full h-max pb-2 bg-gray-100">
-          <PartyView shownId={id} />
-          <BoxView />
+          <PartyView data={party} shownId={id} />
+          <BoxView data={box} shownId={id} />
         </div>
       </div>
     </div>
   );
 };
 
-export default DinoView;
+export default PartyPage;

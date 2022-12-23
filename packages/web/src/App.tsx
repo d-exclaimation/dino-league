@@ -6,7 +6,7 @@
 //
 import { FC } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import PartyPage from "./components/party";
+import PartyPage from "./pages/party";
 
 const router = createBrowserRouter([
   {
