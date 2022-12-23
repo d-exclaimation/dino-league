@@ -20,11 +20,13 @@ export const createAuthLink = (token: () => string | null) =>
       return { headers };
     }
     if (!headers) {
-      return { authorization: `Bearer ${authToken}` };
+      return { headers: { authorization: `Bearer ${authToken}` } };
     }
     return {
-      ...headers,
-      authorization: `Bearer ${authToken}`,
+      headers: {
+        ...headers,
+        authorization: `Bearer ${authToken}`,
+      },
     };
   });
 
