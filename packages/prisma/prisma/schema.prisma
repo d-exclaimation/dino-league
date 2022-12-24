@@ -44,7 +44,7 @@ model Party {
   dinoId    String  @unique
   user      User    @relation(fields: [userId], references: [id])
   dino      Dino    @relation(fields: [dinoId], references: [id])
-  order     Int     @unique @default(0)
+  order     Int     @default(0)
 
   @@id([userId, dinoId])
 }

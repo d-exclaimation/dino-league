@@ -1,0 +1,3 @@
+mutation SwitchDino($input: DinoSwitch!) {
+  switchDino(input: $input)
+}
