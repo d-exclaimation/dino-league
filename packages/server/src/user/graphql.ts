@@ -25,6 +25,9 @@ export class User extends Identifiable {
       select: {
         dino: true,
       },
+      orderBy: {
+        order: "asc",
+      },
     });
     return res.map(({ dino }) => Dino.from(dino));
   }
@@ -38,6 +41,9 @@ export class User extends Identifiable {
       where: {
         userId: this.id,
         party: null,
+      },
+      orderBy: {
+        level: "asc",
       },
     });
     return res.map((each) => Dino.from(each));
@@ -56,7 +62,7 @@ export class User extends Identifiable {
     return count > 6;
   }
 
-  private async reoganiseParty(prisma: PrismaStorage) {
+  async reoganiseParty(prisma: PrismaStorage) {
     const res = await prisma.party.findMany({
       where: { userId: this.id },
       orderBy: { order: "asc" },

@@ -82,6 +82,14 @@ export type DinoFilter = {
   variant?: InputMaybe<Variant>;
 };
 
+/** Input to switch 2 dinosaur */
+export type DinoSwitch = {
+  /** One of the dino's id to be switched */
+  lhs: Scalars['ID'];
+  /** One of the dino's id to be switched */
+  rhs: Scalars['ID'];
+};
+
 export type Identifiable = {
   /** A unique ID for this entity */
   id: Scalars['ID'];
@@ -93,11 +101,18 @@ export type Mutation = {
   createDino: CreateDino;
   /** Create a randomly generated Dino */
   createRandomDino: CreateDino;
+  /** Switch 2 dino around */
+  switchDino: Scalars['Boolean'];
 };
 
 
 export type MutationCreateDinoArgs = {
   input: DinoCreate;
+};
+
+
+export type MutationSwitchDinoArgs = {
+  input: DinoSwitch;
 };
 
 /** New Dino has been created */
@@ -175,6 +190,13 @@ export type FullDinoInfoFragment = { __typename: 'Dino', level: number, attack: 
 
 export type QuickDinoInfoFragment = { __typename: 'Dino', id: string, name: string, hp: number, percentage: number, variant: Variant };
 
+export type SwitchDinoMutationVariables = Exact<{
+  input: DinoSwitch;
+}>;
+
+
+export type SwitchDinoMutation = { __typename: 'Mutation', switchDino: boolean };
+
 export type DinosaurQueryVariables = Exact<{
   input: SearchById;
 }>;
@@ -213,6 +235,37 @@ export const FullDinoInfoFragmentDoc = gql`
   arena
 }
     ${QuickDinoInfoFragmentDoc}`;
+export const SwitchDinoDocument = gql`
+    mutation SwitchDino($input: DinoSwitch!) {
+  switchDino(input: $input)
+}
+    `;
+export type SwitchDinoMutationFn = Apollo.MutationFunction<SwitchDinoMutation, SwitchDinoMutationVariables>;
+
+/**
+ * __useSwitchDinoMutation__
+ *
+ * To run a mutation, you first call `useSwitchDinoMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSwitchDinoMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [switchDinoMutation, { data, loading, error }] = useSwitchDinoMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useSwitchDinoMutation(baseOptions?: Apollo.MutationHookOptions<SwitchDinoMutation, SwitchDinoMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SwitchDinoMutation, SwitchDinoMutationVariables>(SwitchDinoDocument, options);
+      }
+export type SwitchDinoMutationHookResult = ReturnType<typeof useSwitchDinoMutation>;
+export type SwitchDinoMutationResult = Apollo.MutationResult<SwitchDinoMutation>;
+export type SwitchDinoMutationOptions = Apollo.BaseMutationOptions<SwitchDinoMutation, SwitchDinoMutationVariables>;
 export const DinosaurDocument = gql`
     query Dinosaur($input: SearchByID!) {
   dinosaur(input: $input) {

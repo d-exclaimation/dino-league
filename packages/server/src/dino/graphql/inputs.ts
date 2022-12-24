@@ -5,7 +5,8 @@
 //  Created by d-exclaimation on 21 Dec 2022
 //
 
-import { Field, InputType, Int } from "type-graphql";
+import { Dino } from "@dino/prisma";
+import { Field, ID, InputType, Int } from "type-graphql";
 import { Arena, Variant } from "./others";
 
 @InputType({
@@ -53,4 +54,19 @@ export class DinoCreate {
       "The current level of this Dinosaur, which affects its attack and HP",
   })
   level!: number;
+}
+
+@InputType({
+  description: "Input to switch 2 dinosaur",
+})
+export class DinoSwitch {
+  @Field(() => ID, {
+    description: "One of the dino's id to be switched",
+  })
+  lhs!: Dino["id"];
+
+  @Field(() => ID, {
+    description: "One of the dino's id to be switched",
+  })
+  rhs!: Dino["id"];
 }

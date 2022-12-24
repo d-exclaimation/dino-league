@@ -133,6 +133,9 @@ type Mutation {
 
   """Create a randomly generated Dino"""
   createRandomDino: CreateDino!
+
+  """Switch 2 dino around"""
+  switchDino(input: DinoSwitch!): Boolean!
 }
 
 """Create Dino mutation result"""
@@ -160,4 +163,13 @@ input DinoCreate {
 
   """The current level of this Dinosaur, which affects its attack and HP"""
   level: Int! = 1
+}
+
+"""Input to switch 2 dinosaur"""
+input DinoSwitch {
+  """One of the dino's id to be switched"""
+  lhs: ID!
+
+  """One of the dino's id to be switched"""
+  rhs: ID!
 }

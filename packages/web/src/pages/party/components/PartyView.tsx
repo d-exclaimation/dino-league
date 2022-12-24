@@ -5,8 +5,12 @@
 //  Created by d-exclaimation on 18 Dec 2022
 //
 
-import { Dino, QuickDinoInfoFragment } from "@dino/apollo";
-import { FC, Fragment } from "react";
+import {
+  Dino,
+  QuickDinoInfoFragment,
+  useSwitchDinoMutation,
+} from "@dino/apollo";
+import { FC, Fragment, useCallback } from "react";
 import MinoDinoView from "./MinoDinoView";
 
 type Props = {
@@ -15,6 +19,17 @@ type Props = {
 };
 
 const PartyView: FC<Props> = ({ data, shownId }) => {
+  const [mutate] = useSwitchDinoMutation();
+  const onSwitch = useCallback(
+    (id: Dino["id"]) => {
+      if (!shownId) return;
+      mutate({
+        variables: { input: { lhs: shownId, rhs: id } },
+        refetchQueries: ["PartyView"],
+      });
+    },
+    [mutate, shownId]
+  );
   return (
     <div className="py-2">
       <span className="mx-4 text-xl font-semibold">Party</span>
@@ -28,9 +43,7 @@ const PartyView: FC<Props> = ({ data, shownId }) => {
                 Swap: {
                   bg: "bg-teal-400",
                   text: "text-teal-600",
-                  action(id) {
-                    console.info(`Swapping ${id} with ${shownId}`);
-                  },
+                  action: onSwitch,
                 },
                 Box: {
                   bg: "bg-indigo-400",

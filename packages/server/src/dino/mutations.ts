@@ -8,7 +8,7 @@
 import { Arg, Ctx, Mutation, Resolver } from "type-graphql";
 import { Unauthorized } from "../common/graphql";
 import { Context } from "../context";
-import { CreateDino, Dino, DinoCreate, NewDino } from "./graphql";
+import { CreateDino, Dino, DinoCreate, DinoSwitch, NewDino } from "./graphql";
 
 @Resolver()
 export class DinoMutations {
@@ -52,7 +52,76 @@ export class DinoMutations {
     return new NewDino({ dino: Dino.from(dino) });
   }
 
-  async switchDino() {
-    // TODO: Implement, remember use reorganise party from user
+  @Mutation(() => Boolean, {
+    description: "Switch 2 dino around",
+  })
+  async switchDino(
+    @Arg("input") { lhs, rhs }: DinoSwitch,
+    @Ctx() { prisma, user }: Context
+  ): Promise<Boolean> {
+    if (!user) {
+      return false;
+    }
+    const res = await prisma.dino.findMany({
+      where: {
+        id: {
+          in: [lhs, rhs],
+        },
+        userId: user.id,
+      },
+      include: {
+        party: true,
+      },
+    });
+
+    if (res.length < 2) {
+      return false;
+    }
+
+    const [left, right] = res;
+
+    // Within party
+    if (!!left.party && !!right.party) {
+      await prisma.$transaction([
+        prisma.party.update({
+          where: { dinoId: left.id },
+          data: { order: right.party.order },
+        }),
+        prisma.party.update({
+          where: { dinoId: right.id },
+          data: { order: left.party.order },
+        }),
+      ]);
+
+      return true;
+    }
+    // Out party
+    if (!!left.party) {
+      await prisma.party.update({
+        where: {
+          dinoId: left.id,
+        },
+        data: {
+          dinoId: right.id,
+        },
+      });
+
+      return true;
+    }
+
+    // In party
+    if (!!right.party) {
+      await prisma.party.update({
+        where: {
+          dinoId: right.id,
+        },
+        data: {
+          dinoId: left.id,
+        },
+      });
+      return true;
+    }
+
+    return false;
   }
 }
