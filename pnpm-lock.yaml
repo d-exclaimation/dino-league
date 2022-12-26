@@ -37,12 +37,14 @@ importers:
     specifiers:
       '@d-exclaimation/union': ^0.2.0
       '@dino/tsconfig': '*'
+      typescript: ^4.9.4
       ulid: ^2.3.0
     dependencies:
       '@d-exclaimation/union': 0.2.0
       ulid: 2.3.0
     devDependencies:
       '@dino/tsconfig': link:../tsconfig
+      typescript: 4.9.4
 
   packages/prisma:
     specifiers:
@@ -55,6 +57,7 @@ importers:
       graphql: ^16.6.0
       prisma: ^4.6.1
       rimraf: ^3.0.2
+      typescript: ^4.9.4
       uuid: ^9.0.0
     dependencies:
       '@apollo/server': 4.1.1_graphql@16.6.0
@@ -68,6 +71,7 @@ importers:
       '@types/uuid': 8.3.4
       prisma: 4.6.1
       rimraf: 3.0.2
+      typescript: 4.9.4
 
   packages/server:
     specifiers:
@@ -5235,6 +5239,12 @@ packages:
 
   /typescript/4.9.3:
     resolution: {integrity: sha512-CIfGzTelbKNEnLpLdGFgdyKhG23CKdKgQPOBc+OUNrkJ2vr+KSzsSV5kq5iWhEQbok+quxgGzrAtGWCyU7tHnA==}
+    engines: {node: '>=4.2.0'}
+    hasBin: true
+    dev: true
+
+  /typescript/4.9.4:
+    resolution: {integrity: sha512-Uz+dTXYzxXXbsFpM86Wh3dKCxrQqUcVMxwU54orwlJjOpO3ao8L7j5lH+dWfTwgCwIuM9GQ2kvVotzYJMXTBZg==}
     engines: {node: '>=4.2.0'}
     hasBin: true
     dev: true

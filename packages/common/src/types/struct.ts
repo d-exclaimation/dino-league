@@ -15,18 +15,6 @@ export namespace Struct {
       [Key in keyof T]: T[Key] extends (...args: any[]) => any ? Key : never;
     }[keyof T]
   >;
-
-  /**
-   * Create a struct class
-   * @param cl Class espression
-   * @returns The same class with extra features such as constructor from object
-   */
-  export const of = <T extends new (...args: any[]) => any>(cl: T) =>
-    class extends cl {
-      static new(props: Struct.infer<InstanceType<T>>): InstanceType<T> {
-        return Object.assign(new this(), props);
-      }
-    };
 }
 
 /**

@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "clean": "rimraf dist",
-    "build": "rimraf dist; tsc",
+    "build": "tsc",
     "start": "node .",
     "dev": "ts-node-dev --transpile-only --no-notify src/index.ts"
   },
