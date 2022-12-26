@@ -10,6 +10,7 @@
     "schema": "packages/prisma/prisma/schema.prisma"
   },
   "scripts": {
+    "setup": "chmod +x ./scripts/setup.sh; ./scripts/setup.sh",
     "build": "turbo run build",
     "dev": "FORCE_COLOR=1 turbo run dev --parallel",
     "clean": "FORCE_COLOR=1 turbo run clean",
