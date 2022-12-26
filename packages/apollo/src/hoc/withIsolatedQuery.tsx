@@ -5,7 +5,7 @@
 //  Created by d-exclaimation on 23 Dec 2022
 //
 
-import type { ApolloError, QueryResult } from "@apollo/client";
+import type { ApolloError } from "@apollo/client";
 import type { FC } from "react";
 
 /**
@@ -14,20 +14,25 @@ import type { FC } from "react";
  * @param loader Hook to load the data using ApolloClient
  * @param fallbacks Fallback components (loading and error)
  */
-type Config<
-  TData,
-  TVariables,
-  OtherProps extends Record<string | number | symbol, any>
-> = {
-  loader: (props: OtherProps) => QueryResult<TData, TVariables>;
+type Config<TData, OtherProps extends object> = {
+  loader: (props: OtherProps) => {
+    data: TData | undefined;
+    loading: boolean;
+    error?: ApolloError;
+  };
   fallbacks?: {
     loading?: FC<OtherProps>;
-    error?: FC<OtherProps & { error?: ApolloError }>;
+    error?: FC<
+      OtherProps & {
+        data: TData | undefined;
+        error: ApolloError;
+      }
+    >;
   };
 };
 
 /**
- * Create a component that can fetch its own data and not reliance of props
+ * Create a component that can fetch its own data from a component that rely on props for data fetching
  * @param Component Component that is not data / query isolated
  * @param param1.loader Hook to load the data using ApolloClient
  * @param param1.fallbacks Fallback components (loading and error)
@@ -35,24 +40,30 @@ type Config<
  */
 export function withIsolatedQuery<
   TData,
-  TVariables,
-  OtherProps extends Record<string | number | symbol, any>
+  Props extends { data: TData | undefined }
 >(
-  Component: FC<OtherProps & { data: TData | undefined }>,
-  { loader: useLoader, fallbacks }: Config<TData, TVariables, OtherProps>
-): FC<OtherProps> {
-  const { loading: Loading, error: Error } = fallbacks ?? {};
-  return (props: OtherProps) => {
+  Component: FC<Props>,
+  { loader: useLoader, fallbacks }: Config<TData, Omit<Props, "data">>
+): FC<Omit<Props, "data">> {
+  const { loading: LoadingComponent, error: ErrorComponent } = fallbacks ?? {};
+  return (props) => {
     const { data, loading, error } = useLoader(props);
 
-    if (loading && Loading) {
-      return <Loading {...props} />;
+    if (loading && LoadingComponent) {
+      return <LoadingComponent {...props} />;
     }
 
-    if (error && Error) {
-      return <Error error={error} {...props} />;
+    if (error && ErrorComponent) {
+      return <ErrorComponent error={error} data={data} {...props} />;
     }
 
-    return <Component data={data} {...props} />;
+    return (
+      <Component
+        {...({
+          ...props,
+          data,
+        } as Props)}
+      />
+    );
   };
 }
