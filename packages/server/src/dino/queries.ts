@@ -18,13 +18,15 @@ export class DinoQueries {
   })
   async dinosaur(
     @Arg("input") { id }: SearchByID,
-    @Ctx() { prisma }: Context
+    @Ctx() { prisma, logger }: Context
   ): Promise<Dino | undefined> {
-    const res = await prisma.dino.findUnique({ where: { id } });
-    if (!res) {
-      return undefined;
-    }
-    return Dino.from(res);
+    return logger.trace({ scope: "dinosaur" }, async () => {
+      const res = await prisma.dino.findUnique({ where: { id } });
+      if (!res) {
+        return undefined;
+      }
+      return Dino.from(res);
+    });
   }
 
   @Query(() => [Dino], {
@@ -32,15 +34,22 @@ export class DinoQueries {
   })
   async dinosaurs(
     @Arg("input") { take, arena, variant }: DinoFilter,
-    @Ctx() { prisma }: Context
+    @Ctx() { prisma, user, logger }: Context
   ): Promise<Dino[]> {
+    if (!user) {
+      logger.scope("dinosaurs").warn("A findMany is requested by a non user");
+      return [];
+    }
     if (!arena && !variant) {
-      return (await prisma.dino.findMany({ take })).map((each) =>
-        Dino.from(each)
-      );
+      const res = await prisma.dino.findMany({
+        where: { userId: user.id },
+        take,
+      });
+      return res.map((each) => Dino.from(each));
     }
     const res = await prisma.dino.findMany({
       where: {
+        userId: user.id,
         OR: {
           arena: arena ?? undefined,
           variant: variant ?? undefined,

@@ -7,7 +7,7 @@
 
 import { Struct } from "@dino/common";
 import { createUnionType, Field, ObjectType } from "type-graphql";
-import { Unauthorized } from "../../common/graphql";
+import { InputConstraint, Unauthorized } from "../../common/graphql";
 import { Dino } from "./type";
 
 @ObjectType({ description: "New Dino has been created" })
@@ -24,10 +24,13 @@ export type CreateDino = typeof CreateDino;
 export const CreateDino = createUnionType({
   name: "CreateDino",
   description: "Create Dino mutation result",
-  types: () => [Unauthorized, NewDino],
+  types: () => [Unauthorized, NewDino, InputConstraint],
   resolveType(source) {
     if ("dino" in source) {
       return "NewDino";
+    }
+    if ("name" in source && "reason" in source) {
+      return "InputConstraint";
     }
     return "Unauthorized";
   },

@@ -14,15 +14,24 @@ import cors from "cors";
 import express from "express";
 import { createServer } from "http";
 import "reflect-metadata";
-import { __port__ } from "./constant/artifacts";
+import { __port__, __prod__ } from "./constant/artifacts";
 import type { Context } from "./context";
+import { createLogger } from "./logger";
 import { createSchema } from "./schema";
 import { User } from "./user/graphql";
 
 async function main() {
   const app = express();
   const http = createServer(app);
-  const prisma = createPrisma();
+  const prisma = createPrisma({
+    log: ["error", "warn"],
+  });
+  const logger = createLogger({
+    config: {
+      displayDate: __prod__,
+      displayTimestamp: true,
+    },
+  });
   const schema = await createSchema();
 
   const server = new ApolloServer<Context>({
@@ -41,8 +50,7 @@ async function main() {
       credentials: true,
       origin: [
         "https://studio.apollographql.com",
-        "http://localhost:3000",
-        "http://localhost:5173",
+        ...[3000, 5173].map((port) => `http://localhost:${port}`),
       ],
       allowedHeaders: [
         "Authorization",
@@ -61,16 +69,23 @@ async function main() {
       async context({ req }) {
         const id = req.headers["authorization"]?.split(" ")?.at(-1);
         if (!id) {
-          return { prisma };
+          return { prisma, logger };
         }
-        const user = await prisma.user.findUnique({
-          where: { id },
-        });
 
-        return {
-          prisma,
-          user: user ? new User({ ...user }) : undefined,
-        };
+        try {
+          const user = await prisma.user.findUnique({
+            where: { id },
+          });
+
+          return {
+            prisma,
+            user: user ? new User({ ...user }) : undefined,
+            logger,
+          };
+        } catch (e: unknown) {
+          logger.customError(e, "context");
+          return { prisma, logger };
+        }
       },
     })
   );

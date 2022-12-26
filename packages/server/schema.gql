@@ -135,11 +135,17 @@ type Mutation {
   createRandomDino: CreateDino!
 
   """Switch 2 dino around"""
-  switchDino(input: DinoSwitch!): Boolean!
+  switchDino(input: DinoSwitch!): AuthIndicatorReply!
+
+  """Put a dino from party to the box"""
+  putDinoToBox(input: ID!): AuthIndicatorReply!
+
+  """Put a dino from box to the party"""
+  addDinoToParty(input: ID!): AuthIndicatorReply!
 }
 
 """Create Dino mutation result"""
-union CreateDino = Unauthorized | NewDino
+union CreateDino = Unauthorized | NewDino | InputConstraint
 
 """An operation is made by an unauthorized user"""
 type Unauthorized {
@@ -153,6 +159,15 @@ type NewDino {
   dino: Dino!
 }
 
+"""One of the input violates a constraint"""
+type InputConstraint {
+  """The field name that is violating constraint"""
+  name: String!
+
+  """The reason of violation"""
+  reason: String!
+}
+
 """Filter argument(s) for Dino(s)"""
 input DinoCreate {
   """The variant of one or many Dino(s)"""
@@ -163,6 +178,15 @@ input DinoCreate {
 
   """The current level of this Dinosaur, which affects its attack and HP"""
   level: Int! = 1
+}
+
+"""Indicated reply that require authentication"""
+union AuthIndicatorReply = Unauthorized | Indicator | InputConstraint
+
+"""Indicator that an operation has done successfully something or not"""
+type Indicator {
+  """A indicator flag, true for something did happen, false otherwise"""
+  flag: Boolean!
 }
 
 """Input to switch 2 dinosaur"""
