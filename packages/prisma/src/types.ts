@@ -5,8 +5,8 @@
 //  Created by d-exclaimation on 20 Nov 2022
 //
 
-import { Dino, Prisma } from "@prisma/client";
 import { Without } from "@dino/common";
+import { Dino, Prisma } from "@prisma/client";
 
 /**
  * Common properties when working with createdAt and updatedAt
