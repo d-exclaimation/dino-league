@@ -11,5 +11,3 @@ export * from "./random";
 export * from "./types/struct";
 export * from "./types/transform";
 export * from "./ulid";
-
-export const ok = 1;
