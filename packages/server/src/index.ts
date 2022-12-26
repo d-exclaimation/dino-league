@@ -67,16 +67,14 @@ async function main() {
   app.use(
     expressMiddleware(server, {
       async context({ req }) {
+        // TODO: Use actual token
         const id = req.headers["authorization"]?.split(" ")?.at(-1);
         if (!id) {
           return { prisma, logger };
         }
 
         try {
-          const user = await prisma.user.findUnique({
-            where: { id },
-          });
-
+          const user = await prisma.user.findUnique({ where: { id } });
           return {
             prisma,
             user: user ? new User({ ...user }) : undefined,

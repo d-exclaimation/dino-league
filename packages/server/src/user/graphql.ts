@@ -17,19 +17,17 @@ export class User extends Identifiable {
     description: "Get all Dinosaur in this user's party",
   })
   async party(@Ctx() { prisma, logger }: Context): Promise<Dino[]> {
-    return logger.trace({ scope: "User.party" }, async () => {
-      try {
-        const res = await prisma.party.findMany({
-          where: { userId: this.id },
-          select: { dino: true },
-          orderBy: { order: "asc" },
-        });
-        return res.map(({ dino }) => Dino.from(dino));
-      } catch (e: unknown) {
-        logger.customError(e, "User.party");
-        throw e;
-      }
-    });
+    try {
+      const res = await prisma.party.findMany({
+        where: { userId: this.id },
+        select: { dino: true },
+        orderBy: { order: "asc" },
+      });
+      return res.map(({ dino }) => Dino.from(dino));
+    } catch (e: unknown) {
+      logger.customError(e, "User.party");
+      throw e;
+    }
   }
 
   @Field(() => [Dino], {

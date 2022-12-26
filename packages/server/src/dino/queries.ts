@@ -20,13 +20,11 @@ export class DinoQueries {
     @Arg("input") { id }: SearchByID,
     @Ctx() { prisma, logger }: Context
   ): Promise<Dino | undefined> {
-    return logger.trace({ scope: "dinosaur" }, async () => {
-      const res = await prisma.dino.findUnique({ where: { id } });
-      if (!res) {
-        return undefined;
-      }
-      return Dino.from(res);
-    });
+    const res = await prisma.dino.findUnique({ where: { id } });
+    if (!res) {
+      return undefined;
+    }
+    return Dino.from(res);
   }
 
   @Query(() => [Dino], {

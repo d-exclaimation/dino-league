@@ -79,7 +79,7 @@ export class DinoMutations {
   })
   async switchDino(
     @Arg("input") { lhs, rhs }: DinoSwitch,
-    @Ctx() { prisma, user }: Context
+    @Ctx() { prisma, user, logger }: Context
   ): Promise<AuthIndicator> {
     if (!user) {
       return new Unauthorized({ operation: "switchDino" });
@@ -195,7 +195,7 @@ export class DinoMutations {
         });
       }
 
-      if (dino.user?.id === user.id) {
+      if (dino.user?.id !== user.id) {
         return new Unauthorized({ operation: "addDinoToParty" });
       }
 

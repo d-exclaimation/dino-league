@@ -29,11 +29,11 @@ export class Logger extends Signale {
   public customError(e: unknown, scope: string) {
     const logger = this.scope(scope);
     if (e instanceof PrismaKnownError) {
-      logger.warn(e.message.trim());
+      logger.warn(e.message.split("\n").at(0)?.trim() ?? e.message);
     } else if (e instanceof PrismaUnknownError) {
-      logger.error(e.message.trim());
+      logger.error(e.message.split("\n").at(0)?.trim() ?? e.message.trim());
     } else if (e instanceof PrismaEngineError) {
-      logger.fatal(e.message.trim());
+      logger.fatal(e.message.split("\n").at(0)?.trim() ?? e.message.trim());
     } else {
       logger.fatal(e);
     }
