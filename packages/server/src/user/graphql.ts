@@ -16,50 +16,57 @@ export class User extends Identifiable {
   @Field(() => [Dino], {
     description: "Get all Dinosaur in this user's party",
   })
-  async party(@Ctx() { prisma }: Context): Promise<Dino[]> {
-    // TODO: Error handling
-    const res = await prisma.party.findMany({
-      where: {
-        userId: this.id,
-      },
-      select: {
-        dino: true,
-      },
-      orderBy: {
-        order: "asc",
-      },
-    });
-    return res.map(({ dino }) => Dino.from(dino));
+  async party(@Ctx() { prisma, logger }: Context): Promise<Dino[]> {
+    try {
+      const res = await prisma.party.findMany({
+        where: { userId: this.id },
+        select: { dino: true },
+        orderBy: { order: "asc" },
+      });
+      return res.map(({ dino }) => Dino.from(dino));
+    } catch (e: unknown) {
+      logger.customError(e, "User.party");
+      throw e;
+    }
   }
 
   @Field(() => [Dino], {
     description: "Get all Dinosaur in this user's party",
   })
-  async box(@Ctx() { prisma }: Context): Promise<Dino[]> {
-    // TODO: Handle error
-    const res = await prisma.dino.findMany({
-      where: {
-        userId: this.id,
-        party: null,
-      },
-      orderBy: {
-        level: "asc",
-      },
-    });
-    return res.map((each) => Dino.from(each));
+  async box(@Ctx() { prisma, logger }: Context): Promise<Dino[]> {
+    try {
+      const res = await prisma.dino.findMany({
+        where: {
+          userId: this.id,
+          party: null,
+        },
+        orderBy: {
+          level: "asc",
+        },
+      });
+      return res.map((each) => Dino.from(each));
+    } catch (e: unknown) {
+      logger.customError(e, "User.box");
+      throw e;
+    }
   }
 
   @Field(() => Boolean, {
     description: "True if the user has a full party",
   })
-  async hasFullParty(@Ctx() { prisma }: Context): Promise<boolean> {
-    const count = await prisma.party.count({
-      where: {
-        userId: this.id,
-      },
-    });
+  async hasFullParty(@Ctx() { prisma, logger }: Context): Promise<boolean> {
+    try {
+      const count = await prisma.party.count({
+        where: {
+          userId: this.id,
+        },
+      });
 
-    return count > 6;
+      return count > 6;
+    } catch (e: unknown) {
+      logger.customError(e, "User.hasFullParty");
+      return true;
+    }
   }
 
   async reoganiseParty(prisma: PrismaStorage) {
@@ -71,14 +78,16 @@ export class User extends Identifiable {
     const ids = res.map(({ dinoId }) => dinoId);
 
     // Make sure order doesn't skip a number
-    await prisma.party.deleteMany({
-      where: {
-        userId: this.id,
-        dinoId: { in: ids },
-      },
-    });
-    await prisma.party.createMany({
-      data: ids.map((dinoId, order) => ({ userId: this.id, dinoId, order })),
-    });
+    await prisma.$transaction([
+      prisma.party.deleteMany({
+        where: {
+          userId: this.id,
+          dinoId: { in: ids },
+        },
+      }),
+      prisma.party.createMany({
+        data: ids.map((dinoId, order) => ({ userId: this.id, dinoId, order })),
+      }),
+    ]);
   }
 }

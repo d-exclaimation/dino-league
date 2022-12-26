@@ -27,7 +27,7 @@ type Props = {
       bg: Color.Bg;
       text: Color.Text;
       disabled?: boolean;
-      action: (id: Dino["id"]) => void;
+      action: (id: Dino["id"]) => void | Promise<void>;
     };
   };
 };

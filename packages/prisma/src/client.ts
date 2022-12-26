@@ -58,10 +58,20 @@ export class PrismaStorage<
     : false
 > extends PrismaClient<T, U, GlobalReject> {
   async addToParty({ dinoId, userId }: CreatePartyArgs) {
+    const party = await this.party.findMany({
+      where: { userId },
+      select: { dinoId: true },
+    });
+
+    if (new Set(party.map(({ dinoId }) => dinoId)).has(dinoId)) {
+      return;
+    }
+
     return this.party.create({
       data: {
         dinoId,
         userId,
+        order: party.length,
       },
     });
   }

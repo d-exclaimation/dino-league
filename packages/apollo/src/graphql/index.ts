@@ -24,8 +24,11 @@ export enum Arena {
   Urban = 'URBAN'
 }
 
+/** Indicated reply that require authentication */
+export type AuthIndicatorReply = Indicator | InputConstraint | Unauthorized;
+
 /** Create Dino mutation result */
-export type CreateDino = NewDino | Unauthorized;
+export type CreateDino = InputConstraint | NewDino | Unauthorized;
 
 export type Dino = Identifiable & {
   __typename: 'Dino';
@@ -95,19 +98,49 @@ export type Identifiable = {
   id: Scalars['ID'];
 };
 
+/** Indicator that an operation has done successfully something or not */
+export type Indicator = {
+  __typename: 'Indicator';
+  /** A indicator flag, true for something did happen, false otherwise */
+  flag: Scalars['Boolean'];
+};
+
+/** One of the input violates a constraint */
+export type InputConstraint = {
+  __typename: 'InputConstraint';
+  /** The field name that is violating constraint */
+  name: Scalars['String'];
+  /** The reason of violation */
+  reason: Scalars['String'];
+};
+
 export type Mutation = {
   __typename: 'Mutation';
+  /** Put a dino from box to the party */
+  addDinoToParty: AuthIndicatorReply;
   /** Create a Dino */
   createDino: CreateDino;
   /** Create a randomly generated Dino */
   createRandomDino: CreateDino;
+  /** Put a dino from party to the box */
+  putDinoToBox: AuthIndicatorReply;
   /** Switch 2 dino around */
-  switchDino: Scalars['Boolean'];
+  switchDino: AuthIndicatorReply;
+};
+
+
+export type MutationAddDinoToPartyArgs = {
+  input: Scalars['ID'];
 };
 
 
 export type MutationCreateDinoArgs = {
   input: DinoCreate;
+};
+
+
+export type MutationPutDinoToBoxArgs = {
+  input: Scalars['ID'];
 };
 
 
@@ -195,7 +228,7 @@ export type SwitchDinoMutationVariables = Exact<{
 }>;
 
 
-export type SwitchDinoMutation = { __typename: 'Mutation', switchDino: boolean };
+export type SwitchDinoMutation = { __typename: 'Mutation', switchDino: { __typename: 'Indicator', flag: boolean } | { __typename: 'InputConstraint', name: string, reason: string } | { __typename: 'Unauthorized', operation: string } };
 
 export type DinosaurQueryVariables = Exact<{
   input: SearchById;
@@ -237,7 +270,19 @@ export const FullDinoInfoFragmentDoc = gql`
     ${QuickDinoInfoFragmentDoc}`;
 export const SwitchDinoDocument = gql`
     mutation SwitchDino($input: DinoSwitch!) {
-  switchDino(input: $input)
+  switchDino(input: $input) {
+    __typename
+    ... on Indicator {
+      flag
+    }
+    ... on Unauthorized {
+      operation
+    }
+    ... on InputConstraint {
+      name
+      reason
+    }
+  }
 }
     `;
 export type SwitchDinoMutationFn = Apollo.MutationFunction<SwitchDinoMutation, SwitchDinoMutationVariables>;

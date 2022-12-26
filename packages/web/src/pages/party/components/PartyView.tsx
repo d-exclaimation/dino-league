@@ -21,12 +21,35 @@ type Props = {
 const PartyView: FC<Props> = ({ data, shownId }) => {
   const [mutate] = useSwitchDinoMutation();
   const onSwitch = useCallback(
-    (id: Dino["id"]) => {
+    async (id: Dino["id"]) => {
       if (!shownId) return;
-      mutate({
+      const { data, errors } = await mutate({
         variables: { input: { lhs: shownId, rhs: id } },
         refetchQueries: ["PartyView"],
       });
+
+      // TODO: Show indicator flag / toast
+
+      if (!data || errors) {
+        console.error(errors);
+        return;
+      }
+
+      switch (data.switchDino.__typename) {
+        case "Indicator":
+          console.info(
+            `Switch ${data.switchDino.flag ? "did" : "did not"} happened`
+          );
+          break;
+        case "Unauthorized":
+          console.warn("Invalid user");
+          break;
+        case "InputConstraint":
+          console.error(
+            `${data.switchDino.name} field is incorrect, ${data.switchDino.reason}`
+          );
+          break;
+      }
     },
     [mutate, shownId]
   );
