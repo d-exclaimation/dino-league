@@ -12,6 +12,7 @@
     "@dino/tsconfig": "*"
   },
   "dependencies": {
-    "@d-exclaimation/union": "^0.2.0"
+    "@d-exclaimation/union": "^0.2.0",
+    "ulid": "^2.3.0"
   }
 }
