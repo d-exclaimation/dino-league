@@ -17,7 +17,7 @@ All things about `dino-league` is on [Notion](https://dexclaimation.notion.site/
 
 ## API Reference
 
-API Reference can be done through GraphQL Introspection or check the [schema](./packages/server/src/schema.gql) in GraphQL SDL
+API Reference can be done through GraphQL Introspection or check the [schema](./packages/server/schema.gql) in GraphQL SDL
 
 ## Authors
 
