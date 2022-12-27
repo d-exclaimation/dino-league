@@ -1,0 +1,13 @@
+fragment Reply on AuthIndicatorReply {
+  __typename
+  ... on Unauthorized {
+    operation
+  }
+  ... on Indicator {
+    flag
+  }
+  ... on InputConstraint {
+    name
+    reason
+  }
+}
