@@ -25,6 +25,7 @@ const PartyPage: FC = () => {
   });
 
   const dino = useMemo(() => data?.dinosaur, [data]);
+  const hasFullParty = useMemo(() => data?.me?.hasFullParty ?? true, [data]);
   const party = useMemo(() => data?.me?.party, [data]);
   const box = useMemo(() => data?.me?.box, [data]);
 
@@ -102,7 +103,7 @@ const PartyPage: FC = () => {
         </div>
         <div className="w-full h-max pb-2 bg-gray-100">
           <PartyView data={party} shownId={id} />
-          <BoxView data={box} shownId={id} />
+          <BoxView data={box} shownId={id} canAddToParty={!hasFullParty} />
         </div>
       </div>
     </div>
