@@ -5,13 +5,9 @@
 //  Created by d-exclaimation on 18 Dec 2022
 //
 
-import {
-  Dino,
-  QuickDinoInfoFragment,
-  useSwitchDinoMutation,
-} from "@dino/apollo";
-import { FC, Fragment, useCallback } from "react";
-import MinoDinoView from "./MinoDinoView";
+import { Dino, QuickDinoInfoFragment, usePutToBoxMutation } from "@dino/apollo";
+import { FC, useCallback } from "react";
+import DinoListView from "./DinoListView";
 
 type Props = {
   data: QuickDinoInfoFragment[] | undefined;
@@ -19,26 +15,26 @@ type Props = {
 };
 
 const PartyView: FC<Props> = ({ data, shownId }) => {
-  const [mutate] = useSwitchDinoMutation();
-  const onSwitch = useCallback(
+  const [putToBox] = usePutToBoxMutation();
+
+  const boxAction = useCallback(
     async (id: Dino["id"]) => {
-      if (!shownId) return;
-      const { data, errors } = await mutate({
-        variables: { input: { lhs: shownId, rhs: id } },
+      const { data, errors } = await putToBox({
+        variables: {
+          dino: id,
+        },
         refetchQueries: ["PartyView"],
       });
-
-      // TODO: Show indicator flag / toast
 
       if (!data || errors) {
         console.error(errors);
         return;
       }
 
-      switch (data.switchDino.__typename) {
+      switch (data.putDinoToBox.__typename) {
         case "Indicator":
           console.info(
-            `Switch ${data.switchDino.flag ? "did" : "did not"} happened`
+            `Box ${data.putDinoToBox.flag ? "did" : "did not"} happened`
           );
           break;
         case "Unauthorized":
@@ -46,48 +42,32 @@ const PartyView: FC<Props> = ({ data, shownId }) => {
           break;
         case "InputConstraint":
           console.error(
-            `${data.switchDino.name} field is incorrect, ${data.switchDino.reason}`
+            `${data.putDinoToBox.name} field is incorrect, ${data.putDinoToBox.reason}`
           );
           break;
       }
     },
-    [mutate, shownId]
+    [putToBox]
   );
   return (
-    <div className="py-2">
-      <span className="mx-4 text-xl font-semibold">Party</span>
-      <div className="flex flex-row w-full overflow-scroll p-2 min-h-[11rem]">
-        {(data ?? []).map((props) => (
-          <Fragment key={props.id}>
-            <MinoDinoView
-              bg="bg-teal-50"
-              dino={props}
-              actions={{
-                Swap: {
-                  bg: "bg-teal-400",
-                  text: "text-teal-600",
-                  action: onSwitch,
-                },
-                Box: {
-                  bg: "bg-indigo-400",
-                  text: "text-indigo-600",
-                  action(id) {
-                    console.info(`Boxing ${id}`);
-                  },
-                },
-                Sell: {
-                  bg: "bg-red-400",
-                  text: "text-red-600",
-                  action(id) {
-                    console.info(`Selling ${id}`);
-                  },
-                },
-              }}
-            />
-          </Fragment>
-        ))}
-      </div>
-    </div>
+    <DinoListView
+      data={data}
+      shownId={shownId}
+      actions={{
+        Box: {
+          bg: "bg-indigo-400",
+          text: "text-indigo-600",
+          action: boxAction,
+        },
+        Sell: {
+          bg: "bg-red-400",
+          text: "text-red-600",
+          action(id) {
+            console.info(`Selling ${id}`);
+          },
+        },
+      }}
+    />
   );
 };
 

@@ -1,15 +1,5 @@
 mutation SwitchDino($input: DinoSwitch!) {
   switchDino(input: $input) {
-    __typename
-    ... on Indicator {
-      flag
-    }
-    ... on Unauthorized {
-      operation
-    }
-    ... on InputConstraint {
-      name
-      reason
-    }
+    ...Reply
   }
 }

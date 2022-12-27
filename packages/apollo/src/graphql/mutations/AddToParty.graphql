@@ -1,0 +1,5 @@
+mutation AddToParty($dino: ID!) {
+  addDinoToParty(input: $dino) {
+    ...Reply
+  }
+}

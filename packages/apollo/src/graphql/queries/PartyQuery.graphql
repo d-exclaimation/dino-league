@@ -4,6 +4,7 @@ query PartyView($dino: SearchByID!) {
   }
   me {
     id
+    hasFullParty
     party {
       ...QuickDinoInfo
     }

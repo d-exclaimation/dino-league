@@ -1,0 +1,5 @@
+mutation PutToBox($dino: ID!) {
+  putDinoToBox(input: $dino) {
+    ...Reply
+  }
+}

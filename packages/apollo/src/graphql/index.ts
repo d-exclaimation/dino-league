@@ -223,6 +223,28 @@ export type FullDinoInfoFragment = { __typename: 'Dino', level: number, attack: 
 
 export type QuickDinoInfoFragment = { __typename: 'Dino', id: string, name: string, hp: number, percentage: number, variant: Variant };
 
+type Reply_Indicator_Fragment = { __typename: 'Indicator', flag: boolean };
+
+type Reply_InputConstraint_Fragment = { __typename: 'InputConstraint', name: string, reason: string };
+
+type Reply_Unauthorized_Fragment = { __typename: 'Unauthorized', operation: string };
+
+export type ReplyFragment = Reply_Indicator_Fragment | Reply_InputConstraint_Fragment | Reply_Unauthorized_Fragment;
+
+export type AddToPartyMutationVariables = Exact<{
+  dino: Scalars['ID'];
+}>;
+
+
+export type AddToPartyMutation = { __typename: 'Mutation', addDinoToParty: { __typename: 'Indicator', flag: boolean } | { __typename: 'InputConstraint', name: string, reason: string } | { __typename: 'Unauthorized', operation: string } };
+
+export type PutToBoxMutationVariables = Exact<{
+  dino: Scalars['ID'];
+}>;
+
+
+export type PutToBoxMutation = { __typename: 'Mutation', putDinoToBox: { __typename: 'Indicator', flag: boolean } | { __typename: 'InputConstraint', name: string, reason: string } | { __typename: 'Unauthorized', operation: string } };
+
 export type SwitchDinoMutationVariables = Exact<{
   input: DinoSwitch;
 }>;
@@ -242,7 +264,7 @@ export type PartyViewQueryVariables = Exact<{
 }>;
 
 
-export type PartyViewQuery = { __typename: 'Query', dinosaur?: { __typename: 'Dino', level: number, attack: number, speed: number, healing: number, arena: Arena, id: string, name: string, hp: number, percentage: number, variant: Variant } | null, me?: { __typename: 'User', id: string, party: Array<{ __typename: 'Dino', id: string, name: string, hp: number, percentage: number, variant: Variant }>, box: Array<{ __typename: 'Dino', id: string, name: string, hp: number, percentage: number, variant: Variant }> } | null };
+export type PartyViewQuery = { __typename: 'Query', dinosaur?: { __typename: 'Dino', level: number, attack: number, speed: number, healing: number, arena: Arena, id: string, name: string, hp: number, percentage: number, variant: Variant } | null, me?: { __typename: 'User', id: string, hasFullParty: boolean, party: Array<{ __typename: 'Dino', id: string, name: string, hp: number, percentage: number, variant: Variant }>, box: Array<{ __typename: 'Dino', id: string, name: string, hp: number, percentage: number, variant: Variant }> } | null };
 
 export type PlaceholderPartyQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -268,23 +290,94 @@ export const FullDinoInfoFragmentDoc = gql`
   arena
 }
     ${QuickDinoInfoFragmentDoc}`;
-export const SwitchDinoDocument = gql`
-    mutation SwitchDino($input: DinoSwitch!) {
-  switchDino(input: $input) {
-    __typename
-    ... on Indicator {
-      flag
-    }
-    ... on Unauthorized {
-      operation
-    }
-    ... on InputConstraint {
-      name
-      reason
-    }
+export const ReplyFragmentDoc = gql`
+    fragment Reply on AuthIndicatorReply {
+  __typename
+  ... on Unauthorized {
+    operation
+  }
+  ... on Indicator {
+    flag
+  }
+  ... on InputConstraint {
+    name
+    reason
   }
 }
     `;
+export const AddToPartyDocument = gql`
+    mutation AddToParty($dino: ID!) {
+  addDinoToParty(input: $dino) {
+    ...Reply
+  }
+}
+    ${ReplyFragmentDoc}`;
+export type AddToPartyMutationFn = Apollo.MutationFunction<AddToPartyMutation, AddToPartyMutationVariables>;
+
+/**
+ * __useAddToPartyMutation__
+ *
+ * To run a mutation, you first call `useAddToPartyMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddToPartyMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addToPartyMutation, { data, loading, error }] = useAddToPartyMutation({
+ *   variables: {
+ *      dino: // value for 'dino'
+ *   },
+ * });
+ */
+export function useAddToPartyMutation(baseOptions?: Apollo.MutationHookOptions<AddToPartyMutation, AddToPartyMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddToPartyMutation, AddToPartyMutationVariables>(AddToPartyDocument, options);
+      }
+export type AddToPartyMutationHookResult = ReturnType<typeof useAddToPartyMutation>;
+export type AddToPartyMutationResult = Apollo.MutationResult<AddToPartyMutation>;
+export type AddToPartyMutationOptions = Apollo.BaseMutationOptions<AddToPartyMutation, AddToPartyMutationVariables>;
+export const PutToBoxDocument = gql`
+    mutation PutToBox($dino: ID!) {
+  putDinoToBox(input: $dino) {
+    ...Reply
+  }
+}
+    ${ReplyFragmentDoc}`;
+export type PutToBoxMutationFn = Apollo.MutationFunction<PutToBoxMutation, PutToBoxMutationVariables>;
+
+/**
+ * __usePutToBoxMutation__
+ *
+ * To run a mutation, you first call `usePutToBoxMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePutToBoxMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [putToBoxMutation, { data, loading, error }] = usePutToBoxMutation({
+ *   variables: {
+ *      dino: // value for 'dino'
+ *   },
+ * });
+ */
+export function usePutToBoxMutation(baseOptions?: Apollo.MutationHookOptions<PutToBoxMutation, PutToBoxMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<PutToBoxMutation, PutToBoxMutationVariables>(PutToBoxDocument, options);
+      }
+export type PutToBoxMutationHookResult = ReturnType<typeof usePutToBoxMutation>;
+export type PutToBoxMutationResult = Apollo.MutationResult<PutToBoxMutation>;
+export type PutToBoxMutationOptions = Apollo.BaseMutationOptions<PutToBoxMutation, PutToBoxMutationVariables>;
+export const SwitchDinoDocument = gql`
+    mutation SwitchDino($input: DinoSwitch!) {
+  switchDino(input: $input) {
+    ...Reply
+  }
+}
+    ${ReplyFragmentDoc}`;
 export type SwitchDinoMutationFn = Apollo.MutationFunction<SwitchDinoMutation, SwitchDinoMutationVariables>;
 
 /**
@@ -365,6 +458,7 @@ export const PartyViewDocument = gql`
   }
   me {
     id
+    hasFullParty
     party {
       ...QuickDinoInfo
     }

@@ -8,66 +8,77 @@
 import {
   Dino,
   QuickDinoInfoFragment,
-  useSwitchDinoMutation,
+  useAddToPartyMutation,
 } from "@dino/apollo";
-import { FC, Fragment, useCallback } from "react";
-import MinoDinoView from "./MinoDinoView";
+import { FC, useCallback } from "react";
+import DinoListView from "./DinoListView";
 
 type Props = {
   data: QuickDinoInfoFragment[] | undefined;
   shownId?: Dino["id"] | null;
+  canAddToParty: boolean;
 };
 
-const BoxView: FC<Props> = ({ data, shownId }) => {
-  const [mutate] = useSwitchDinoMutation();
-  const onSwitch = useCallback(
-    (id: Dino["id"]) => {
-      if (!shownId) return;
-      mutate({
-        variables: { input: { lhs: shownId, rhs: id } },
+const BoxView: FC<Props> = ({ data, shownId, canAddToParty }) => {
+  const [addToParty] = useAddToPartyMutation();
+
+  const partyAction = useCallback(
+    async (id: Dino["id"]) => {
+      if (!canAddToParty) {
+        return;
+      }
+
+      const { data, errors } = await addToParty({
+        variables: {
+          dino: id,
+        },
         refetchQueries: ["PartyView"],
       });
+
+      if (!data || errors) {
+        console.error(errors);
+        return;
+      }
+
+      switch (data.addDinoToParty.__typename) {
+        case "Indicator":
+          console.info(
+            `Box ${data.addDinoToParty.flag ? "did" : "did not"} happened`
+          );
+          break;
+        case "Unauthorized":
+          console.warn("Invalid user");
+          break;
+        case "InputConstraint":
+          console.error(
+            `${data.addDinoToParty.name} field is incorrect, ${data.addDinoToParty.reason}`
+          );
+          break;
+      }
     },
-    [mutate, shownId]
+    [addToParty]
   );
   return (
-    <div className="py-2">
-      <span className="mx-4 text-xl font-semibold">Box</span>
-      <div className="flex flex-row w-full overflow-scroll p-2">
-        {(data ?? []).map((props) => (
-          <Fragment key={props.id}>
-            <MinoDinoView
-              bg="bg-white"
-              dino={props}
-              actions={{
-                Party: {
-                  bg: "bg-teal-400",
-                  text: "text-teal-600",
-                  disabled: true,
-                  action(id) {
-                    console.info(
-                      `Putting ${id} into next available spot in party`
-                    );
-                  },
-                },
-                Swap: {
-                  bg: "bg-indigo-400",
-                  text: "text-indigo-600",
-                  action: onSwitch,
-                },
-                Sell: {
-                  bg: "bg-red-400",
-                  text: "text-red-600",
-                  action(id) {
-                    console.info(`Selling ${id}`);
-                  },
-                },
-              }}
-            />
-          </Fragment>
-        ))}
-      </div>
-    </div>
+    <DinoListView
+      data={data}
+      shownId={shownId}
+      bg="bg-slate-100"
+      actions={{
+        Party: {
+          bg: "bg-violet-400",
+          text: "text-violet-600",
+          disabled: !canAddToParty,
+          action: partyAction,
+        },
+        Sell: {
+          bg: "bg-red-400",
+          text: "text-red-600",
+          action(id) {
+            console.info(`Selling ${id}`);
+          },
+        },
+      }}
+    />
   );
 };
 
