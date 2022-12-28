@@ -24,10 +24,6 @@ const BoxView: FC<Props> = ({ data, shownId, canAddToParty }) => {
 
   const partyAction = useCallback(
     async (id: Dino["id"]) => {
-      if (!canAddToParty) {
-        return;
-      }
-
       const { data, errors } = await addToParty({
         variables: {
           dino: id,
