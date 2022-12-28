@@ -16,39 +16,29 @@ export class User extends Identifiable {
   @Field(() => [Dino], {
     description: "Get all Dinosaur in this user's party",
   })
-  async party(@Ctx() { prisma, logger }: Context): Promise<Dino[]> {
-    try {
-      const res = await prisma.party.findMany({
-        where: { userId: this.id },
-        select: { dino: true },
-        orderBy: { order: "asc" },
-      });
-      return res.map(({ dino }) => Dino.from(dino));
-    } catch (e: unknown) {
-      logger.customError(e, "User.party");
-      throw e;
-    }
+  async party(@Ctx() { prisma }: Context): Promise<Dino[]> {
+    const res = await prisma.party.findMany({
+      where: { userId: this.id },
+      select: { dino: true },
+      orderBy: { order: "asc" },
+    });
+    return res.map(({ dino }) => Dino.from(dino));
   }
 
   @Field(() => [Dino], {
     description: "Get all Dinosaur in this user's party",
   })
-  async box(@Ctx() { prisma, logger }: Context): Promise<Dino[]> {
-    try {
-      const res = await prisma.dino.findMany({
-        where: {
-          userId: this.id,
-          party: null,
-        },
-        orderBy: {
-          level: "asc",
-        },
-      });
-      return res.map((each) => Dino.from(each));
-    } catch (e: unknown) {
-      logger.customError(e, "User.box");
-      throw e;
-    }
+  async box(@Ctx() { prisma }: Context): Promise<Dino[]> {
+    const res = await prisma.dino.findMany({
+      where: {
+        userId: this.id,
+        party: null,
+      },
+      orderBy: {
+        level: "asc",
+      },
+    });
+    return res.map((each) => Dino.from(each));
   }
 
   @Field(() => Boolean, {
@@ -62,7 +52,7 @@ export class User extends Identifiable {
         },
       });
 
-      return count > 6;
+      return count >= 6;
     } catch (e: unknown) {
       logger.customError(e, "User.hasFullParty");
       return true;

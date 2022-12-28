@@ -18,7 +18,7 @@ export class DinoQueries {
   })
   async dinosaur(
     @Arg("input") { id }: SearchByID,
-    @Ctx() { prisma, logger }: Context
+    @Ctx() { prisma }: Context
   ): Promise<Dino | undefined> {
     const res = await prisma.dino.findUnique({ where: { id } });
     if (!res) {

@@ -16,7 +16,7 @@ import { createServer } from "http";
 import "reflect-metadata";
 import { __port__, __prod__ } from "./constant/artifacts";
 import type { Context } from "./context";
-import { createLogger } from "./logger";
+import { ApolloServerLoggerPlugin, createLogger } from "./logger";
 import { createSchema } from "./schema";
 import { User } from "./user/graphql";
 
@@ -39,6 +39,7 @@ async function main() {
     plugins: [
       ApolloServerPluginDrainHttpServer({ httpServer: http }),
       ApolloServerPrismaPlugin(prisma),
+      ApolloServerLoggerPlugin(logger, ["trace", "errors", "unexpected"]),
     ],
   });
   await server.start();
@@ -93,6 +94,4 @@ async function main() {
   );
 }
 
-main()
-  .catch((reason) => console.log(reason))
-  .then(() => console.log(`🚀 Running at http://localhost:${__port__}`));
+main().catch((reason) => console.log(reason));

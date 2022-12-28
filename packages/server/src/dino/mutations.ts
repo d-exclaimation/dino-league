@@ -37,25 +37,20 @@ export class DinoMutations {
       });
     }
 
-    try {
-      const hasFullParty = await user.hasFullParty({ prisma, user, logger });
+    const hasFullParty = await user.hasFullParty({ prisma, user, logger });
 
-      const res = await prisma.createDino(variant, {
-        level,
-        name: !!name ? name : undefined,
-        userId: user.id,
-      });
+    const res = await prisma.createDino(variant, {
+      level,
+      name: !!name ? name : undefined,
+      userId: user.id,
+    });
 
-      // New dino add to party if available
-      if (!hasFullParty) {
-        await prisma.addToParty({ dinoId: res.id, userId: user.id });
-      }
-
-      return new NewDino({ dino: Dino.from(res) });
-    } catch (e: unknown) {
-      logger.customError(e, "createDino");
-      throw e;
+    // New dino add to party if available
+    if (!hasFullParty) {
+      await prisma.addToParty({ dinoId: res.id, userId: user.id });
     }
+
+    return new NewDino({ dino: Dino.from(res) });
   }
 
   @Mutation(() => CreateDino, {
