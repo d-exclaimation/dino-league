@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "User" ADD COLUMN     "cash" INTEGER NOT NULL DEFAULT 0,
+ADD COLUMN     "location" "Arena" NOT NULL DEFAULT 'GRASSLAND';

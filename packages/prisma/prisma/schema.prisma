@@ -15,8 +15,10 @@ model User {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   username  String    @db.VarChar(100)
-  email     String 
+  email     String    @unique
   hash      String
+  cash      Int       @default(0)
+  location  Arena     @default(GRASSLAND)
   dinos     Dino[]
   party     Party[]
 }
