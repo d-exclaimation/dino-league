@@ -10,8 +10,9 @@
     "schema": "packages/prisma/prisma/schema.prisma"
   },
   "scripts": {
+    "start": "node packages/server/dist/index.js",
     "setup": "chmod +x ./scripts/setup.sh; ./scripts/setup.sh",
-    "build": "turbo run build",
+    "build": "FORCE_COLOR=1 turbo run build",
     "dev": "FORCE_COLOR=1 turbo run dev --parallel",
     "clean": "FORCE_COLOR=1 turbo run clean",
     "migrate": "FORCE_COLOR=1 turbo run migrate",
