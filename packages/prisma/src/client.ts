@@ -8,6 +8,7 @@
 import { randomElement, randomInt } from "@dino/common";
 import { Dino, Prisma, PrismaClient, User, Variant } from "@prisma/client";
 import { DinoLib } from "./dino";
+import { hash, verify } from "./hasher";
 
 export const createPrisma = <
   T extends Prisma.PrismaClientOptions = Prisma.PrismaClientOptions,
@@ -37,6 +38,12 @@ type CreatePartyArgs = {
   userId: User["id"];
   dinoId: Dino["id"];
   order?: number;
+};
+
+type CreateUserInput = {
+  email: string;
+  username: string;
+  password: string;
 };
 
 /**
@@ -94,5 +101,36 @@ export class PrismaStorage<
       level: randomInt({ start: Math.ceil(level / 2), end: level }),
       ...rest,
     });
+  }
+
+  async signUp({ password, email, username }: CreateUserInput) {
+    if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
+      throw new Error("Email is not valid");
+    }
+    return this.user.create({
+      data: {
+        email,
+        username,
+        hash: await hash(password),
+      },
+    });
+  }
+
+  async login({ password, email }: Omit<CreateUserInput, "username">) {
+    const res = await this.user.findUnique({
+      where: {
+        email,
+      },
+      select: {
+        id: true,
+        hash: true,
+      },
+    });
+
+    if (!res) {
+      return null;
+    }
+
+    return (await verify(res.hash, password)) ? res.id : null;
   }
 }
