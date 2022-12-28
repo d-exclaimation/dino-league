@@ -113,6 +113,7 @@ input DinoFilter {
   take: Int! = 20
 }
 
+"""A valid user of the game"""
 type User implements Identifiable {
   """A unique ID for this entity"""
   id: ID!
@@ -142,6 +143,9 @@ type Mutation {
 
   """Put a dino from box to the party"""
   addDinoToParty(input: ID!): AuthIndicatorReply!
+
+  """Log into a user with the given credentials"""
+  login(input: LoginInfo!): Login!
 }
 
 """Create Dino mutation result"""
@@ -196,4 +200,25 @@ input DinoSwitch {
 
   """One of the dino's id to be switched"""
   rhs: ID!
+}
+
+"""Login result"""
+union Login = Unauthorized | Credentials
+
+"""User credentials"""
+type Credentials {
+  """User information"""
+  user: User!
+
+  """Token for this user"""
+  token: String!
+}
+
+"""Information required for login"""
+input LoginInfo {
+  """A unique email for the user"""
+  email: String!
+
+  """Password to log in"""
+  password: String!
 }

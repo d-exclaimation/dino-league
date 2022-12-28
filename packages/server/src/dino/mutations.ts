@@ -14,7 +14,7 @@ import {
   InputConstraint,
   Unauthorized,
 } from "../common/graphql";
-import { Context } from "../context";
+import type { Context } from "../context";
 import { CreateDino, Dino, DinoCreate, DinoSwitch, NewDino } from "./graphql";
 
 @Resolver()
@@ -24,7 +24,7 @@ export class DinoMutations {
   })
   async createDino(
     @Arg("input") { level, name, variant }: DinoCreate,
-    @Ctx() { prisma, user, logger }: Context
+    @Ctx() { prisma, user, ...rest }: Context
   ): Promise<CreateDino> {
     if (!user) {
       return new Unauthorized({ operation: "createDino" });
@@ -37,7 +37,7 @@ export class DinoMutations {
       });
     }
 
-    const hasFullParty = await user.hasFullParty({ prisma, user, logger });
+    const hasFullParty = await user.hasFullParty({ prisma, user, ...rest });
 
     const res = await prisma.createDino(variant, {
       level,
@@ -74,7 +74,7 @@ export class DinoMutations {
   })
   async switchDino(
     @Arg("input") { lhs, rhs }: DinoSwitch,
-    @Ctx() { prisma, user, logger }: Context
+    @Ctx() { prisma, user }: Context
   ): Promise<AuthIndicator> {
     if (!user) {
       return new Unauthorized({ operation: "switchDino" });
@@ -167,13 +167,13 @@ export class DinoMutations {
   })
   async addDinoToParty(
     @Arg("input", () => ID) input: string,
-    @Ctx() { prisma, user, logger }: Context
+    @Ctx() { prisma, user, logger, ...rest }: Context
   ): Promise<AuthIndicator> {
     if (!user) {
       return new Unauthorized({ operation: "addDinoToParty" });
     }
 
-    if (await user.hasFullParty({ prisma, user, logger })) {
+    if (await user.hasFullParty({ prisma, user, logger, ...rest })) {
       return new Indicator({ flag: false });
     }
 

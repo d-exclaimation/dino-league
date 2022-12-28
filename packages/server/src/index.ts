@@ -20,6 +20,8 @@ import { ApolloServerLoggerPlugin, createLogger } from "./logger";
 import { createSchema } from "./schema";
 import { User } from "./user/graphql";
 
+const start = new Date();
+
 async function main() {
   const app = express();
   const http = createServer(app);
@@ -71,7 +73,7 @@ async function main() {
         // TODO: Use actual token
         const id = req.headers["authorization"]?.split(" ")?.at(-1);
         if (!id) {
-          return { prisma, logger };
+          return { prisma, logger, req };
         }
 
         try {
@@ -80,10 +82,11 @@ async function main() {
             prisma,
             user: user ? new User({ ...user }) : undefined,
             logger,
+            req,
           };
         } catch (e: unknown) {
           logger.customError(e, "context");
-          return { prisma, logger };
+          return { prisma, logger, req };
         }
       },
     })

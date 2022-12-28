@@ -6,7 +6,7 @@
 //
 
 import { Arg, Ctx, Query, Resolver } from "type-graphql";
-import { Context } from "../context";
+import type { Context } from "../context";
 import { SearchByID } from "../identifiable/graphql";
 import { Dino, DinoFilter } from "./graphql";
 

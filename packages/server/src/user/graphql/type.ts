@@ -1,17 +1,20 @@
 //
-//  graphql.ts
+//  type.ts
 //  dino-league
 //
-//  Created by d-exclaimation on 20 Dec 2022
+//  Created by d-exclaimation on 28 Dec 2022
 //
 
 import { PrismaStorage } from "@dino/prisma";
 import { Ctx, Field, ObjectType } from "type-graphql";
-import { Context } from "../context";
-import { Dino } from "../dino/graphql";
-import { Identifiable } from "../identifiable/graphql";
+import type { Context } from "../../context";
+import { Dino } from "../../dino/graphql";
+import { Identifiable } from "../../identifiable/graphql";
 
-@ObjectType({ implements: Identifiable })
+@ObjectType({
+  implements: Identifiable,
+  description: "A valid user of the game",
+})
 export class User extends Identifiable {
   @Field(() => [Dino], {
     description: "Get all Dinosaur in this user's party",
