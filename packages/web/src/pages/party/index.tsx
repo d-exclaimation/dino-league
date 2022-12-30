@@ -8,6 +8,7 @@
 import { usePartyViewQuery } from "@dino/apollo";
 import { FC, useMemo } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { withAuthRedirect } from "../../hoc/withAuthRedirect";
 import BoxView from "./components/BoxView";
 import DinoStat from "./components/DinoStat";
 import PartyView from "./components/PartyView";
@@ -46,9 +47,8 @@ const PartyPage: FC = () => {
     return `${variant.toLowerCase()}.gif`;
   }, [data]);
 
-  if (!id) {
-    // TODO: Redirect somewhere
-    nav("/404");
+  if (!id && party?.at(0)?.id) {
+    nav(`/party?id=${encodeURIComponent(party?.at(0)?.id ?? "")}`, {});
   }
 
   if (error) {
@@ -102,12 +102,16 @@ const PartyPage: FC = () => {
           </button>
         </div>
         <div className="w-full h-max pb-2 bg-gray-100">
-          <PartyView data={party} shownId={id} />
-          <BoxView data={box} shownId={id} canAddToParty={!hasFullParty} />
+          {(!party || party.length > 0) && (
+            <PartyView data={party} shownId={id} />
+          )}
+          {(!box || box.length > 0) && (
+            <BoxView data={box} shownId={id} canAddToParty={!hasFullParty} />
+          )}
         </div>
       </div>
     </div>
   );
 };
 
-export default PartyPage;
+export default withAuthRedirect(PartyPage);

@@ -30,6 +30,16 @@ export type AuthIndicatorReply = Indicator | InputConstraint | Unauthorized;
 /** Create Dino mutation result */
 export type CreateDino = InputConstraint | NewDino | Unauthorized;
 
+/** User credentials */
+export type Credentials = {
+  __typename: 'Credentials';
+  /** Token for this user */
+  token: Scalars['String'];
+  /** User information */
+  user: User;
+};
+
+/** A dinosaur */
 export type Dino = Identifiable & {
   __typename: 'Dino';
   /** The arena environment this Dinosaur most effective in */
@@ -61,6 +71,7 @@ export type Dino = Identifiable & {
 };
 
 
+/** A dinosaur */
 export type DinoDamageArgs = {
   arena: Arena;
 };
@@ -114,6 +125,17 @@ export type InputConstraint = {
   reason: Scalars['String'];
 };
 
+/** Login result */
+export type Login = Credentials | Unauthorized;
+
+/** Information required for login */
+export type LoginInfo = {
+  /** A unique email for the user */
+  email: Scalars['String'];
+  /** Password to log in */
+  password: Scalars['String'];
+};
+
 export type Mutation = {
   __typename: 'Mutation';
   /** Put a dino from box to the party */
@@ -122,6 +144,8 @@ export type Mutation = {
   createDino: CreateDino;
   /** Create a randomly generated Dino */
   createRandomDino: CreateDino;
+  /** Log into a user with the given credentials */
+  login: Login;
   /** Put a dino from party to the box */
   putDinoToBox: AuthIndicatorReply;
   /** Switch 2 dino around */
@@ -136,6 +160,11 @@ export type MutationAddDinoToPartyArgs = {
 
 export type MutationCreateDinoArgs = {
   input: DinoCreate;
+};
+
+
+export type MutationLoginArgs = {
+  input: LoginInfo;
 };
 
 
@@ -187,6 +216,7 @@ export type Unauthorized = {
   operation: Scalars['String'];
 };
 
+/** A valid user of the game */
 export type User = Identifiable & {
   __typename: 'User';
   /** Get all Dinosaur in this user's party */
@@ -258,6 +288,11 @@ export type DinosaurQueryVariables = Exact<{
 
 
 export type DinosaurQuery = { __typename: 'Query', dinosaur?: { __typename: 'Dino', id: string, level: number, hp: number, attack: number, speed: number, healing: number, arena: Arena, variant: Variant, name: string, percentage: number } | null };
+
+export type MeQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MeQuery = { __typename: 'Query', me?: { __typename: 'User', id: string } | null };
 
 export type PartyViewQueryVariables = Exact<{
   dino: SearchById;
@@ -450,6 +485,43 @@ export type DinosaurLazyQueryHookResult = ReturnType<typeof useDinosaurLazyQuery
 export type DinosaurQueryResult = Apollo.QueryResult<DinosaurQuery, DinosaurQueryVariables>;
 export function refetchDinosaurQuery(variables: DinosaurQueryVariables) {
       return { query: DinosaurDocument, variables: variables }
+    }
+export const MeDocument = gql`
+    query Me {
+  me {
+    id
+  }
+}
+    `;
+
+/**
+ * __useMeQuery__
+ *
+ * To run a query within a React component, call `useMeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMeQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMeQuery(baseOptions?: Apollo.QueryHookOptions<MeQuery, MeQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MeQuery, MeQueryVariables>(MeDocument, options);
+      }
+export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery, MeQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MeQuery, MeQueryVariables>(MeDocument, options);
+        }
+export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
+export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
+export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
+export function refetchMeQuery(variables?: MeQueryVariables) {
+      return { query: MeDocument, variables: variables }
     }
 export const PartyViewDocument = gql`
     query PartyView($dino: SearchByID!) {

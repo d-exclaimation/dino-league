@@ -6,6 +6,8 @@
 //
 
 export { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
+export * from "./auth/AuthProvider";
+export * from "./auth/useAuth";
 export * from "./client/http";
 export * from "./graphql";
 export * from "./hoc/withIsolatedQuery";

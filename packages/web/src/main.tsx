@@ -16,10 +16,10 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import "./index.css";
 
-window?.localStorage?.setItem(
-  "token",
-  "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6ImNsYnNqa25uNDAwMDA3dGFmc2RpYzhhbGgiLCJpYXQiOjE2NzIzNzM3NTUsImlzcyI6ImRpbm86bm9kZTpzZXJ2ZXIiLCJhdWQiOiJkaW5vOndlYjpjbGllbnQiLCJleHAiOjE2NzI5Nzg1NTV9.9Jyk13fZ8-YqzDC93hy-eg7yF7aIdDRWhIuqyPuYXEc"
-);
+// window?.localStorage?.setItem(
+//   "token",
+//   "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6ImNsYnNqa25uNDAwMDA3dGFmc2RpYzhhbGgiLCJpYXQiOjE2NzIzNzM3NTUsImlzcyI6ImRpbm86bm9kZTpzZXJ2ZXIiLCJhdWQiOiJkaW5vOndlYjpjbGllbnQiLCJleHAiOjE2NzI5Nzg1NTV9.9Jyk13fZ8-YqzDC93hy-eg7yF7aIdDRWhIuqyPuYXEc"
+// );
 
 const client = new ApolloClient({
   link: createHttpWithAuthLink({
