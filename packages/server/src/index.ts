@@ -20,8 +20,6 @@ import { ApolloServerLoggerPlugin, createLogger } from "./logger";
 import { createSchema } from "./schema";
 import { User } from "./user/graphql";
 
-const start = new Date();
-
 async function main() {
   const app = express();
   const http = createServer(app);

@@ -118,13 +118,8 @@ export class PrismaStorage<
 
   async login({ password, email }: Omit<CreateUserInput, "username">) {
     const res = await this.user.findUnique({
-      where: {
-        email,
-      },
-      select: {
-        id: true,
-        hash: true,
-      },
+      where: { email },
+      select: { id: true, hash: true },
     });
 
     if (!res) {
