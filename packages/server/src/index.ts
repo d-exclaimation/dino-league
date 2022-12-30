@@ -14,6 +14,7 @@ import cors from "cors";
 import express from "express";
 import { createServer } from "http";
 import "reflect-metadata";
+import { verify } from "./auth";
 import { __port__, __prod__ } from "./constant/artifacts";
 import type { Context } from "./context";
 import { ApolloServerLoggerPlugin, createLogger } from "./logger";
@@ -68,13 +69,17 @@ async function main() {
   app.use(
     expressMiddleware(server, {
       async context({ req }) {
-        // TODO: Use actual token
-        const id = req.headers["authorization"]?.split(" ")?.at(-1);
-        if (!id) {
+        const token = req.headers["authorization"]?.split(" ")?.at(-1);
+        if (!token) {
+          return { prisma, logger, req };
+        }
+        const jwt = await verify<{ id: string }>(token);
+        if (!jwt) {
           return { prisma, logger, req };
         }
 
         try {
+          const { id } = jwt;
           const user = await prisma.user.findUnique({ where: { id } });
           return {
             prisma,
