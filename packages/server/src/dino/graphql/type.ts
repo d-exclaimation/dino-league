@@ -11,7 +11,7 @@ import { Arg, Field, Float, Int, ObjectType } from "type-graphql";
 import { Identifiable } from "../../identifiable/graphql";
 import { Arena, Variant } from "./others";
 
-@ObjectType({ implements: Identifiable })
+@ObjectType({ implements: Identifiable, description: "A dinosaur" })
 export class Dino extends Identifiable {
   @Field({ description: "The name of this Dinosaur" })
   name!: string;

@@ -14,6 +14,7 @@ type Query {
   me: User
 }
 
+"""A dinosaur"""
 type Dino implements Identifiable {
   """A unique ID for this entity"""
   id: ID!
