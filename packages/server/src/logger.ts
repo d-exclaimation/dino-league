@@ -163,7 +163,9 @@ export const ApolloServerLoggerPlugin = <C extends BaseContext>(
       logger.scope("👎").error(error.message);
     },
     async serverWillStart() {
-      logger.scope("root").announce(`Running at http://localhost:${__port__}`);
+      logger
+        .scope("root")
+        .announce(`Running at http://localhost:${__port__}/graphql`);
 
       return {
         async serverWillStop() {
