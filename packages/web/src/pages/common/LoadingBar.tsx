@@ -10,19 +10,11 @@ import { randomElement } from "@dino/common";
 import { Transition } from "@headlessui/react";
 import { FC, Fragment, useEffect, useState } from "react";
 
-const ALL_VARIANTS = [
-  Variant.Black,
-  Variant.Blue,
-  Variant.Green,
-  Variant.Pink,
-  Variant.Red,
-  Variant.Slate,
-  Variant.White,
-  Variant.Yellow,
-];
+const ALL_VARIANTS = [Variant.Black, Variant.Green, Variant.Blue];
 
 const LoadingBar: FC = () => {
   const [isShowing, setShowing] = useState(true);
+  const [] = useState();
   const [variant, setVariant] = useState<Variant>(Variant.Black);
 
   useEffect(() => {
@@ -40,17 +32,17 @@ const LoadingBar: FC = () => {
 
   return (
     <Transition appear show={isShowing}>
-      <div className="flex flex-col items-center justify-center h-20 md:h-24">
+      <div className="flex flex-col items-center justify-center h-20">
         <Transition.Child
           as={Fragment}
-          enter="transition ease-out duration-700 transform"
+          enter="transition ease-in duration-700 transform"
           enterFrom="-translate-x-[min(10rem,20vw)]"
           enterTo="translate-x-0"
           leave="transition ease-in duration-700 transform"
           leaveFrom="translate-x-0"
           leaveTo="translate-x-[min(10rem,20vw)]"
         >
-          <img className="w-20 md:w-24" src={`/${variant.toString()}.gif`} />
+          <img className="w-20" src={`/sm/${variant.toString()}.webp`} />
         </Transition.Child>
         <Transition.Child
           as={Fragment}

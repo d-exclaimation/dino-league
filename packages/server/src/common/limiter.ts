@@ -20,7 +20,7 @@ class Imprints extends Map<string, Date> {
       return false;
     }
 
-    return curr.getTime() - prev.getTime() < maxDiff;
+    return curr.getTime() - prev.getTime() >= maxDiff;
   }
 }
 
@@ -34,7 +34,7 @@ export function RateLimit(rps: number = 100) {
   const maxTime = Math.round(1000 / clamp(rps, { min: 0, max: 1000 }));
   return createMethodDecorator<Context>(
     ({ info, context: { req, logger } }, next) => {
-      if (imprints.verify(req.ip, maxTime)) {
+      if (!imprints.verify(req.ip, maxTime)) {
         logger
           .under(info.operation, req.ip)
           .warn(`ip: ${req.ip} is making too many requests`);
