@@ -12,9 +12,12 @@ import { FC, Fragment, useEffect, useState } from "react";
 
 const ALL_VARIANTS = [Variant.Black, Variant.Green, Variant.Blue];
 
-const LoadingBar: FC = () => {
+type Props = {
+  text?: string;
+};
+
+const LoadingBar: FC<Props> = ({ text }) => {
   const [isShowing, setShowing] = useState(true);
-  const [] = useState();
   const [variant, setVariant] = useState<Variant>(Variant.Black);
 
   useEffect(() => {
@@ -44,19 +47,21 @@ const LoadingBar: FC = () => {
         >
           <img className="w-20" src={`/sm/${variant.toString()}.webp`} />
         </Transition.Child>
-        <Transition.Child
-          as={Fragment}
-          enter="transition-opacity ease-linear duration-700"
-          enterFrom="opacity-0"
-          enterTo="opacity-100"
-          leave="transition-opacity ease-linear duration-700"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
-        >
-          <div className="font-mono text-gray-50 md:text-gray-700 text-sm md:text-base">
-            Loading...
-          </div>
-        </Transition.Child>
+        {text && (
+          <Transition.Child
+            as={Fragment}
+            enter="transition-opacity ease-linear duration-700"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="transition-opacity ease-linear duration-700"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="font-mono text-gray-50 md:text-gray-700 text-sm md:text-base">
+              {text}
+            </div>
+          </Transition.Child>
+        )}
       </div>
     </Transition>
   );

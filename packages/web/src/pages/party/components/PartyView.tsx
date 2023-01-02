@@ -26,6 +26,8 @@ const PartyView: FC<Props> = ({ data, shownId }) => {
         refetchQueries: ["PartyView"],
       });
 
+      // TODO: Show indicator flag / toast
+
       if (!data || errors) {
         console.error(errors);
         return;

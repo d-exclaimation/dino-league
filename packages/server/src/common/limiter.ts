@@ -17,7 +17,7 @@ class Imprints extends Map<string, Date> {
     this.set(ip, curr);
 
     if (!prev) {
-      return false;
+      return true;
     }
 
     return curr.getTime() - prev.getTime() >= maxDiff;

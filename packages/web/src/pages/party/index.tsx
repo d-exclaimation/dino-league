@@ -8,6 +8,7 @@
 import { usePartyViewQuery } from "@dino/apollo";
 import { FC, useMemo } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { nextLoop } from "../../common/VirtualDom";
 import { withAuthRedirect } from "../../hoc/withAuthRedirect";
 import BoxView from "./components/BoxView";
 import DinoStat from "./components/DinoStat";
@@ -17,7 +18,7 @@ const PartyPage: FC = () => {
   const nav = useNavigate();
   const [searchParam] = useSearchParams();
   const id = useMemo(() => searchParam.get("id"), [searchParam]);
-  const { data, error } = usePartyViewQuery({
+  const { data, error, loading } = usePartyViewQuery({
     variables: {
       dino: {
         id: id ?? "claxchxpc00017trcssa6v46b",
@@ -47,8 +48,10 @@ const PartyPage: FC = () => {
     return `${variant.toLowerCase()}.gif`;
   }, [data]);
 
-  if (!id && party?.at(0)?.id) {
-    nav(`/party?id=${encodeURIComponent(party?.at(0)?.id ?? "")}`, {});
+  if (!id && !loading && party?.at(0)?.id) {
+    nextLoop(() =>
+      nav(`/party?id=${encodeURIComponent(party?.at(0)?.id ?? "")}`, {})
+    );
   }
 
   if (error) {
@@ -61,15 +64,17 @@ const PartyPage: FC = () => {
 
   return (
     <div className="w-screen h-screen bg-[#C0B2A2]">
+      <button className="fixed top-2 right-2" onClick={() => nav("/")}>
+        <img className="w-10 md:w-12" src="/back.svg" />
+      </button>
       <div className="flex items-center justify-evenly flex-row h-[45%]">
-        <div />
         <div className="flex flex-col items-start justify-center">
           <span className="text-7xl text-white border-b-2 border-white my-2">
             {dino?.level.toString() ?? "..."}
           </span>
           <span className="text-white/70">{dino?.name ?? "..."}</span>
         </div>
-        <img className="w-64 md:w-72" alt="Image" src={imageSrc} />
+        <img className="w-60 md:w-72" alt="Image" src={imageSrc} />
       </div>
       <div className="w-full h-[55%] bg-white">
         <div className="w-full bg-white h-40">

@@ -5,9 +5,10 @@
 //  Created by d-exclaimation on 25 Nov 2022
 //
 import AuthProvider from "@dino/apollo/src/auth/AuthProvider";
-import { FC } from "react";
+import type { FC } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import LoadingBar from "./pages/common/LoadingBar";
+import LoginPage from "./pages/login";
 import MainPage from "./pages/main";
 import PartyPage from "./pages/party";
 
@@ -18,7 +19,7 @@ const router = createBrowserRouter([
   },
   {
     path: "login",
-    element: <div>Login</div>,
+    element: <LoginPage />,
   },
   {
     path: "/party",
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
   {
     path: "/sandbox",
     element: <LoadingBar />,
+  },
+  {
+    path: "*",
+    element: <MainPage />,
   },
 ]);
 

@@ -1,0 +1,11 @@
+mutation Login($input: LoginInfo!) {
+  login(input: $input) {
+    __typename
+    ... on Credentials {
+      token
+    }
+    ... on Unauthorized {
+      operation
+    }
+  }
+}

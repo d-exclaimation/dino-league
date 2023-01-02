@@ -84,7 +84,7 @@ const MinoDinoView: FC<Props> = ({
             <Menu.Item>
               {({ active }) => (
                 <Link
-                  to={`/?id=${id}`}
+                  to={`/party?id=${id}`}
                   className={`${
                     active
                       ? "bg-blue-500 text-white"

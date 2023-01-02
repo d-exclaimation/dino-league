@@ -60,7 +60,7 @@ const MainPage: FC = () => {
   );
 
   if (loading) {
-    return <LoadingBar />;
+    return <LoadingBar text="Loading..." />;
   }
 
   return (

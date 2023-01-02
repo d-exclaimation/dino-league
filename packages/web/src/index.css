@@ -1,3 +1,56 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+._input {
+  background: none;
+}
+
+._input:valid {
+  color: black;
+}
+
+._input:invalid {
+  color: rgba(179, 20, 29);
+}
+
+._text-field::after {
+  content: "";
+  position: relative;
+  display: block;
+  height: 4px;
+  width: 100%;
+  background: #fde047;
+  transform: scaleX(0);
+  transform-origin: 0%;
+  transition: transform 500ms ease;
+  top: 2px;
+}
+
+._text-field:focus-within {
+  border-color: transparent;
+}
+
+._text-field:focus-within::after {
+  transform: scaleX(1);
+}
+
+._form-label {
+  position: absolute;
+  transform-origin: 0%;
+  transition: transform 400ms;
+}
+
+._text-field:focus-within ._form-label,
+._input:not(:placeholder-shown) + ._form-label {
+  transform: scale(0.7) translateY(-2rem);
+  color: #a16207;
+  opacity: 1;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 0.25rem;
+  bottom: 0.5rem;
+}
