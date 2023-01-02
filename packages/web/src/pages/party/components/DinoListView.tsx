@@ -12,6 +12,7 @@ import {
 } from "@dino/apollo";
 import { FC, Fragment, useCallback } from "react";
 import type { Color } from "../../../common/Styling";
+import { mutationToast } from "../../../common/Toast";
 import MinoDinoView from "./MinoDinoView";
 
 type Props = {
@@ -31,35 +32,32 @@ type Props = {
 const DinoListView: FC<Props> = ({ data, actions, bg, shownId }) => {
   const [switchDino] = useSwitchDinoMutation();
   const switchAction = useCallback(
-    async (id: Dino["id"]) => {
+    (id: Dino["id"]) => {
       if (!shownId) return;
-      const { data, errors } = await switchDino({
-        variables: { input: { lhs: shownId, rhs: id } },
-        refetchQueries: ["PartyView"],
+      mutationToast({
+        async mutation() {
+          const { data, errors } = await switchDino({
+            variables: { input: { lhs: shownId, rhs: id } },
+            refetchQueries: ["PartyView"],
+          });
+
+          if (!data || errors) {
+            throw errors?.at(0)?.message ?? "Unexpected error happened";
+          }
+
+          switch (data.switchDino.__typename) {
+            case "Indicator":
+              return data.switchDino.flag
+                ? "Dinosaurs switched"
+                : "No switch is necessary";
+            case "Unauthorized":
+              throw "You can't switch the same dinosaur";
+            case "InputConstraint":
+              throw `${data.switchDino.name} field is incorrect, ${data.switchDino.reason}`;
+          }
+        },
+        pending: "Switching dino...",
       });
-
-      // TODO: Show indicator flag / toast
-
-      if (!data || errors) {
-        console.error(errors);
-        return;
-      }
-
-      switch (data.switchDino.__typename) {
-        case "Indicator":
-          console.info(
-            `Switch ${data.switchDino.flag ? "did" : "did not"} happened`
-          );
-          break;
-        case "Unauthorized":
-          console.warn("Invalid user");
-          break;
-        case "InputConstraint":
-          console.error(
-            `${data.switchDino.name} field is incorrect, ${data.switchDino.reason}`
-          );
-          break;
-      }
     },
     [switchDino, shownId]
   );

@@ -11,6 +11,7 @@ import {
   useAddToPartyMutation,
 } from "@dino/apollo";
 import { FC, useCallback } from "react";
+import { mutationToast } from "../../../common/Toast";
 import DinoListView from "./DinoListView";
 
 type Props = {
@@ -24,35 +25,29 @@ const BoxView: FC<Props> = ({ data, shownId, canAddToParty }) => {
 
   const partyAction = useCallback(
     async (id: Dino["id"]) => {
-      const { data, errors } = await addToParty({
-        variables: {
-          dino: id,
+      mutationToast({
+        async mutation() {
+          const { data, errors } = await addToParty({
+            variables: {
+              dino: id,
+            },
+            refetchQueries: ["PartyView"],
+          });
+
+          if (!data || errors) {
+            throw errors?.at(0)?.message ?? "Unexpected error";
+          }
+
+          switch (data.addDinoToParty.__typename) {
+            case "Indicator":
+              return "Dinosaur has been added to the party";
+            case "Unauthorized":
+              throw "Invalid user";
+            case "InputConstraint":
+              throw `${data.addDinoToParty.name} field is incorrect, ${data.addDinoToParty.reason}`;
+          }
         },
-        refetchQueries: ["PartyView"],
       });
-
-      // TODO: Show indicator flag / toast
-
-      if (!data || errors) {
-        console.error(errors);
-        return;
-      }
-
-      switch (data.addDinoToParty.__typename) {
-        case "Indicator":
-          console.info(
-            `Box ${data.addDinoToParty.flag ? "did" : "did not"} happened`
-          );
-          break;
-        case "Unauthorized":
-          console.warn("Invalid user");
-          break;
-        case "InputConstraint":
-          console.error(
-            `${data.addDinoToParty.name} field is incorrect, ${data.addDinoToParty.reason}`
-          );
-          break;
-      }
     },
     [addToParty]
   );

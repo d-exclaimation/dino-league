@@ -7,6 +7,7 @@
 import AuthProvider from "@dino/apollo/src/auth/AuthProvider";
 import type { FC } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 import LoadingBar from "./pages/common/LoadingBar";
 import LoginPage from "./pages/login";
 import MainPage from "./pages/main";
@@ -40,6 +41,18 @@ const App: FC = () => {
     <AuthProvider>
       <div className="flex flex-col items-center justify-center w-screen h-screen">
         <RouterProvider router={router} />
+        <ToastContainer
+          position="bottom-left"
+          autoClose={2000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
       </div>
     </AuthProvider>
   );

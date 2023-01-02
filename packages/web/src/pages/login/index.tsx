@@ -8,6 +8,7 @@
 import { useLoginMutation } from "@dino/apollo";
 import { FC, useCallback, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { mutationToast } from "../../common/Toast";
 import FormInput from "../common/FormInput";
 import LoadingBar from "../common/LoadingBar";
 
@@ -19,27 +20,28 @@ const LoginPage: FC = () => {
     password: "",
   });
 
-  const submit = useCallback(async () => {
-    const { data, errors } = await login({
-      variables: { input: form },
+  const submit = useCallback(() => {
+    mutationToast({
+      async mutation() {
+        const { data, errors } = await login({
+          variables: { input: form },
+        });
+
+        if (!data || errors) {
+          throw errors?.at(0)?.message ?? "Unexpected error";
+        }
+
+        switch (data.login.__typename) {
+          case "Credentials":
+            window?.localStorage?.setItem("token", data.login.token);
+            nav("/");
+            return "Login successful";
+          case "Unauthorized":
+            throw "Invalid credentials";
+        }
+      },
     });
 
-    // TODO: Show indicator flag / toast
-
-    if (!data || errors) {
-      console.error(errors);
-      return;
-    }
-
-    switch (data.login.__typename) {
-      case "Credentials":
-        window?.localStorage?.setItem("token", data.login.token);
-        nav("/");
-        break;
-      case "Unauthorized":
-        console.log("Unauthorized");
-        break;
-    }
     setForm({ email: "", password: "" });
   }, [form, login, setForm]);
 
