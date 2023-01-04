@@ -7,6 +7,7 @@
 
 import { join } from "path";
 import { buildSchema } from "type-graphql";
+import { BattleResolver } from "./battle/mutations";
 import { __prod__ } from "./constant/artifacts";
 import { DinoMutations } from "./dino/mutations";
 import { DinoQueries } from "./dino/queries";
@@ -15,7 +16,13 @@ import { UserQueries } from "./user/queries";
 
 export const createSchema = async () =>
   buildSchema({
-    resolvers: [DinoQueries, DinoMutations, UserQueries, UserMutations],
+    resolvers: [
+      DinoQueries,
+      DinoMutations,
+      UserQueries,
+      UserMutations,
+      BattleResolver,
+    ],
     validate: false,
     emitSchemaFile: !__prod__
       ? {

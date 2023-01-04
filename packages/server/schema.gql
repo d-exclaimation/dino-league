@@ -119,6 +119,9 @@ type User implements Identifiable {
   """A unique ID for this entity"""
   id: ID!
 
+  """The current arena the user is in"""
+  location: Arena!
+
   """Get all Dinosaur in this user's party"""
   party: [Dino!]!
 
@@ -130,6 +133,8 @@ type User implements Identifiable {
 }
 
 type Mutation {
+  quest: [Battle!]!
+
   """Create a Dino"""
   createDino(input: DinoCreate!): CreateDino!
 
@@ -147,6 +152,18 @@ type Mutation {
 
   """Log into a user with the given credentials"""
   login(input: LoginInfo!): Login!
+}
+
+"""Battle information"""
+type Battle {
+  """The type information"""
+  type: String!
+
+  """The current details of your battling dino"""
+  yours: Dino!
+
+  """The current details of opponent's battling dino"""
+  opponents: Dino!
 }
 
 """Create Dino mutation result"""
