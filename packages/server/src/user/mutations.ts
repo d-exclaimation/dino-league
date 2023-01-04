@@ -28,7 +28,7 @@ export class UserMutations {
         return new Unauthorized({ operation: "login" });
       }
       const token = await sign({ id: res });
-      return new Credentials({ user: new User({ id: res }), token });
+      return new Credentials({ user: User.from(res), token });
     } catch (e: unknown) {
       logger.customError(e, "login");
       return new Unauthorized({ operation: "login" });
