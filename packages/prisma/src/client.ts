@@ -119,13 +119,12 @@ export class PrismaStorage<
   async login({ password, email }: Omit<CreateUserInput, "username">) {
     const res = await this.user.findUnique({
       where: { email },
-      select: { id: true, hash: true },
     });
 
     if (!res) {
       return null;
     }
 
-    return (await verify(res.hash, password)) ? res.id : null;
+    return (await verify(res.hash, password)) ? res : null;
   }
 }
