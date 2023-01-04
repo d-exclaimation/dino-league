@@ -133,7 +133,7 @@ type User implements Identifiable {
 }
 
 type Mutation {
-  quest: [Battle!]!
+  quest: Quest!
 
   """Create a Dino"""
   createDino(input: DinoCreate!): CreateDino!
@@ -154,26 +154,59 @@ type Mutation {
   login(input: LoginInfo!): Login!
 }
 
-"""Battle information"""
-type Battle {
-  """The type information"""
-  type: String!
-
-  """The current details of your battling dino"""
-  yours: Dino!
-
-  """The current details of opponent's battling dino"""
-  opponents: Dino!
-}
-
-"""Create Dino mutation result"""
-union CreateDino = Unauthorized | NewDino | InputConstraint
+"""Quest results"""
+union Quest = Unauthorized | Battle
 
 """An operation is made by an unauthorized user"""
 type Unauthorized {
   """What operation is done that caused an unauthorized error"""
   operation: String!
 }
+
+"""Battle result and plan"""
+type Battle {
+  """Battle plan information"""
+  plan: [BattleInfo!]!
+}
+
+"""Battle information"""
+union BattleInfo = BattleInit | BattleTurn | BattleEnd
+
+"""Initial battle information"""
+type BattleInit {
+  """The current details of your battling dino"""
+  yours: Dino!
+
+  """The current details of opponent's battling dino"""
+  opponents: Dino!
+
+  """The number of opponent's dino"""
+  count: Float!
+}
+
+"""Turn information"""
+type BattleTurn {
+  """True if your dino is attacking, false otherwise"""
+  attacking: Boolean!
+
+  """The current details of your battling dino"""
+  yours: Dino!
+
+  """The current details of opponent's battling dino"""
+  opponents: Dino!
+
+  """The damage being dealt"""
+  damage: Float!
+}
+
+"""Battle ending"""
+type BattleEnd {
+  """Whether you win or not"""
+  win: Boolean!
+}
+
+"""Create Dino mutation result"""
+union CreateDino = Unauthorized | NewDino | InputConstraint
 
 """New Dino has been created"""
 type NewDino {

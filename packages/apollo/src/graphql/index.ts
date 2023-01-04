@@ -27,6 +27,47 @@ export enum Arena {
 /** Indicated reply that require authentication */
 export type AuthIndicatorReply = Indicator | InputConstraint | Unauthorized;
 
+/** Battle result and plan */
+export type Battle = {
+  __typename: 'Battle';
+  /** Battle plan information */
+  plan: Array<BattleInfo>;
+};
+
+/** Battle ending */
+export type BattleEnd = {
+  __typename: 'BattleEnd';
+  /** Whether you win or not */
+  win: Scalars['Boolean'];
+};
+
+/** Battle information */
+export type BattleInfo = BattleEnd | BattleInit | BattleTurn;
+
+/** Initial battle information */
+export type BattleInit = {
+  __typename: 'BattleInit';
+  /** The number of opponent's dino */
+  count: Scalars['Float'];
+  /** The current details of opponent's battling dino */
+  opponents: Dino;
+  /** The current details of your battling dino */
+  yours: Dino;
+};
+
+/** Turn information */
+export type BattleTurn = {
+  __typename: 'BattleTurn';
+  /** True if your dino is attacking, false otherwise */
+  attacking: Scalars['Boolean'];
+  /** The damage being dealt */
+  damage: Scalars['Float'];
+  /** The current details of opponent's battling dino */
+  opponents: Dino;
+  /** The current details of your battling dino */
+  yours: Dino;
+};
+
 /** Create Dino mutation result */
 export type CreateDino = InputConstraint | NewDino | Unauthorized;
 
@@ -148,6 +189,7 @@ export type Mutation = {
   login: Login;
   /** Put a dino from party to the box */
   putDinoToBox: AuthIndicatorReply;
+  quest: Quest;
   /** Switch 2 dino around */
   switchDino: AuthIndicatorReply;
 };
@@ -204,6 +246,9 @@ export type QueryDinosaursArgs = {
   input: DinoFilter;
 };
 
+/** Quest results */
+export type Quest = Battle | Unauthorized;
+
 export type SearchById = {
   /** A unique ID for this entity */
   id: Scalars['ID'];
@@ -225,6 +270,8 @@ export type User = Identifiable & {
   hasFullParty: Scalars['Boolean'];
   /** A unique ID for this entity */
   id: Scalars['ID'];
+  /** The current arena the user is in */
+  location: Arena;
   /** Get all Dinosaur in this user's party */
   party: Array<Dino>;
 };
@@ -248,6 +295,8 @@ export enum Variant {
   /** Can't lose if you don't get hit */
   Yellow = 'yellow'
 }
+
+export type BattlingDinoInfoFragment = { __typename: 'Dino', id: string, name: string, variant: Variant, level: number, hp: number, percentage: number };
 
 export type FullDinoInfoFragment = { __typename: 'Dino', level: number, attack: number, speed: number, healing: number, arena: Arena, id: string, name: string, hp: number, percentage: number, variant: Variant };
 
@@ -282,6 +331,11 @@ export type PutToBoxMutationVariables = Exact<{
 
 export type PutToBoxMutation = { __typename: 'Mutation', putDinoToBox: { __typename: 'Indicator', flag: boolean } | { __typename: 'InputConstraint', name: string, reason: string } | { __typename: 'Unauthorized', operation: string } };
 
+export type QuestMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type QuestMutation = { __typename: 'Mutation', quest: { __typename: 'Battle', plan: Array<{ __typename: 'BattleEnd', win: boolean } | { __typename: 'BattleInit', count: number, yours: { __typename: 'Dino', id: string, name: string, variant: Variant, level: number, hp: number, percentage: number }, opponents: { __typename: 'Dino', id: string, name: string, variant: Variant, level: number, hp: number, percentage: number } } | { __typename: 'BattleTurn', attacking: boolean, damage: number, yours: { __typename: 'Dino', id: string, name: string, variant: Variant, level: number, hp: number, percentage: number }, opponents: { __typename: 'Dino', id: string, name: string, variant: Variant, level: number, hp: number, percentage: number } }> } | { __typename: 'Unauthorized', operation: string } };
+
 export type SwitchDinoMutationVariables = Exact<{
   input: DinoSwitch;
 }>;
@@ -313,6 +367,16 @@ export type PlaceholderPartyQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type PlaceholderPartyQuery = { __typename: 'Query', dinosaurs: Array<{ __typename: 'Dino', id: string, name: string, hp: number, percentage: number, variant: Variant }> };
 
+export const BattlingDinoInfoFragmentDoc = gql`
+    fragment BattlingDinoInfo on Dino {
+  id
+  name
+  variant
+  level
+  hp
+  percentage
+}
+    `;
 export const QuickDinoInfoFragmentDoc = gql`
     fragment QuickDinoInfo on Dino {
   id
@@ -452,6 +516,68 @@ export function usePutToBoxMutation(baseOptions?: Apollo.MutationHookOptions<Put
 export type PutToBoxMutationHookResult = ReturnType<typeof usePutToBoxMutation>;
 export type PutToBoxMutationResult = Apollo.MutationResult<PutToBoxMutation>;
 export type PutToBoxMutationOptions = Apollo.BaseMutationOptions<PutToBoxMutation, PutToBoxMutationVariables>;
+export const QuestDocument = gql`
+    mutation Quest {
+  quest {
+    __typename
+    ... on Unauthorized {
+      operation
+    }
+    ... on Battle {
+      plan {
+        __typename
+        ... on BattleInit {
+          count
+          yours {
+            ...BattlingDinoInfo
+          }
+          opponents {
+            ...BattlingDinoInfo
+          }
+        }
+        ... on BattleTurn {
+          attacking
+          damage
+          yours {
+            ...BattlingDinoInfo
+          }
+          opponents {
+            ...BattlingDinoInfo
+          }
+        }
+        ... on BattleEnd {
+          win
+        }
+      }
+    }
+  }
+}
+    ${BattlingDinoInfoFragmentDoc}`;
+export type QuestMutationFn = Apollo.MutationFunction<QuestMutation, QuestMutationVariables>;
+
+/**
+ * __useQuestMutation__
+ *
+ * To run a mutation, you first call `useQuestMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useQuestMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [questMutation, { data, loading, error }] = useQuestMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useQuestMutation(baseOptions?: Apollo.MutationHookOptions<QuestMutation, QuestMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<QuestMutation, QuestMutationVariables>(QuestDocument, options);
+      }
+export type QuestMutationHookResult = ReturnType<typeof useQuestMutation>;
+export type QuestMutationResult = Apollo.MutationResult<QuestMutation>;
+export type QuestMutationOptions = Apollo.BaseMutationOptions<QuestMutation, QuestMutationVariables>;
 export const SwitchDinoDocument = gql`
     mutation SwitchDino($input: DinoSwitch!) {
   switchDino(input: $input) {

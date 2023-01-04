@@ -1,0 +1,35 @@
+mutation Quest {
+  quest {
+    __typename
+    ... on Unauthorized {
+      operation
+    }
+    ... on Battle {
+      plan {
+        __typename
+        ... on BattleInit {
+          count
+          yours {
+            ...BattlingDinoInfo
+          }
+          opponents {
+            ...BattlingDinoInfo
+          }
+        }
+        ... on BattleTurn {
+          attacking
+          damage
+          yours {
+            ...BattlingDinoInfo
+          }
+          opponents {
+            ...BattlingDinoInfo
+          }
+        }
+        ... on BattleEnd {
+          win
+        }
+      }
+    }
+  }
+}
