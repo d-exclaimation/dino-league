@@ -16,6 +16,6 @@ export class UserQueries {
     description: "Get the current authenticated user",
   })
   async me(@Ctx() { user }: Context): Promise<User | undefined> {
-    return user ? new User({ id: user.id }) : undefined;
+    return user;
   }
 }

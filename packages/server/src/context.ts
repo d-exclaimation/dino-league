@@ -11,7 +11,7 @@ import type { Logger } from "./logger";
 import type { User } from "./user/graphql";
 
 export type Context = {
-  prisma: PrismaStorage;
+  prisma: PrismaStorage<any, any, any>;
   logger: Logger;
   user?: User;
   req: ExpressContextFunctionArgument["req"];

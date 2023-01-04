@@ -5,10 +5,11 @@
 //  Created by d-exclaimation on 28 Dec 2022
 //
 
-import { PrismaStorage } from "@dino/prisma";
+import { Struct } from "@dino/common";
+import { PrismaStorage, User as _User } from "@dino/prisma";
 import { Ctx, Field, ObjectType } from "type-graphql";
 import type { Context } from "../../context";
-import { Dino } from "../../dino/graphql";
+import { Arena, Dino } from "../../dino/graphql";
 import { Identifiable } from "../../identifiable/graphql";
 
 @ObjectType({
@@ -16,6 +17,20 @@ import { Identifiable } from "../../identifiable/graphql";
   description: "A valid user of the game",
 })
 export class User extends Identifiable {
+  @Field(() => Arena, {
+    description: "The current arena the user is in",
+  })
+  location: Arena;
+
+  constructor({ id, location }: Struct.infer<User>) {
+    super({ id });
+    this.location = location;
+  }
+
+  static from({ id, location }: _User) {
+    return new User({ id, location: Arena[location] });
+  }
+
   @Field(() => [Dino], {
     description: "Get all Dinosaur in this user's party",
   })

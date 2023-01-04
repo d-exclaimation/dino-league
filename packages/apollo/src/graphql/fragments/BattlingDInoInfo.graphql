@@ -1,0 +1,8 @@
+fragment BattlingDinoInfo on Dino {
+  id
+  name
+  variant
+  level
+  hp
+  percentage
+}

@@ -83,7 +83,7 @@ async function main() {
           const user = await prisma.user.findUnique({ where: { id } });
           return {
             prisma,
-            user: user ? new User({ ...user }) : undefined,
+            user: user ? User.from(user) : undefined,
             logger,
             req,
           };

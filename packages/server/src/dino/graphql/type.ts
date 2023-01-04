@@ -5,7 +5,7 @@
 //  Created by d-exclaimation on 21 Dec 2022
 //
 
-import { random, Struct } from "@dino/common";
+import { random, randomElement, randomInt, Struct, ulid } from "@dino/common";
 import { Dino as _Dino, DinoLib } from "@dino/prisma";
 import { Arg, Field, Float, Int, ObjectType } from "type-graphql";
 import { Identifiable } from "../../identifiable/graphql";
@@ -92,5 +92,32 @@ export class Dino extends Identifiable {
       arena: Arena[arena],
       ...props,
     });
+  }
+
+  static random(args: Parameters<typeof randomInt>[0]) {
+    const level = randomInt(args);
+    const defaults = DinoLib.variants[randomElement(DinoLib.ALL_VARIANTS)];
+    const { variant, arena, ...props } = DinoLib.adjusted(defaults, level);
+
+    return new Dino({
+      id: ulid(),
+      name: variant,
+      level,
+      variant: Variant[variant],
+      arena: Arena[arena],
+      ...props,
+    });
+  }
+
+  take(dmg: number) {
+    this.hp = Math.max(0, this.hp - dmg);
+  }
+
+  fainted() {
+    return this.hp <= 0;
+  }
+
+  clone(): Dino {
+    return new Dino({ ...this });
   }
 }
