@@ -12,6 +12,7 @@ import LoadingBar from "./pages/common/LoadingBar";
 import LoginPage from "./pages/login";
 import MainPage from "./pages/main";
 import PartyPage from "./pages/party";
+import PvEPage from "./pages/pve";
 
 const router = createBrowserRouter([
   {
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
   {
     path: "/sandbox",
     element: <LoadingBar />,
+  },
+  {
+    path: "/pve",
+    element: <PvEPage />,
   },
   {
     path: "*",
