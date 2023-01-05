@@ -48,6 +48,7 @@ const PartyView: FC<Props> = ({ data, shownId }) => {
   );
   return (
     <DinoListView
+      title="Party"
       data={data}
       shownId={shownId}
       actions={{

@@ -53,6 +53,7 @@ const BoxView: FC<Props> = ({ data, shownId, canAddToParty }) => {
   );
   return (
     <DinoListView
+      title="Box"
       data={data}
       shownId={shownId}
       bg="bg-slate-100"

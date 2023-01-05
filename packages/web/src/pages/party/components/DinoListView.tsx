@@ -16,6 +16,7 @@ import { mutationToast } from "../../../common/Toast";
 import MinoDinoView from "./MinoDinoView";
 
 type Props = {
+  title: string;
   data: QuickDinoInfoFragment[] | undefined;
   shownId?: Dino["id"] | null;
   bg?: Color.Bg;
@@ -29,7 +30,7 @@ type Props = {
   };
 };
 
-const DinoListView: FC<Props> = ({ data, actions, bg, shownId }) => {
+const DinoListView: FC<Props> = ({ title, data, actions, bg, shownId }) => {
   const [switchDino] = useSwitchDinoMutation();
   const switchAction = useCallback(
     (id: Dino["id"]) => {
@@ -63,7 +64,7 @@ const DinoListView: FC<Props> = ({ data, actions, bg, shownId }) => {
   );
   return (
     <div className="py-2">
-      <span className="mx-4 text-xl font-semibold">Box</span>
+      <span className="mx-4 text-xl font-semibold">{title}</span>
       <div className="flex flex-row w-full overflow-scroll p-2">
         {(data ?? []).map((props) => (
           <Fragment key={props.id}>
