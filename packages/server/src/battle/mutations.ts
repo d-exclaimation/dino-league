@@ -28,7 +28,10 @@ export class BattleResolver {
         orderBy: { order: "asc" },
       })
       .then((values) => values.map(({ dino }) => Dino.from(dino)));
-    const minLevel = Math.min(...party.map(({ level }) => level));
+    const minLevel = Math.max(
+      1,
+      Math.min(...party.map(({ level }) => level)) * 0.8
+    );
     const maxLevel = Math.max(
       minLevel,
       Math.max(...party.map(({ level }) => level)) * 0.8
