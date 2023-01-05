@@ -25,14 +25,25 @@ export class BattleInit {
   opponents: Dino;
 
   @Field({
+    description: "The number of yours dino",
+  })
+  yoursRemaining: number;
+
+  @Field({
     description: "The number of opponent's dino",
   })
-  count: number;
+  opponentsRemaining: number;
 
-  constructor({ yours, opponents, count }: Struct.infer<BattleInit>) {
+  constructor({
+    yours,
+    opponents,
+    yoursRemaining,
+    opponentsRemaining,
+  }: Struct.infer<BattleInit>) {
     this.yours = yours.clone();
     this.opponents = opponents.clone();
-    this.count = count;
+    this.yoursRemaining = yoursRemaining;
+    this.opponentsRemaining = opponentsRemaining;
   }
 }
 

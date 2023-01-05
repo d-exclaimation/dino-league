@@ -180,8 +180,11 @@ type BattleInit {
   """The current details of opponent's battling dino"""
   opponents: Dino!
 
+  """The number of yours dino"""
+  yoursRemaining: Float!
+
   """The number of opponent's dino"""
-  count: Float!
+  opponentsRemaining: Float!
 }
 
 """Turn information"""

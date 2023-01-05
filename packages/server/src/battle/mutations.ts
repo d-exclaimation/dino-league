@@ -9,7 +9,7 @@ import { fill, random, randomInt } from "@dino/common";
 import { Ctx, Mutation, Resolver } from "type-graphql";
 import { Unauthorized } from "../common/graphql";
 import type { Context } from "../context";
-import { Dino } from "../dino/graphql";
+import { Arena, Dino } from "../dino/graphql";
 import { Battle, Quest } from "./graphql";
 
 @Resolver()
@@ -37,40 +37,65 @@ export class BattleResolver {
       Dino.random({ start: minLevel, end: maxLevel })
     );
 
-    // Mark: Initial
-    let [lhs, rhs] = [0, 0];
+    return this.simulation(party, enemies, user.location);
+  }
+
+  private simulation(party1: Dino[], party2: Dino[], location: Arena): Battle {
     const battle = new Battle({ plan: [] });
+
+    let [i1, i2] = [0, 0];
+    let [mut1, mut2] = [1, 1];
+
+    const yours = () => party1[i1];
+    const opponents = () => party2[i2];
+
+    // Mark: -> Init
     battle.init({
-      yours: party[lhs],
-      opponents: enemies[rhs],
-      count: enemies.length,
+      yours: yours(),
+      opponents: opponents(),
+      yoursRemaining: activeCount(party1),
+      opponentsRemaining: activeCount(party2),
     });
 
-    // Mark: Battling
-    while (lhs < party.length && rhs < enemies.length) {
-      // Mark: Game decision
-      const yours = party[lhs];
-      const opponents = enemies[rhs];
-      const attacking =
-        random({ start: 0, end: yours.speed }) >=
-        random({ start: 0, end: opponents.speed });
+    while (true) {
+      // Mark: .. -> Init, repeat until no switch is needed
+      while (yours().fainted() || opponents().fainted()) {
+        i1 += yours().fainted() ? 1 : 0;
+        i2 += opponents().fainted() ? 1 : 0;
 
-      // Mark: Attack and defending
-      const attacker = attacking ? yours : opponents;
-      const defender = attacking ? opponents : yours;
-      const damage = attacker.damage(user.location);
-      defender.take(damage);
-      battle.turn({ attacking, yours, opponents, damage });
+        // Mark: ... -> End
+        if (i1 >= party1.length || i2 >= party2.length) {
+          battle.end({ win: i1 < party1.length });
+          return battle;
+        }
 
-      // Mark: Switching
-      lhs = lhs + (yours.fainted() ? 1 : 0);
-      rhs = rhs + (opponents.fainted() ? 1 : 0);
+        battle.init({
+          yours: yours(),
+          opponents: opponents(),
+          yoursRemaining: activeCount(party1),
+          opponentsRemaining: activeCount(party2),
+        });
+      }
+
+      // Mark: ... -> Turn
+      const yoursSpeed = random({ end: yours().speed * mut1 });
+      const opponentsSpeed = random({ end: opponents().speed * mut2 });
+      const attacking = yoursSpeed >= opponentsSpeed;
+
+      const damage = (attacking ? yours() : opponents()).damage(location);
+      (attacking ? opponents() : yours()).take(damage);
+      battle.turn({
+        yours: yours(),
+        opponents: opponents(),
+        attacking,
+        damage,
+      });
+
+      mut1 = attacking ? Math.max(0.1, mut1 - 0.1) : 1;
+      mut2 = !attacking ? Math.max(0.1, mut2 - 0.1) : 1;
     }
-
-    // Mark: End and apply result
-    // TODO: Apply result to the database
-    battle.end({ win: lhs < party.length });
-
-    return battle;
   }
 }
+
+const activeCount = (party: Dino[]) =>
+  party.filter((dino) => !dino.fainted()).length;

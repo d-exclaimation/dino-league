@@ -47,12 +47,14 @@ export type BattleInfo = BattleEnd | BattleInit | BattleTurn;
 /** Initial battle information */
 export type BattleInit = {
   __typename: 'BattleInit';
-  /** The number of opponent's dino */
-  count: Scalars['Float'];
   /** The current details of opponent's battling dino */
   opponents: Dino;
+  /** The number of opponent's dino */
+  opponentsRemaining: Scalars['Float'];
   /** The current details of your battling dino */
   yours: Dino;
+  /** The number of yours dino */
+  yoursRemaining: Scalars['Float'];
 };
 
 /** Turn information */
@@ -334,7 +336,7 @@ export type PutToBoxMutation = { __typename: 'Mutation', putDinoToBox: { __typen
 export type QuestMutationVariables = Exact<{ [key: string]: never; }>;
 
 
-export type QuestMutation = { __typename: 'Mutation', quest: { __typename: 'Battle', plan: Array<{ __typename: 'BattleEnd', win: boolean } | { __typename: 'BattleInit', count: number, yours: { __typename: 'Dino', id: string, name: string, variant: Variant, level: number, hp: number, percentage: number }, opponents: { __typename: 'Dino', id: string, name: string, variant: Variant, level: number, hp: number, percentage: number } } | { __typename: 'BattleTurn', attacking: boolean, damage: number, yours: { __typename: 'Dino', id: string, name: string, variant: Variant, level: number, hp: number, percentage: number }, opponents: { __typename: 'Dino', id: string, name: string, variant: Variant, level: number, hp: number, percentage: number } }> } | { __typename: 'Unauthorized', operation: string } };
+export type QuestMutation = { __typename: 'Mutation', quest: { __typename: 'Battle', plan: Array<{ __typename: 'BattleEnd', win: boolean } | { __typename: 'BattleInit', yoursRemaining: number, opponentsRemaining: number, yours: { __typename: 'Dino', id: string, name: string, variant: Variant, level: number, hp: number, percentage: number }, opponents: { __typename: 'Dino', id: string, name: string, variant: Variant, level: number, hp: number, percentage: number } } | { __typename: 'BattleTurn', attacking: boolean, damage: number, yours: { __typename: 'Dino', id: string, name: string, variant: Variant, level: number, hp: number, percentage: number }, opponents: { __typename: 'Dino', id: string, name: string, variant: Variant, level: number, hp: number, percentage: number } }> } | { __typename: 'Unauthorized', operation: string } };
 
 export type SwitchDinoMutationVariables = Exact<{
   input: DinoSwitch;
@@ -353,7 +355,7 @@ export type DinosaurQuery = { __typename: 'Query', dinosaur?: { __typename: 'Din
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename: 'Query', me?: { __typename: 'User', id: string } | null };
+export type MeQuery = { __typename: 'Query', me?: { __typename: 'User', id: string, location: Arena } | null };
 
 export type PartyViewQueryVariables = Exact<{
   dino: SearchById;
@@ -527,13 +529,14 @@ export const QuestDocument = gql`
       plan {
         __typename
         ... on BattleInit {
-          count
           yours {
             ...BattlingDinoInfo
           }
           opponents {
             ...BattlingDinoInfo
           }
+          yoursRemaining
+          opponentsRemaining
         }
         ... on BattleTurn {
           attacking
@@ -662,6 +665,7 @@ export const MeDocument = gql`
     query Me {
   me {
     id
+    location
   }
 }
     `;

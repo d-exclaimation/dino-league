@@ -8,13 +8,14 @@ mutation Quest {
       plan {
         __typename
         ... on BattleInit {
-          count
           yours {
             ...BattlingDinoInfo
           }
           opponents {
             ...BattlingDinoInfo
           }
+          yoursRemaining
+          opponentsRemaining
         }
         ... on BattleTurn {
           attacking
