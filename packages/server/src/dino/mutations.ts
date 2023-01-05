@@ -138,15 +138,26 @@ export class DinoMutations {
     }
 
     try {
-      await prisma.party.delete({
-        where: {
-          userId_dinoId: {
-            dinoId: input,
-            userId: user.id,
-          },
-        },
+      const res = await prisma.party.findMany({
+        where: { userId: user.id, dinoId: { not: input } },
+        orderBy: { order: "asc" },
+        select: { dinoId: true },
       });
-      await user.reoganiseParty(prisma);
+      const ids = res.map(({ dinoId }) => dinoId);
+
+      // Make sure order doesn't skip a number
+      await prisma.$transaction([
+        prisma.party.deleteMany({
+          where: { userId: user.id },
+        }),
+        prisma.party.createMany({
+          data: ids.map((dinoId, order) => ({
+            userId: user.id,
+            dinoId,
+            order,
+          })),
+        }),
+      ]);
 
       return new Indicator({ flag: true });
     } catch (e: unknown) {

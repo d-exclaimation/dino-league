@@ -6,7 +6,7 @@
 //
 
 import { Struct } from "@dino/common";
-import { PrismaStorage, User as _User } from "@dino/prisma";
+import { User as _User } from "@dino/prisma";
 import { Ctx, Field, ObjectType } from "type-graphql";
 import type { Context } from "../../context";
 import { Arena, Dino } from "../../dino/graphql";
@@ -75,27 +75,5 @@ export class User extends Identifiable {
       logger.customError(e, "User.hasFullParty");
       return true;
     }
-  }
-
-  async reoganiseParty(prisma: PrismaStorage) {
-    const res = await prisma.party.findMany({
-      where: { userId: this.id },
-      orderBy: { order: "asc" },
-      select: { dinoId: true },
-    });
-    const ids = res.map(({ dinoId }) => dinoId);
-
-    // Make sure order doesn't skip a number
-    await prisma.$transaction([
-      prisma.party.deleteMany({
-        where: {
-          userId: this.id,
-          dinoId: { in: ids },
-        },
-      }),
-      prisma.party.createMany({
-        data: ids.map((dinoId, order) => ({ userId: this.id, dinoId, order })),
-      }),
-    ]);
   }
 }
