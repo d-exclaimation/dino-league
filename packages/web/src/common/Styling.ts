@@ -47,7 +47,7 @@ export namespace Color {
   /**
    * Base tailwind color options, "{hue}-{lightness}"
    */
-  export type Base = `${Hue}-${Lightness}` | "white" | "black";
+  export type Base = `${Hue}-${Lightness}` | "white" | "black" | "transparent";
 
   /**
    * Tailwind color type template
