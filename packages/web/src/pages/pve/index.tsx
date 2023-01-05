@@ -5,7 +5,6 @@
 //  Created by d-exclaimation on 04 Jan 2023
 //
 
-import { Union } from "@d-exclaimation/union";
 import {
   BattleEnd,
   BattleInit,
@@ -16,14 +15,6 @@ import {
 } from "@dino/apollo";
 import { FC, useCallback, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-type BattleState = Union<{
-  loading: {};
-  battling: {
-    yours: BattlingDinoInfoFragment;
-    opponents: BattlingDinoInfoFragment;
-  };
-}>;
 
 type BattleDinoDisplay = {
   damage?: number;
