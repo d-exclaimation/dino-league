@@ -146,6 +146,7 @@ export class DinoMutations {
           },
         },
       });
+      await user.reoganiseParty(prisma);
 
       return new Indicator({ flag: true });
     } catch (e: unknown) {
