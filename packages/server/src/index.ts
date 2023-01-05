@@ -74,6 +74,7 @@ async function main() {
           return { prisma, logger, req };
         }
         const jwt = await verify<{ id: string }>(token);
+
         if (!jwt) {
           return { prisma, logger, req };
         }

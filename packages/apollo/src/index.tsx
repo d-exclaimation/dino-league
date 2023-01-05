@@ -5,7 +5,12 @@
 //  Created by d-exclaimation on 27 Nov 2022
 //
 
-export { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
+export {
+  ApolloClient,
+  ApolloProvider,
+  InMemoryCache,
+  useApolloClient,
+} from "@apollo/client";
 export * from "./auth/AuthProvider";
 export * from "./auth/useAuth";
 export * from "./client/http";

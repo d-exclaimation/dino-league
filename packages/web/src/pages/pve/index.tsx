@@ -143,7 +143,9 @@ const PvEPage: FC = () => {
   const startQuest = useCallback(async () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
 
-    const { data, errors } = await quest();
+    const { data, errors } = await quest({
+      refetchQueries: ["PartyView"],
+    });
     if (!data || errors) return;
 
     switch (data.quest.__typename) {

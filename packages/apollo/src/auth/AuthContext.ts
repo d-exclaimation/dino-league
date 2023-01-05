@@ -11,7 +11,9 @@ import type { MeQuery } from "../graphql";
 export const AuthContext = createContext<{
   user: MeQuery["me"];
   loading: boolean;
+  refetch: () => Promise<void>;
 }>({
   user: null,
   loading: false,
+  async refetch() {},
 });

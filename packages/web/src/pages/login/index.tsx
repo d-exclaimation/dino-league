@@ -5,7 +5,7 @@
 //  Created by d-exclaimation on 01 Jan 2023
 //
 
-import { useLoginMutation } from "@dino/apollo";
+import { useAuth, useLoginMutation } from "@dino/apollo";
 import { FC, useCallback, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { mutationToast } from "../../common/Toast";
@@ -14,6 +14,7 @@ import LoadingBar from "../common/LoadingBar";
 
 const LoginPage: FC = () => {
   const nav = useNavigate();
+  const { refetch } = useAuth();
   const [login] = useLoginMutation();
   const [form, setForm] = useState({
     email: "",
@@ -34,7 +35,8 @@ const LoginPage: FC = () => {
         switch (data.login.__typename) {
           case "Credentials":
             window?.localStorage?.setItem("token", data.login.token);
-            nav("/");
+            await refetch();
+            setTimeout(() => nav("/"), 0);
             return "Login successful";
           case "Unauthorized":
             throw "Invalid credentials";
@@ -43,7 +45,7 @@ const LoginPage: FC = () => {
     });
 
     setForm({ email: "", password: "" });
-  }, [form, login, setForm]);
+  }, [form, login, setForm, refetch]);
 
   return (
     <div className="w-screen h-screen flex items-center justify-center flex-col gap-5 bg-[#C0B2A2]">

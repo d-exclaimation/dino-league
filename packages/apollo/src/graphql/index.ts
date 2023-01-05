@@ -1,10 +1,16 @@
-import { gql } from '@apollo/client';
-import * as Apollo from '@apollo/client';
+import * as Apollo from "@apollo/client";
+import { gql } from "@apollo/client";
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type Exact<T extends { [key: string]: unknown }> = {
+  [K in keyof T]: T[K];
+};
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]?: Maybe<T[SubKey]>;
+};
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]: Maybe<T[SubKey]>;
+};
 const defaultOptions = {} as const;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -17,11 +23,11 @@ export type Scalars = {
 
 /** The battlefield environment */
 export enum Arena {
-  Desert = 'DESERT',
-  Grassland = 'GRASSLAND',
-  Hills = 'HILLS',
-  Ocean = 'OCEAN',
-  Urban = 'URBAN'
+  Desert = "DESERT",
+  Grassland = "GRASSLAND",
+  Hills = "HILLS",
+  Ocean = "OCEAN",
+  Urban = "URBAN",
 }
 
 /** Indicated reply that require authentication */
@@ -29,16 +35,16 @@ export type AuthIndicatorReply = Indicator | InputConstraint | Unauthorized;
 
 /** Battle result and plan */
 export type Battle = {
-  __typename: 'Battle';
+  __typename: "Battle";
   /** Battle plan information */
   plan: Array<BattleInfo>;
 };
 
 /** Battle ending */
 export type BattleEnd = {
-  __typename: 'BattleEnd';
+  __typename: "BattleEnd";
   /** Whether you win or not */
-  win: Scalars['Boolean'];
+  win: Scalars["Boolean"];
 };
 
 /** Battle information */
@@ -46,24 +52,24 @@ export type BattleInfo = BattleEnd | BattleInit | BattleTurn;
 
 /** Initial battle information */
 export type BattleInit = {
-  __typename: 'BattleInit';
+  __typename: "BattleInit";
   /** The current details of opponent's battling dino */
   opponents: Dino;
   /** The number of opponent's dino */
-  opponentsRemaining: Scalars['Float'];
+  opponentsRemaining: Scalars["Float"];
   /** The current details of your battling dino */
   yours: Dino;
   /** The number of yours dino */
-  yoursRemaining: Scalars['Float'];
+  yoursRemaining: Scalars["Float"];
 };
 
 /** Turn information */
 export type BattleTurn = {
-  __typename: 'BattleTurn';
+  __typename: "BattleTurn";
   /** True if your dino is attacking, false otherwise */
-  attacking: Scalars['Boolean'];
+  attacking: Scalars["Boolean"];
   /** The damage being dealt */
-  damage: Scalars['Float'];
+  damage: Scalars["Float"];
   /** The current details of opponent's battling dino */
   opponents: Dino;
   /** The current details of your battling dino */
@@ -75,44 +81,43 @@ export type CreateDino = InputConstraint | NewDino | Unauthorized;
 
 /** User credentials */
 export type Credentials = {
-  __typename: 'Credentials';
+  __typename: "Credentials";
   /** Token for this user */
-  token: Scalars['String'];
+  token: Scalars["String"];
   /** User information */
   user: User;
 };
 
 /** A dinosaur */
 export type Dino = Identifiable & {
-  __typename: 'Dino';
+  __typename: "Dino";
   /** The arena environment this Dinosaur most effective in */
   arena: Arena;
   /** The attack for this class of Dinosaur */
-  attack: Scalars['Float'];
+  attack: Scalars["Float"];
   /** The damage dealt by this Dinosaur */
-  damage: Scalars['Float'];
+  damage: Scalars["Float"];
   /** The amount of healing this class Dinosaur gain when resting */
-  healing: Scalars['Float'];
+  healing: Scalars["Float"];
   /** The current health of this Dinosaur */
-  hp: Scalars['Float'];
+  hp: Scalars["Float"];
   /** A unique ID for this entity */
-  id: Scalars['ID'];
+  id: Scalars["ID"];
   /** The current level of this Dinosaur, which affects its attack and HP */
-  level: Scalars['Int'];
+  level: Scalars["Int"];
   /** The max hp of this Dinosaur */
-  maxHp: Scalars['Float'];
+  maxHp: Scalars["Float"];
   /** The name of this Dinosaur */
-  name: Scalars['String'];
+  name: Scalars["String"];
   /** The hp percentage of this Dinosaur */
-  percentage: Scalars['Float'];
+  percentage: Scalars["Float"];
   /** The price of this dinosaur */
-  price: Scalars['Float'];
+  price: Scalars["Float"];
   /** The speed for this class of Dinosaur */
-  speed: Scalars['Float'];
+  speed: Scalars["Float"];
   /** The variance for this Dinosaur */
   variant: Variant;
 };
-
 
 /** A dinosaur */
 export type DinoDamageArgs = {
@@ -122,9 +127,9 @@ export type DinoDamageArgs = {
 /** Filter argument(s) for Dino(s) */
 export type DinoCreate = {
   /** The current level of this Dinosaur, which affects its attack and HP */
-  level?: Scalars['Int'];
+  level?: Scalars["Int"];
   /** The name of this Dinosaur */
-  name?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars["String"]>;
   /** The variant of one or many Dino(s) */
   variant: Variant;
 };
@@ -134,7 +139,7 @@ export type DinoFilter = {
   /** The arena of choice of one or many Dino(s) */
   arena?: InputMaybe<Arena>;
   /** The limit of result to take */
-  take?: Scalars['Int'];
+  take?: Scalars["Int"];
   /** The variant of one or many Dino(s) */
   variant?: InputMaybe<Variant>;
 };
@@ -142,30 +147,30 @@ export type DinoFilter = {
 /** Input to switch 2 dinosaur */
 export type DinoSwitch = {
   /** One of the dino's id to be switched */
-  lhs: Scalars['ID'];
+  lhs: Scalars["ID"];
   /** One of the dino's id to be switched */
-  rhs: Scalars['ID'];
+  rhs: Scalars["ID"];
 };
 
 export type Identifiable = {
   /** A unique ID for this entity */
-  id: Scalars['ID'];
+  id: Scalars["ID"];
 };
 
 /** Indicator that an operation has done successfully something or not */
 export type Indicator = {
-  __typename: 'Indicator';
+  __typename: "Indicator";
   /** A indicator flag, true for something did happen, false otherwise */
-  flag: Scalars['Boolean'];
+  flag: Scalars["Boolean"];
 };
 
 /** One of the input violates a constraint */
 export type InputConstraint = {
-  __typename: 'InputConstraint';
+  __typename: "InputConstraint";
   /** The field name that is violating constraint */
-  name: Scalars['String'];
+  name: Scalars["String"];
   /** The reason of violation */
-  reason: Scalars['String'];
+  reason: Scalars["String"];
 };
 
 /** Login result */
@@ -174,13 +179,13 @@ export type Login = Credentials | Unauthorized;
 /** Information required for login */
 export type LoginInfo = {
   /** A unique email for the user */
-  email: Scalars['String'];
+  email: Scalars["String"];
   /** Password to log in */
-  password: Scalars['String'];
+  password: Scalars["String"];
 };
 
 export type Mutation = {
-  __typename: 'Mutation';
+  __typename: "Mutation";
   /** Put a dino from box to the party */
   addDinoToParty: AuthIndicatorReply;
   /** Create a Dino */
@@ -196,26 +201,21 @@ export type Mutation = {
   switchDino: AuthIndicatorReply;
 };
 
-
 export type MutationAddDinoToPartyArgs = {
-  input: Scalars['ID'];
+  input: Scalars["ID"];
 };
-
 
 export type MutationCreateDinoArgs = {
   input: DinoCreate;
 };
 
-
 export type MutationLoginArgs = {
   input: LoginInfo;
 };
 
-
 export type MutationPutDinoToBoxArgs = {
-  input: Scalars['ID'];
+  input: Scalars["ID"];
 };
-
 
 export type MutationSwitchDinoArgs = {
   input: DinoSwitch;
@@ -223,13 +223,13 @@ export type MutationSwitchDinoArgs = {
 
 /** New Dino has been created */
 export type NewDino = {
-  __typename: 'NewDino';
+  __typename: "NewDino";
   /** The new Dino created */
   dino: Dino;
 };
 
 export type Query = {
-  __typename: 'Query';
+  __typename: "Query";
   /** Find a Dino by their ID */
   dinosaur?: Maybe<Dino>;
   /** Get all dinosaurs */
@@ -238,11 +238,9 @@ export type Query = {
   me?: Maybe<User>;
 };
 
-
 export type QueryDinosaurArgs = {
   input: SearchById;
 };
-
 
 export type QueryDinosaursArgs = {
   input: DinoFilter;
@@ -253,25 +251,25 @@ export type Quest = Battle | Unauthorized;
 
 export type SearchById = {
   /** A unique ID for this entity */
-  id: Scalars['ID'];
+  id: Scalars["ID"];
 };
 
 /** An operation is made by an unauthorized user */
 export type Unauthorized = {
-  __typename: 'Unauthorized';
+  __typename: "Unauthorized";
   /** What operation is done that caused an unauthorized error */
-  operation: Scalars['String'];
+  operation: Scalars["String"];
 };
 
 /** A valid user of the game */
 export type User = Identifiable & {
-  __typename: 'User';
+  __typename: "User";
   /** Get all Dinosaur in this user's party */
   box: Array<Dino>;
   /** True if the user has a full party */
-  hasFullParty: Scalars['Boolean'];
+  hasFullParty: Scalars["Boolean"];
   /** A unique ID for this entity */
-  id: Scalars['ID'];
+  id: Scalars["ID"];
   /** The current arena the user is in */
   location: Arena;
   /** Get all Dinosaur in this user's party */
@@ -281,146 +279,322 @@ export type User = Identifiable & {
 /** The variant of dinosaur */
 export enum Variant {
   /** Bold comes in black */
-  Black = 'black',
+  Black = "black",
   /** Jumping expert */
-  Blue = 'blue',
+  Blue = "blue",
   /** Runs swiftly */
-  Green = 'green',
+  Green = "green",
   /** Ouch.. */
-  Pink = 'pink',
+  Pink = "pink",
   /** A good offense in the best defense */
-  Red = 'red',
+  Red = "red",
   /** Boom */
-  Slate = 'slate',
+  Slate = "slate",
   /** Jack of all trades */
-  White = 'white',
+  White = "white",
   /** Can't lose if you don't get hit */
-  Yellow = 'yellow'
+  Yellow = "yellow",
 }
 
-export type BattlingDinoInfoFragment = { __typename: 'Dino', id: string, name: string, variant: Variant, level: number, hp: number, percentage: number };
+export type BattlingDinoInfoFragment = {
+  __typename: "Dino";
+  id: string;
+  name: string;
+  variant: Variant;
+  level: number;
+  hp: number;
+  percentage: number;
+};
 
-export type FullDinoInfoFragment = { __typename: 'Dino', level: number, attack: number, speed: number, healing: number, arena: Arena, id: string, name: string, hp: number, percentage: number, variant: Variant };
+export type FullDinoInfoFragment = {
+  __typename: "Dino";
+  level: number;
+  attack: number;
+  speed: number;
+  healing: number;
+  arena: Arena;
+  id: string;
+  name: string;
+  hp: number;
+  percentage: number;
+  variant: Variant;
+};
 
-export type QuickDinoInfoFragment = { __typename: 'Dino', id: string, name: string, hp: number, percentage: number, variant: Variant };
+export type QuickDinoInfoFragment = {
+  __typename: "Dino";
+  id: string;
+  name: string;
+  hp: number;
+  percentage: number;
+  variant: Variant;
+};
 
-type Reply_Indicator_Fragment = { __typename: 'Indicator', flag: boolean };
+type Reply_Indicator_Fragment = { __typename: "Indicator"; flag: boolean };
 
-type Reply_InputConstraint_Fragment = { __typename: 'InputConstraint', name: string, reason: string };
+type Reply_InputConstraint_Fragment = {
+  __typename: "InputConstraint";
+  name: string;
+  reason: string;
+};
 
-type Reply_Unauthorized_Fragment = { __typename: 'Unauthorized', operation: string };
+type Reply_Unauthorized_Fragment = {
+  __typename: "Unauthorized";
+  operation: string;
+};
 
-export type ReplyFragment = Reply_Indicator_Fragment | Reply_InputConstraint_Fragment | Reply_Unauthorized_Fragment;
+export type ReplyFragment =
+  | Reply_Indicator_Fragment
+  | Reply_InputConstraint_Fragment
+  | Reply_Unauthorized_Fragment;
 
 export type AddToPartyMutationVariables = Exact<{
-  dino: Scalars['ID'];
+  dino: Scalars["ID"];
 }>;
 
-
-export type AddToPartyMutation = { __typename: 'Mutation', addDinoToParty: { __typename: 'Indicator', flag: boolean } | { __typename: 'InputConstraint', name: string, reason: string } | { __typename: 'Unauthorized', operation: string } };
+export type AddToPartyMutation = {
+  __typename: "Mutation";
+  addDinoToParty:
+    | { __typename: "Indicator"; flag: boolean }
+    | { __typename: "InputConstraint"; name: string; reason: string }
+    | { __typename: "Unauthorized"; operation: string };
+};
 
 export type LoginMutationVariables = Exact<{
   input: LoginInfo;
 }>;
 
-
-export type LoginMutation = { __typename: 'Mutation', login: { __typename: 'Credentials', token: string } | { __typename: 'Unauthorized', operation: string } };
+export type LoginMutation = {
+  __typename: "Mutation";
+  login:
+    | { __typename: "Credentials"; token: string }
+    | { __typename: "Unauthorized"; operation: string };
+};
 
 export type PutToBoxMutationVariables = Exact<{
-  dino: Scalars['ID'];
+  dino: Scalars["ID"];
 }>;
 
+export type PutToBoxMutation = {
+  __typename: "Mutation";
+  putDinoToBox:
+    | { __typename: "Indicator"; flag: boolean }
+    | { __typename: "InputConstraint"; name: string; reason: string }
+    | { __typename: "Unauthorized"; operation: string };
+};
 
-export type PutToBoxMutation = { __typename: 'Mutation', putDinoToBox: { __typename: 'Indicator', flag: boolean } | { __typename: 'InputConstraint', name: string, reason: string } | { __typename: 'Unauthorized', operation: string } };
+export type QuestMutationVariables = Exact<{ [key: string]: never }>;
 
-export type QuestMutationVariables = Exact<{ [key: string]: never; }>;
-
-
-export type QuestMutation = { __typename: 'Mutation', quest: { __typename: 'Battle', plan: Array<{ __typename: 'BattleEnd', win: boolean } | { __typename: 'BattleInit', yoursRemaining: number, opponentsRemaining: number, yours: { __typename: 'Dino', id: string, name: string, variant: Variant, level: number, hp: number, percentage: number }, opponents: { __typename: 'Dino', id: string, name: string, variant: Variant, level: number, hp: number, percentage: number } } | { __typename: 'BattleTurn', attacking: boolean, damage: number, yours: { __typename: 'Dino', id: string, name: string, variant: Variant, level: number, hp: number, percentage: number }, opponents: { __typename: 'Dino', id: string, name: string, variant: Variant, level: number, hp: number, percentage: number } }> } | { __typename: 'Unauthorized', operation: string } };
+export type QuestMutation = {
+  __typename: "Mutation";
+  quest:
+    | {
+        __typename: "Battle";
+        plan: Array<
+          | { __typename: "BattleEnd"; win: boolean }
+          | {
+              __typename: "BattleInit";
+              yoursRemaining: number;
+              opponentsRemaining: number;
+              yours: {
+                __typename: "Dino";
+                id: string;
+                name: string;
+                variant: Variant;
+                level: number;
+                hp: number;
+                percentage: number;
+              };
+              opponents: {
+                __typename: "Dino";
+                id: string;
+                name: string;
+                variant: Variant;
+                level: number;
+                hp: number;
+                percentage: number;
+              };
+            }
+          | {
+              __typename: "BattleTurn";
+              attacking: boolean;
+              damage: number;
+              yours: {
+                __typename: "Dino";
+                id: string;
+                name: string;
+                variant: Variant;
+                level: number;
+                hp: number;
+                percentage: number;
+              };
+              opponents: {
+                __typename: "Dino";
+                id: string;
+                name: string;
+                variant: Variant;
+                level: number;
+                hp: number;
+                percentage: number;
+              };
+            }
+        >;
+      }
+    | { __typename: "Unauthorized"; operation: string };
+};
 
 export type SwitchDinoMutationVariables = Exact<{
   input: DinoSwitch;
 }>;
 
-
-export type SwitchDinoMutation = { __typename: 'Mutation', switchDino: { __typename: 'Indicator', flag: boolean } | { __typename: 'InputConstraint', name: string, reason: string } | { __typename: 'Unauthorized', operation: string } };
+export type SwitchDinoMutation = {
+  __typename: "Mutation";
+  switchDino:
+    | { __typename: "Indicator"; flag: boolean }
+    | { __typename: "InputConstraint"; name: string; reason: string }
+    | { __typename: "Unauthorized"; operation: string };
+};
 
 export type DinosaurQueryVariables = Exact<{
   input: SearchById;
 }>;
 
+export type DinosaurQuery = {
+  __typename: "Query";
+  dinosaur?: {
+    __typename: "Dino";
+    id: string;
+    level: number;
+    hp: number;
+    attack: number;
+    speed: number;
+    healing: number;
+    arena: Arena;
+    variant: Variant;
+    name: string;
+    percentage: number;
+  } | null;
+};
 
-export type DinosaurQuery = { __typename: 'Query', dinosaur?: { __typename: 'Dino', id: string, level: number, hp: number, attack: number, speed: number, healing: number, arena: Arena, variant: Variant, name: string, percentage: number } | null };
+export type MeQueryVariables = Exact<{ [key: string]: never }>;
 
-export type MeQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type MeQuery = { __typename: 'Query', me?: { __typename: 'User', id: string, location: Arena } | null };
+export type MeQuery = {
+  __typename: "Query";
+  me?: { __typename: "User"; id: string; location: Arena } | null;
+};
 
 export type PartyViewQueryVariables = Exact<{
   dino: SearchById;
 }>;
 
+export type PartyViewQuery = {
+  __typename: "Query";
+  dinosaur?: {
+    __typename: "Dino";
+    level: number;
+    attack: number;
+    speed: number;
+    healing: number;
+    arena: Arena;
+    id: string;
+    name: string;
+    hp: number;
+    percentage: number;
+    variant: Variant;
+  } | null;
+  me?: {
+    __typename: "User";
+    id: string;
+    hasFullParty: boolean;
+    party: Array<{
+      __typename: "Dino";
+      id: string;
+      name: string;
+      hp: number;
+      percentage: number;
+      variant: Variant;
+    }>;
+    box: Array<{
+      __typename: "Dino";
+      id: string;
+      name: string;
+      hp: number;
+      percentage: number;
+      variant: Variant;
+    }>;
+  } | null;
+};
 
-export type PartyViewQuery = { __typename: 'Query', dinosaur?: { __typename: 'Dino', level: number, attack: number, speed: number, healing: number, arena: Arena, id: string, name: string, hp: number, percentage: number, variant: Variant } | null, me?: { __typename: 'User', id: string, hasFullParty: boolean, party: Array<{ __typename: 'Dino', id: string, name: string, hp: number, percentage: number, variant: Variant }>, box: Array<{ __typename: 'Dino', id: string, name: string, hp: number, percentage: number, variant: Variant }> } | null };
+export type PlaceholderPartyQueryVariables = Exact<{ [key: string]: never }>;
 
-export type PlaceholderPartyQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type PlaceholderPartyQuery = { __typename: 'Query', dinosaurs: Array<{ __typename: 'Dino', id: string, name: string, hp: number, percentage: number, variant: Variant }> };
+export type PlaceholderPartyQuery = {
+  __typename: "Query";
+  dinosaurs: Array<{
+    __typename: "Dino";
+    id: string;
+    name: string;
+    hp: number;
+    percentage: number;
+    variant: Variant;
+  }>;
+};
 
 export const BattlingDinoInfoFragmentDoc = gql`
-    fragment BattlingDinoInfo on Dino {
-  id
-  name
-  variant
-  level
-  hp
-  percentage
-}
-    `;
-export const QuickDinoInfoFragmentDoc = gql`
-    fragment QuickDinoInfo on Dino {
-  id
-  name
-  hp
-  percentage
-  variant
-}
-    `;
-export const FullDinoInfoFragmentDoc = gql`
-    fragment FullDinoInfo on Dino {
-  ...QuickDinoInfo
-  level
-  attack
-  speed
-  healing
-  arena
-}
-    ${QuickDinoInfoFragmentDoc}`;
-export const ReplyFragmentDoc = gql`
-    fragment Reply on AuthIndicatorReply {
-  __typename
-  ... on Unauthorized {
-    operation
-  }
-  ... on Indicator {
-    flag
-  }
-  ... on InputConstraint {
+  fragment BattlingDinoInfo on Dino {
+    id
     name
-    reason
+    variant
+    level
+    hp
+    percentage
   }
-}
-    `;
+`;
+export const QuickDinoInfoFragmentDoc = gql`
+  fragment QuickDinoInfo on Dino {
+    id
+    name
+    hp
+    percentage
+    variant
+  }
+`;
+export const FullDinoInfoFragmentDoc = gql`
+  fragment FullDinoInfo on Dino {
+    ...QuickDinoInfo
+    level
+    attack
+    speed
+    healing
+    arena
+  }
+  ${QuickDinoInfoFragmentDoc}
+`;
+export const ReplyFragmentDoc = gql`
+  fragment Reply on AuthIndicatorReply {
+    __typename
+    ... on Unauthorized {
+      operation
+    }
+    ... on Indicator {
+      flag
+    }
+    ... on InputConstraint {
+      name
+      reason
+    }
+  }
+`;
 export const AddToPartyDocument = gql`
-    mutation AddToParty($dino: ID!) {
-  addDinoToParty(input: $dino) {
-    ...Reply
+  mutation AddToParty($dino: ID!) {
+    addDinoToParty(input: $dino) {
+      ...Reply
+    }
   }
-}
-    ${ReplyFragmentDoc}`;
-export type AddToPartyMutationFn = Apollo.MutationFunction<AddToPartyMutation, AddToPartyMutationVariables>;
+  ${ReplyFragmentDoc}
+`;
+export type AddToPartyMutationFn = Apollo.MutationFunction<
+  AddToPartyMutation,
+  AddToPartyMutationVariables
+>;
 
 /**
  * __useAddToPartyMutation__
@@ -439,27 +613,44 @@ export type AddToPartyMutationFn = Apollo.MutationFunction<AddToPartyMutation, A
  *   },
  * });
  */
-export function useAddToPartyMutation(baseOptions?: Apollo.MutationHookOptions<AddToPartyMutation, AddToPartyMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<AddToPartyMutation, AddToPartyMutationVariables>(AddToPartyDocument, options);
-      }
-export type AddToPartyMutationHookResult = ReturnType<typeof useAddToPartyMutation>;
-export type AddToPartyMutationResult = Apollo.MutationResult<AddToPartyMutation>;
-export type AddToPartyMutationOptions = Apollo.BaseMutationOptions<AddToPartyMutation, AddToPartyMutationVariables>;
+export function useAddToPartyMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    AddToPartyMutation,
+    AddToPartyMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<AddToPartyMutation, AddToPartyMutationVariables>(
+    AddToPartyDocument,
+    options
+  );
+}
+export type AddToPartyMutationHookResult = ReturnType<
+  typeof useAddToPartyMutation
+>;
+export type AddToPartyMutationResult =
+  Apollo.MutationResult<AddToPartyMutation>;
+export type AddToPartyMutationOptions = Apollo.BaseMutationOptions<
+  AddToPartyMutation,
+  AddToPartyMutationVariables
+>;
 export const LoginDocument = gql`
-    mutation Login($input: LoginInfo!) {
-  login(input: $input) {
-    __typename
-    ... on Credentials {
-      token
-    }
-    ... on Unauthorized {
-      operation
+  mutation Login($input: LoginInfo!) {
+    login(input: $input) {
+      __typename
+      ... on Credentials {
+        token
+      }
+      ... on Unauthorized {
+        operation
+      }
     }
   }
-}
-    `;
-export type LoginMutationFn = Apollo.MutationFunction<LoginMutation, LoginMutationVariables>;
+`;
+export type LoginMutationFn = Apollo.MutationFunction<
+  LoginMutation,
+  LoginMutationVariables
+>;
 
 /**
  * __useLoginMutation__
@@ -478,21 +669,36 @@ export type LoginMutationFn = Apollo.MutationFunction<LoginMutation, LoginMutati
  *   },
  * });
  */
-export function useLoginMutation(baseOptions?: Apollo.MutationHookOptions<LoginMutation, LoginMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument, options);
-      }
+export function useLoginMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    LoginMutation,
+    LoginMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<LoginMutation, LoginMutationVariables>(
+    LoginDocument,
+    options
+  );
+}
 export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
-export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
+export type LoginMutationOptions = Apollo.BaseMutationOptions<
+  LoginMutation,
+  LoginMutationVariables
+>;
 export const PutToBoxDocument = gql`
-    mutation PutToBox($dino: ID!) {
-  putDinoToBox(input: $dino) {
-    ...Reply
+  mutation PutToBox($dino: ID!) {
+    putDinoToBox(input: $dino) {
+      ...Reply
+    }
   }
-}
-    ${ReplyFragmentDoc}`;
-export type PutToBoxMutationFn = Apollo.MutationFunction<PutToBoxMutation, PutToBoxMutationVariables>;
+  ${ReplyFragmentDoc}
+`;
+export type PutToBoxMutationFn = Apollo.MutationFunction<
+  PutToBoxMutation,
+  PutToBoxMutationVariables
+>;
 
 /**
  * __usePutToBoxMutation__
@@ -511,52 +717,67 @@ export type PutToBoxMutationFn = Apollo.MutationFunction<PutToBoxMutation, PutTo
  *   },
  * });
  */
-export function usePutToBoxMutation(baseOptions?: Apollo.MutationHookOptions<PutToBoxMutation, PutToBoxMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<PutToBoxMutation, PutToBoxMutationVariables>(PutToBoxDocument, options);
-      }
+export function usePutToBoxMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    PutToBoxMutation,
+    PutToBoxMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<PutToBoxMutation, PutToBoxMutationVariables>(
+    PutToBoxDocument,
+    options
+  );
+}
 export type PutToBoxMutationHookResult = ReturnType<typeof usePutToBoxMutation>;
 export type PutToBoxMutationResult = Apollo.MutationResult<PutToBoxMutation>;
-export type PutToBoxMutationOptions = Apollo.BaseMutationOptions<PutToBoxMutation, PutToBoxMutationVariables>;
+export type PutToBoxMutationOptions = Apollo.BaseMutationOptions<
+  PutToBoxMutation,
+  PutToBoxMutationVariables
+>;
 export const QuestDocument = gql`
-    mutation Quest {
-  quest {
-    __typename
-    ... on Unauthorized {
-      operation
-    }
-    ... on Battle {
-      plan {
-        __typename
-        ... on BattleInit {
-          yours {
-            ...BattlingDinoInfo
+  mutation Quest {
+    quest {
+      __typename
+      ... on Unauthorized {
+        operation
+      }
+      ... on Battle {
+        plan {
+          __typename
+          ... on BattleInit {
+            yours {
+              ...BattlingDinoInfo
+            }
+            opponents {
+              ...BattlingDinoInfo
+            }
+            yoursRemaining
+            opponentsRemaining
           }
-          opponents {
-            ...BattlingDinoInfo
+          ... on BattleTurn {
+            attacking
+            damage
+            yours {
+              ...BattlingDinoInfo
+            }
+            opponents {
+              ...BattlingDinoInfo
+            }
           }
-          yoursRemaining
-          opponentsRemaining
-        }
-        ... on BattleTurn {
-          attacking
-          damage
-          yours {
-            ...BattlingDinoInfo
+          ... on BattleEnd {
+            win
           }
-          opponents {
-            ...BattlingDinoInfo
-          }
-        }
-        ... on BattleEnd {
-          win
         }
       }
     }
   }
-}
-    ${BattlingDinoInfoFragmentDoc}`;
-export type QuestMutationFn = Apollo.MutationFunction<QuestMutation, QuestMutationVariables>;
+  ${BattlingDinoInfoFragmentDoc}
+`;
+export type QuestMutationFn = Apollo.MutationFunction<
+  QuestMutation,
+  QuestMutationVariables
+>;
 
 /**
  * __useQuestMutation__
@@ -574,21 +795,36 @@ export type QuestMutationFn = Apollo.MutationFunction<QuestMutation, QuestMutati
  *   },
  * });
  */
-export function useQuestMutation(baseOptions?: Apollo.MutationHookOptions<QuestMutation, QuestMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<QuestMutation, QuestMutationVariables>(QuestDocument, options);
-      }
+export function useQuestMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    QuestMutation,
+    QuestMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<QuestMutation, QuestMutationVariables>(
+    QuestDocument,
+    options
+  );
+}
 export type QuestMutationHookResult = ReturnType<typeof useQuestMutation>;
 export type QuestMutationResult = Apollo.MutationResult<QuestMutation>;
-export type QuestMutationOptions = Apollo.BaseMutationOptions<QuestMutation, QuestMutationVariables>;
+export type QuestMutationOptions = Apollo.BaseMutationOptions<
+  QuestMutation,
+  QuestMutationVariables
+>;
 export const SwitchDinoDocument = gql`
-    mutation SwitchDino($input: DinoSwitch!) {
-  switchDino(input: $input) {
-    ...Reply
+  mutation SwitchDino($input: DinoSwitch!) {
+    switchDino(input: $input) {
+      ...Reply
+    }
   }
-}
-    ${ReplyFragmentDoc}`;
-export type SwitchDinoMutationFn = Apollo.MutationFunction<SwitchDinoMutation, SwitchDinoMutationVariables>;
+  ${ReplyFragmentDoc}
+`;
+export type SwitchDinoMutationFn = Apollo.MutationFunction<
+  SwitchDinoMutation,
+  SwitchDinoMutationVariables
+>;
 
 /**
  * __useSwitchDinoMutation__
@@ -607,29 +843,43 @@ export type SwitchDinoMutationFn = Apollo.MutationFunction<SwitchDinoMutation, S
  *   },
  * });
  */
-export function useSwitchDinoMutation(baseOptions?: Apollo.MutationHookOptions<SwitchDinoMutation, SwitchDinoMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<SwitchDinoMutation, SwitchDinoMutationVariables>(SwitchDinoDocument, options);
-      }
-export type SwitchDinoMutationHookResult = ReturnType<typeof useSwitchDinoMutation>;
-export type SwitchDinoMutationResult = Apollo.MutationResult<SwitchDinoMutation>;
-export type SwitchDinoMutationOptions = Apollo.BaseMutationOptions<SwitchDinoMutation, SwitchDinoMutationVariables>;
-export const DinosaurDocument = gql`
-    query Dinosaur($input: SearchByID!) {
-  dinosaur(input: $input) {
-    id
-    level
-    hp
-    attack
-    speed
-    healing
-    arena
-    variant
-    name
-    percentage
-  }
+export function useSwitchDinoMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    SwitchDinoMutation,
+    SwitchDinoMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<SwitchDinoMutation, SwitchDinoMutationVariables>(
+    SwitchDinoDocument,
+    options
+  );
 }
-    `;
+export type SwitchDinoMutationHookResult = ReturnType<
+  typeof useSwitchDinoMutation
+>;
+export type SwitchDinoMutationResult =
+  Apollo.MutationResult<SwitchDinoMutation>;
+export type SwitchDinoMutationOptions = Apollo.BaseMutationOptions<
+  SwitchDinoMutation,
+  SwitchDinoMutationVariables
+>;
+export const DinosaurDocument = gql`
+  query Dinosaur($input: SearchByID!) {
+    dinosaur(input: $input) {
+      id
+      level
+      hp
+      attack
+      speed
+      healing
+      arena
+      variant
+      name
+      percentage
+    }
+  }
+`;
 
 /**
  * __useDinosaurQuery__
@@ -647,28 +897,46 @@ export const DinosaurDocument = gql`
  *   },
  * });
  */
-export function useDinosaurQuery(baseOptions: Apollo.QueryHookOptions<DinosaurQuery, DinosaurQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<DinosaurQuery, DinosaurQueryVariables>(DinosaurDocument, options);
-      }
-export function useDinosaurLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DinosaurQuery, DinosaurQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<DinosaurQuery, DinosaurQueryVariables>(DinosaurDocument, options);
-        }
-export type DinosaurQueryHookResult = ReturnType<typeof useDinosaurQuery>;
-export type DinosaurLazyQueryHookResult = ReturnType<typeof useDinosaurLazyQuery>;
-export type DinosaurQueryResult = Apollo.QueryResult<DinosaurQuery, DinosaurQueryVariables>;
-export function refetchDinosaurQuery(variables: DinosaurQueryVariables) {
-      return { query: DinosaurDocument, variables: variables }
-    }
-export const MeDocument = gql`
-    query Me {
-  me {
-    id
-    location
-  }
+export function useDinosaurQuery(
+  baseOptions: Apollo.QueryHookOptions<DinosaurQuery, DinosaurQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<DinosaurQuery, DinosaurQueryVariables>(
+    DinosaurDocument,
+    options
+  );
 }
-    `;
+export function useDinosaurLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    DinosaurQuery,
+    DinosaurQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<DinosaurQuery, DinosaurQueryVariables>(
+    DinosaurDocument,
+    options
+  );
+}
+export type DinosaurQueryHookResult = ReturnType<typeof useDinosaurQuery>;
+export type DinosaurLazyQueryHookResult = ReturnType<
+  typeof useDinosaurLazyQuery
+>;
+export type DinosaurQueryResult = Apollo.QueryResult<
+  DinosaurQuery,
+  DinosaurQueryVariables
+>;
+export function refetchDinosaurQuery(variables: DinosaurQueryVariables) {
+  return { query: DinosaurDocument, variables: variables };
+}
+export const MeDocument = gql`
+  query Me {
+    me {
+      id
+      location
+    }
+  }
+`;
 
 /**
  * __useMeQuery__
@@ -685,38 +953,43 @@ export const MeDocument = gql`
  *   },
  * });
  */
-export function useMeQuery(baseOptions?: Apollo.QueryHookOptions<MeQuery, MeQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<MeQuery, MeQueryVariables>(MeDocument, options);
-      }
-export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery, MeQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<MeQuery, MeQueryVariables>(MeDocument, options);
-        }
+export function useMeQuery(
+  baseOptions?: Apollo.QueryHookOptions<MeQuery, MeQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<MeQuery, MeQueryVariables>(MeDocument, options);
+}
+export function useMeLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<MeQuery, MeQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<MeQuery, MeQueryVariables>(MeDocument, options);
+}
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
 export function refetchMeQuery(variables?: MeQueryVariables) {
-      return { query: MeDocument, variables: variables }
-    }
-export const PartyViewDocument = gql`
-    query PartyView($dino: SearchByID!) {
-  dinosaur(input: $dino) {
-    ...FullDinoInfo
-  }
-  me {
-    id
-    hasFullParty
-    party {
-      ...QuickDinoInfo
-    }
-    box {
-      ...QuickDinoInfo
-    }
-  }
+  return { query: MeDocument, variables: variables };
 }
-    ${FullDinoInfoFragmentDoc}
-${QuickDinoInfoFragmentDoc}`;
+export const PartyViewDocument = gql`
+  query PartyView($dino: SearchByID!) {
+    dinosaur(input: $dino) {
+      ...FullDinoInfo
+    }
+    me {
+      id
+      hasFullParty
+      party {
+        ...QuickDinoInfo
+      }
+      box {
+        ...QuickDinoInfo
+      }
+    }
+  }
+  ${FullDinoInfoFragmentDoc}
+  ${QuickDinoInfoFragmentDoc}
+`;
 
 /**
  * __usePartyViewQuery__
@@ -734,31 +1007,49 @@ ${QuickDinoInfoFragmentDoc}`;
  *   },
  * });
  */
-export function usePartyViewQuery(baseOptions: Apollo.QueryHookOptions<PartyViewQuery, PartyViewQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PartyViewQuery, PartyViewQueryVariables>(PartyViewDocument, options);
-      }
-export function usePartyViewLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PartyViewQuery, PartyViewQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PartyViewQuery, PartyViewQueryVariables>(PartyViewDocument, options);
-        }
-export type PartyViewQueryHookResult = ReturnType<typeof usePartyViewQuery>;
-export type PartyViewLazyQueryHookResult = ReturnType<typeof usePartyViewLazyQuery>;
-export type PartyViewQueryResult = Apollo.QueryResult<PartyViewQuery, PartyViewQueryVariables>;
-export function refetchPartyViewQuery(variables: PartyViewQueryVariables) {
-      return { query: PartyViewDocument, variables: variables }
-    }
-export const PlaceholderPartyDocument = gql`
-    query PlaceholderParty {
-  dinosaurs(input: {take: 5}) {
-    id
-    name
-    hp
-    percentage
-    variant
-  }
+export function usePartyViewQuery(
+  baseOptions: Apollo.QueryHookOptions<PartyViewQuery, PartyViewQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<PartyViewQuery, PartyViewQueryVariables>(
+    PartyViewDocument,
+    options
+  );
 }
-    `;
+export function usePartyViewLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    PartyViewQuery,
+    PartyViewQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<PartyViewQuery, PartyViewQueryVariables>(
+    PartyViewDocument,
+    options
+  );
+}
+export type PartyViewQueryHookResult = ReturnType<typeof usePartyViewQuery>;
+export type PartyViewLazyQueryHookResult = ReturnType<
+  typeof usePartyViewLazyQuery
+>;
+export type PartyViewQueryResult = Apollo.QueryResult<
+  PartyViewQuery,
+  PartyViewQueryVariables
+>;
+export function refetchPartyViewQuery(variables: PartyViewQueryVariables) {
+  return { query: PartyViewDocument, variables: variables };
+}
+export const PlaceholderPartyDocument = gql`
+  query PlaceholderParty {
+    dinosaurs(input: { take: 5 }) {
+      id
+      name
+      hp
+      percentage
+      variant
+    }
+  }
+`;
 
 /**
  * __usePlaceholderPartyQuery__
@@ -775,17 +1066,42 @@ export const PlaceholderPartyDocument = gql`
  *   },
  * });
  */
-export function usePlaceholderPartyQuery(baseOptions?: Apollo.QueryHookOptions<PlaceholderPartyQuery, PlaceholderPartyQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PlaceholderPartyQuery, PlaceholderPartyQueryVariables>(PlaceholderPartyDocument, options);
-      }
-export function usePlaceholderPartyLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PlaceholderPartyQuery, PlaceholderPartyQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PlaceholderPartyQuery, PlaceholderPartyQueryVariables>(PlaceholderPartyDocument, options);
-        }
-export type PlaceholderPartyQueryHookResult = ReturnType<typeof usePlaceholderPartyQuery>;
-export type PlaceholderPartyLazyQueryHookResult = ReturnType<typeof usePlaceholderPartyLazyQuery>;
-export type PlaceholderPartyQueryResult = Apollo.QueryResult<PlaceholderPartyQuery, PlaceholderPartyQueryVariables>;
-export function refetchPlaceholderPartyQuery(variables?: PlaceholderPartyQueryVariables) {
-      return { query: PlaceholderPartyDocument, variables: variables }
-    }
+export function usePlaceholderPartyQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    PlaceholderPartyQuery,
+    PlaceholderPartyQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<PlaceholderPartyQuery, PlaceholderPartyQueryVariables>(
+    PlaceholderPartyDocument,
+    options
+  );
+}
+export function usePlaceholderPartyLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    PlaceholderPartyQuery,
+    PlaceholderPartyQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    PlaceholderPartyQuery,
+    PlaceholderPartyQueryVariables
+  >(PlaceholderPartyDocument, options);
+}
+export type PlaceholderPartyQueryHookResult = ReturnType<
+  typeof usePlaceholderPartyQuery
+>;
+export type PlaceholderPartyLazyQueryHookResult = ReturnType<
+  typeof usePlaceholderPartyLazyQuery
+>;
+export type PlaceholderPartyQueryResult = Apollo.QueryResult<
+  PlaceholderPartyQuery,
+  PlaceholderPartyQueryVariables
+>;
+export function refetchPlaceholderPartyQuery(
+  variables?: PlaceholderPartyQueryVariables
+) {
+  return { query: PlaceholderPartyDocument, variables: variables };
+}
