@@ -30,5 +30,5 @@ API Reference can be done through GraphQL Introspection or check the [schema](./
 ## Support
 
 For support, email thisoneis4business+dinoleague@gmail.com or contact me directly through:
-- Twitter [@d_exclaimation](https://twitter.com/d_exclaimation)
+- Twitter [@d-exclaimation](https://twitter.com/d-exclaimation)
 - Linkedin [@d-exclaimation](https://www.linkedin.com/in/d-exclaimation)
