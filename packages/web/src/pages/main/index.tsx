@@ -41,7 +41,7 @@ const MainPage: FC = () => {
         icon: "/monster-shop.png",
         title: "Barrack",
         subtitle: "Recruit a new dinosaur",
-        action: () => nav("/party"),
+        action: () => nav("/barrack"),
       },
       {
         icon: "/shop.png",

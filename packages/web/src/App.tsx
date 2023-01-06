@@ -8,7 +8,7 @@ import AuthProvider from "@dino/apollo/src/auth/AuthProvider";
 import type { FC } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import LoadingBar from "./pages/common/LoadingBar";
+import BarrackPage from "./pages/barrack";
 import LoginPage from "./pages/login";
 import MainPage from "./pages/main";
 import PartyPage from "./pages/party";
@@ -28,12 +28,12 @@ const router = createBrowserRouter([
     element: <PartyPage />,
   },
   {
-    path: "/sandbox",
-    element: <LoadingBar />,
-  },
-  {
     path: "/pve",
     element: <PvEPage />,
+  },
+  {
+    path: "/barrack",
+    element: <BarrackPage />,
   },
   {
     path: "*",
