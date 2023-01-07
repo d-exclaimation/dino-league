@@ -10,8 +10,8 @@ import {
   QuickDinoInfoFragment,
   useAddToPartyMutation,
 } from "@dino/apollo";
-import { FC, useCallback } from "react";
-import { mutationToast } from "../../../common/Toast";
+import { FC } from "react";
+import { useToastableMutation } from "../../../common/Toast";
 import DinoListView from "./DinoListView";
 
 type Props = {
@@ -23,31 +23,29 @@ type Props = {
 const BoxView: FC<Props> = ({ data, shownId, canAddToParty }) => {
   const [addToParty] = useAddToPartyMutation();
 
-  const partyAction = useCallback(
-    async (id: Dino["id"]) => {
-      mutationToast({
-        async mutation() {
-          const { data, errors } = await addToParty({
-            variables: {
-              dino: id,
-            },
-            refetchQueries: ["PartyView"],
-          });
+  const partyAction = useToastableMutation(
+    {
+      async mutation(id: Dino["id"]) {
+        const { data, errors } = await addToParty({
+          variables: {
+            dino: id,
+          },
+          refetchQueries: ["PartyView"],
+        });
 
-          if (!data || errors) {
-            throw errors?.at(0)?.message ?? "Unexpected error";
-          }
+        if (!data || errors) {
+          throw errors?.at(0)?.message ?? "Unexpected error";
+        }
 
-          switch (data.addDinoToParty.__typename) {
-            case "Indicator":
-              return "Dinosaur has been added to the party";
-            case "Unauthorized":
-              throw "Invalid user";
-            case "InputConstraint":
-              throw `${data.addDinoToParty.name} field is incorrect, ${data.addDinoToParty.reason}`;
-          }
-        },
-      });
+        switch (data.addDinoToParty.__typename) {
+          case "Indicator":
+            return "Dinosaur has been added to the party";
+          case "Unauthorized":
+            throw "Invalid user";
+          case "InputConstraint":
+            throw `${data.addDinoToParty.name} field is incorrect, ${data.addDinoToParty.reason}`;
+        }
+      },
     },
     [addToParty]
   );

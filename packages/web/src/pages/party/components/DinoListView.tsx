@@ -10,9 +10,9 @@ import {
   QuickDinoInfoFragment,
   useSwitchDinoMutation,
 } from "@dino/apollo";
-import { FC, Fragment, useCallback } from "react";
+import { FC, Fragment } from "react";
 import type { Color } from "../../../common/Styling";
-import { mutationToast } from "../../../common/Toast";
+import { useToastableMutation } from "../../../common/Toast";
 import MinoDinoView from "./MinoDinoView";
 
 type Props = {
@@ -32,36 +32,35 @@ type Props = {
 
 const DinoListView: FC<Props> = ({ title, data, actions, bg, shownId }) => {
   const [switchDino] = useSwitchDinoMutation();
-  const switchAction = useCallback(
-    (id: Dino["id"]) => {
-      if (!shownId) return;
-      mutationToast({
-        async mutation() {
-          const { data, errors } = await switchDino({
-            variables: { input: { lhs: shownId, rhs: id } },
-            refetchQueries: ["PartyView"],
-          });
+  const switchAction = useToastableMutation(
+    {
+      async mutation(id: Dino["id"]) {
+        if (!shownId) throw "No given dinosaur to switch with";
+        const { data, errors } = await switchDino({
+          variables: { input: { lhs: shownId, rhs: id } },
+          refetchQueries: ["PartyView"],
+        });
 
-          if (!data || errors) {
-            throw errors?.at(0)?.message ?? "Unexpected error happened";
-          }
+        if (!data || errors) {
+          throw errors?.at(0)?.message ?? "Unexpected error happened";
+        }
 
-          switch (data.switchDino.__typename) {
-            case "Indicator":
-              return data.switchDino.flag
-                ? "Dinosaurs switched"
-                : "No switch is necessary";
-            case "Unauthorized":
-              throw "You can't switch the same dinosaur";
-            case "InputConstraint":
-              throw `${data.switchDino.name} field is incorrect, ${data.switchDino.reason}`;
-          }
-        },
-        pending: "Switching dino...",
-      });
+        switch (data.switchDino.__typename) {
+          case "Indicator":
+            return data.switchDino.flag
+              ? "Dinosaurs switched"
+              : "No switch is necessary";
+          case "Unauthorized":
+            throw "You can't switch the same dinosaur";
+          case "InputConstraint":
+            throw `${data.switchDino.name} field is incorrect, ${data.switchDino.reason}`;
+        }
+      },
+      pending: "Switching dino...",
     },
     [switchDino, shownId]
   );
+
   return (
     <div className="py-2">
       <span className="mx-4 text-xl font-semibold">{title}</span>
@@ -75,7 +74,7 @@ const DinoListView: FC<Props> = ({ title, data, actions, bg, shownId }) => {
                 Swap: {
                   bg: "bg-teal-400",
                   text: "text-teal-600",
-                  action: switchAction,
+                  action: (id) => switchAction(id),
                 },
                 ...actions,
               }}

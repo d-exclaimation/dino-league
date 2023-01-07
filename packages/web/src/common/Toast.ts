@@ -5,6 +5,7 @@
 //  Created by d-exclaimation on 02 Jan 2023
 //
 
+import { DependencyList, useCallback } from "react";
 import { toast } from "react-toastify";
 
 type MutationToastArgs = {
@@ -23,4 +24,20 @@ export function mutationToast({ mutation, error, pending }: MutationToastArgs) {
       render: ({ data }) => data ?? "Success",
     },
   });
+}
+
+export function useToastableMutation<
+  T extends (...args: any[]) => Promise<string>
+>(
+  { mutation, ...rest }: Omit<MutationToastArgs, "mutation"> & { mutation: T },
+  deps: DependencyList
+) {
+  return useCallback(async (...args: Parameters<T>) => {
+    await mutationToast({
+      async mutation() {
+        return mutation(args);
+      },
+      ...rest,
+    });
+  }, deps);
 }

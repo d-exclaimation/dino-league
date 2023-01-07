@@ -6,37 +6,35 @@
 //
 
 import { useCrackAnEggMutation } from "@dino/apollo";
-import { FC, useCallback } from "react";
-import { mutationToast } from "../../common/Toast";
+import { FC } from "react";
+import { useToastableMutation } from "../../common/Toast";
 import HomeButton from "../common/HomeButton";
 import Tabs from "../common/Tabs";
 
 const BarrackPage: FC = () => {
   const [crackAnEgg] = useCrackAnEggMutation();
 
-  const crackEggAction = useCallback(
-    () =>
-      mutationToast({
-        async mutation() {
-          const { data, errors } = await crackAnEgg({
-            refetchQueries: ["PartyView"],
-          });
-          if (!data || errors)
-            throw errors?.at(0)?.message ?? "Unexpected error";
+  const crackEggAction = useToastableMutation(
+    {
+      async mutation() {
+        const { data, errors } = await crackAnEgg({
+          refetchQueries: ["PartyView"],
+        });
+        if (!data || errors) throw errors?.at(0)?.message ?? "Unexpected error";
 
-          const res = data.createRandomDino;
-          switch (res.__typename) {
-            case "NewDino":
-              return `Egg cracked into a level ${res.dino.level} ${res.dino.variant} dino`;
-            case "Unauthorized":
-              throw "Cracking an egg require logging in";
-            case "InputConstraint":
-              throw `Invalid input for ${res.name}, due to ${res.reason}`;
-          }
-        },
-        error: "🚧 Unexpected error during the egg cracking",
-        pending: "Loading...",
-      }),
+        const res = data.createRandomDino;
+        switch (res.__typename) {
+          case "NewDino":
+            return `Egg cracked into a level ${res.dino.level} ${res.dino.variant} dino`;
+          case "Unauthorized":
+            throw "Cracking an egg require logging in";
+          case "InputConstraint":
+            throw `Invalid input for ${res.name}, due to ${res.reason}`;
+        }
+      },
+      error: "🚧 Unexpected error during the egg cracking",
+      pending: "Loading...",
+    },
     [crackAnEgg]
   );
 
