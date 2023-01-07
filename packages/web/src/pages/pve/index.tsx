@@ -18,6 +18,7 @@ import { FC, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Color } from "../../common/Styling";
 import BattleView from "../common/BattleView";
+import HomeButton from "../common/HomeButton";
 
 type BattleDinoDisplay = {
   damage?: number;
@@ -71,9 +72,7 @@ const PvEPage: FC = () => {
 
   return (
     <div className="flex items-center justify-center w-screen h-screen bg-gradient-to-t from-white to-[#C0B2A2]">
-      <button className="fixed top-2 right-2" onClick={() => nav("/")}>
-        <img className="w-10 md:w-12" src="/back.svg" />
-      </button>
+      <HomeButton />
       <BattleView location={user?.location ?? Arena.Desert} start={start} />
     </div>
   );

@@ -192,8 +192,7 @@ const BattleView: FC<Props> = ({ location, start }) => {
           <button
             className="bg-white px-2 md:px-4 py-1 md:py-2 rounded-lg
               text-indigo-600 font-medium text-sm md:text-base
-            active:bg-gray-100 active:scale-95 active:shadow-md
-              md:hover:scale-95 md:hover:shadow-md
+            active:bg-gray-100 clickable
               "
             onClick={init}
           >

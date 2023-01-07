@@ -48,11 +48,7 @@ const MinoDinoView: FC<Props> = ({
           <div
             className={`
             flex items-center justify-center w-60 min-w-fit mx-3 h-40
-            ${bg} rounded-2xl px-5 p-2 
-            transform shadow-sm shadow-gray-400 
-            active:bg-gray-100
-            active:scale-95 active:shadow-md
-            md:hover:scale-95 md:hover:shadow-md
+            ${bg} rounded-2xl px-5 p-2 clickable
             `}
           >
             <div className="flex flex-col items-center justify-start h-1/2">

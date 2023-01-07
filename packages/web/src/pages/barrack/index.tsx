@@ -5,79 +5,77 @@
 //  Created by d-exclaimation on 06 Jan 2023
 //
 
-import { Tab } from "@headlessui/react";
-import type { FC } from "react";
+import { useCrackAnEggMutation } from "@dino/apollo";
+import { FC, useCallback } from "react";
+import { mutationToast } from "../../common/Toast";
+import HomeButton from "../common/HomeButton";
+import Tabs from "../common/Tabs";
 
 const BarrackPage: FC = () => {
+  const [crackAnEgg] = useCrackAnEggMutation();
+
+  const crackEggAction = useCallback(
+    () =>
+      mutationToast({
+        async mutation() {
+          const { data, errors } = await crackAnEgg({
+            refetchQueries: ["PartyView"],
+          });
+          if (!data || errors)
+            throw errors?.at(0)?.message ?? "Unexpected error";
+
+          const res = data.createRandomDino;
+          switch (res.__typename) {
+            case "NewDino":
+              return `Egg cracked into a level ${res.dino.level} ${res.dino.variant} dino`;
+            case "Unauthorized":
+              throw "Cracking an egg require logging in";
+            case "InputConstraint":
+              throw `Invalid input for ${res.name}, due to ${res.reason}`;
+          }
+        },
+        error: "🚧 Unexpected error during the egg cracking",
+        pending: "Loading...",
+      }),
+    [crackAnEgg]
+  );
+
   return (
     <div className="flex items-center justify-center bg-gradient-to-t from-[#d0cbc5] to-[#C0B2A2] w-screen h-screen">
+      <HomeButton />
       <div className="w-full max-w-2xl px-2 py-16 sm:px-0">
-        <Tab.Group>
-          <Tab.List className="flex space-x-1 rounded-xl bg-blue-900/20 p-1">
-            <Tab
-              className={({ selected }) => `w-full rounded-lg py-2.5 text-sm 
-            font-medium leading-5 text-stone-700
-            ring-white ring-opacity-60 ring-offset-2 
-            ${
-              selected
-                ? "bg-white shadow"
-                : "text-stone-100 hover:bg-white/[0.12] hover:text-white"
-            }
-            ring-offset-stone-400 focus:outline-none focus:ring-2`}
-            >
-              Tab 1
-            </Tab>
-            <Tab
-              className={({ selected }) => `w-full rounded-lg py-2.5 text-sm 
-              font-medium leading-5 text-stone-700
-              ring-white ring-opacity-60 ring-offset-2 
-              ${
-                selected
-                  ? "bg-white shadow"
-                  : "text-stone-100 hover:bg-white/[0.12] hover:text-white"
-              }
-              ring-offset-stone-400 focus:outline-none focus:ring-2`}
-            >
-              Tab 2
-            </Tab>
-            <Tab
-              className={({ selected }) => `w-full rounded-lg py-2.5 text-sm 
-              font-medium leading-5 text-stone-700
-              ring-white ring-opacity-60 ring-offset-2 
-              ${
-                selected
-                  ? "bg-white shadow"
-                  : "text-stone-100 hover:bg-white/[0.12] hover:text-white"
-              }
-              ring-offset-stone-400 focus:outline-none focus:ring-2`}
-            >
-              Tab 3
-            </Tab>
-          </Tab.List>
-          <Tab.Panels className="mt-2">
-            <Tab.Panel
-              className="rounded-xl bg-white p-3
-              ring-white ring-opacity-60 ring-offset-2 
-              ring-offset-stone-400 focus:outline-none focus:ring-2"
-            >
-              Content 1
-            </Tab.Panel>
-            <Tab.Panel
-              className="rounded-xl bg-white p-3
-              ring-white ring-opacity-60 ring-offset-2 
-              ring-offset-stone-400 focus:outline-none focus:ring-2"
-            >
-              Content 2
-            </Tab.Panel>
-            <Tab.Panel
-              className="rounded-xl bg-white p-3
-              ring-white ring-opacity-60 ring-offset-2 
-              ring-offset-stone-400 focus:outline-none focus:ring-2"
-            >
-              Content 3
-            </Tab.Panel>
-          </Tab.Panels>
-        </Tab.Group>
+        <Tabs>
+          {{
+            Custom: (
+              <div className="flex flex-col items-center justify-center w-full h-[70vh]">
+                <img src="/black.gif" />
+                <button className="flex items-center justify-center px-3 py-2 rounded-md text-emerald-500 bg-white clickable">
+                  <img className="w-8 pr-2" src="/coin.svg" />{" "}
+                  {Math.round(342 * Math.pow(1.01, 10 - 1))}
+                </button>
+              </div>
+            ),
+            Egg: (
+              <div className="flex flex-col items-center justify-center w-full h-[70vh]">
+                <img src="/egg.gif" />
+                <button
+                  className="flex items-center justify-center px-3 py-2 rounded-md bg-emerald-500 text-white clickable"
+                  onClick={crackEggAction}
+                >
+                  <img className="w-8 pr-2" src="/coin.svg" /> 500
+                </button>
+              </div>
+            ),
+            Sales: (
+              <div className="flex flex-col items-center justify-center w-full h-[70vh]">
+                <img src="/egg.gif" />
+                <button className="flex items-center justify-center px-3 py-2 rounded-md bg-emerald-500 text-white clickable">
+                  <img className="w-8 pr-2" src="/coin.svg" /> 500
+                </button>
+              </div>
+            ),
+          }}
+        </Tabs>
       </div>
     </div>
   );

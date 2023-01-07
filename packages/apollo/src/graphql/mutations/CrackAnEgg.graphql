@@ -1,0 +1,23 @@
+mutation CrackAnEgg {
+  createRandomDino {
+    __typename
+    ... on Unauthorized {
+      operation
+    }
+    ... on NewDino {
+      dino {
+        id
+        variant
+        name
+        level
+        hp
+        attack
+        speed
+      }
+    }
+    ... on InputConstraint {
+      name
+      reason
+    }
+  }
+}

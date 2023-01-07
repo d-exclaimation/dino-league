@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  .clickable {
+    @apply transform shadow-sm shadow-gray-400 active:brightness-90 active:scale-95 active:shadow-md md:hover:scale-95 md:hover:shadow-md
+  }
+}
 
 ._input {
   background: none;

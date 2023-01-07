@@ -10,6 +10,7 @@ import { FC, useMemo } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { nextLoop } from "../../common/VirtualDom";
 import { withAuthRedirect } from "../../hoc/withAuthRedirect";
+import HomeButton from "../common/HomeButton";
 import BoxView from "./components/BoxView";
 import DinoStat from "./components/DinoStat";
 import PartyView from "./components/PartyView";
@@ -64,9 +65,7 @@ const PartyPage: FC = () => {
 
   return (
     <div className="w-screen h-screen bg-[#C0B2A2]">
-      <button className="fixed top-2 right-2" onClick={() => nav("/")}>
-        <img className="w-10 md:w-12" src="/back.svg" />
-      </button>
+      <HomeButton />
       <div className="flex items-center justify-evenly flex-row h-[45%]">
         <div className="flex flex-col items-start justify-center">
           <span className="text-7xl text-white border-b-2 border-white my-2">

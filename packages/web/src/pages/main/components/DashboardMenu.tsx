@@ -21,9 +21,7 @@ const DashboardMenu: FC<Props> = ({ title, subtitle, icon, action }) => {
       flex items-center justify-center md:justify-start h-60 md:h-80
       flex-col md:flex-row
       rounded-xl p-6 bg-white
-      active:bg-gray-100
-      active:scale-95 active:shadow-md
-      md:hover:scale-95 md:hover:shadow-md
+      active:bg-gray-100 clickable
       "
       onClick={action}
     >

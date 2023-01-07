@@ -10,3 +10,5 @@ import type { FC } from "react";
 export type InferProps<C extends FC<any>> = C extends FC<infer Props>
   ? Props
   : {};
+
+export type XFC<Props extends object = {}> = FC<Props & { className?: string }>;
