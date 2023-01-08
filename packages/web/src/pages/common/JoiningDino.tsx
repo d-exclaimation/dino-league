@@ -5,9 +5,10 @@
 //  Created by d-exclaimation on 08 Jan 2023
 //
 
-import { JoiningDinoInfoFragment } from "@dino/apollo";
+import { JoiningDinoInfoFragment, useRenameDinoMutation } from "@dino/apollo";
 import { Dialog, Transition } from "@headlessui/react";
-import { FC, Fragment, useMemo, useState } from "react";
+import { FC, Fragment, useCallback, useMemo, useState } from "react";
+import { toast } from "react-toastify";
 import { Color } from "../../common/Styling";
 
 type Props = {
@@ -18,6 +19,7 @@ type Props = {
 };
 
 const JoiningDino: FC<Props> = ({ title, dino, close, open }) => {
+  const [renameDino] = useRenameDinoMutation();
   const [name, setName] = useState(dino?.name ?? "");
 
   const price = useMemo(() => dino?.price ?? 0, [dino]);
@@ -35,11 +37,53 @@ const JoiningDino: FC<Props> = ({ title, dino, close, open }) => {
     [price]
   );
 
+  const onClose = useCallback(async () => {
+    if (!dino) return close();
+    const { data, errors } = await renameDino({
+      variables: {
+        input: {
+          id: dino?.id,
+          name,
+        },
+      },
+      refetchQueries: ["PartyView"],
+    });
+
+    if (!data || errors)
+      return toast(errors?.at(0)?.message ?? "Unexpected error", {
+        type: "error",
+        autoClose: 2000,
+        pauseOnHover: true,
+        theme: "light",
+      });
+
+    const res = data.renameDino;
+
+    switch (res.__typename) {
+      case "Indicator":
+        return close();
+      case "InputConstraint":
+        return toast(`Invalid input for ${res.name} due to ${res.reason}`, {
+          type: "error",
+          autoClose: 2000,
+          pauseOnHover: true,
+          theme: "light",
+        });
+      case "Unauthorized":
+        return toast("You are not authorized to make changes", {
+          type: "error",
+          autoClose: 2000,
+          pauseOnHover: true,
+          theme: "light",
+        });
+    }
+  }, [close, renameDino]);
+
   return (
-    <Transition.Root show={open} as={Fragment} afterLeave={close}>
+    <Transition.Root show={open} as={Fragment} afterLeave={onClose}>
       <Dialog
         className="fixed inset-0 p-4 pt-[30vh] overflow-y-auto z-10"
-        onClose={close}
+        onClose={onClose}
       >
         <Transition.Child
           as={Fragment}
@@ -115,7 +159,7 @@ const JoiningDino: FC<Props> = ({ title, dino, close, open }) => {
                   bg-emerald-50 px-4 py-2 
                   text-sm font-medium text-emerald-700
                   clickable"
-                  onClick={close}
+                  onClick={onClose}
                 >
                   Got it, thanks!
                 </button>

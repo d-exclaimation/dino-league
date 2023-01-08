@@ -360,6 +360,13 @@ export type QuestMutationVariables = Exact<{ [key: string]: never; }>;
 
 export type QuestMutation = { __typename: 'Mutation', quest: { __typename: 'Battle', plan: Array<{ __typename: 'BattleEnd', win: boolean } | { __typename: 'BattleInit', yoursRemaining: number, opponentsRemaining: number, yours: { __typename: 'Dino', id: string, name: string, variant: Variant, level: number, hp: number, percentage: number }, opponents: { __typename: 'Dino', id: string, name: string, variant: Variant, level: number, hp: number, percentage: number } } | { __typename: 'BattleTurn', attacking: boolean, damage: number, yours: { __typename: 'Dino', id: string, name: string, variant: Variant, level: number, hp: number, percentage: number }, opponents: { __typename: 'Dino', id: string, name: string, variant: Variant, level: number, hp: number, percentage: number } }> } | { __typename: 'Unauthorized', operation: string } };
 
+export type RenameDinoMutationVariables = Exact<{
+  input: DinoRename;
+}>;
+
+
+export type RenameDinoMutation = { __typename: 'Mutation', renameDino: { __typename: 'Indicator', flag: boolean } | { __typename: 'InputConstraint', name: string, reason: string } | { __typename: 'Unauthorized', operation: string } };
+
 export type SwitchDinoMutationVariables = Exact<{
   input: DinoSwitch;
 }>;
@@ -656,6 +663,48 @@ export function useQuestMutation(baseOptions?: Apollo.MutationHookOptions<QuestM
 export type QuestMutationHookResult = ReturnType<typeof useQuestMutation>;
 export type QuestMutationResult = Apollo.MutationResult<QuestMutation>;
 export type QuestMutationOptions = Apollo.BaseMutationOptions<QuestMutation, QuestMutationVariables>;
+export const RenameDinoDocument = gql`
+    mutation RenameDino($input: DinoRename!) {
+  renameDino(input: $input) {
+    ... on Unauthorized {
+      operation
+    }
+    ... on Indicator {
+      flag
+    }
+    ... on InputConstraint {
+      name
+      reason
+    }
+  }
+}
+    `;
+export type RenameDinoMutationFn = Apollo.MutationFunction<RenameDinoMutation, RenameDinoMutationVariables>;
+
+/**
+ * __useRenameDinoMutation__
+ *
+ * To run a mutation, you first call `useRenameDinoMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRenameDinoMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [renameDinoMutation, { data, loading, error }] = useRenameDinoMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useRenameDinoMutation(baseOptions?: Apollo.MutationHookOptions<RenameDinoMutation, RenameDinoMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RenameDinoMutation, RenameDinoMutationVariables>(RenameDinoDocument, options);
+      }
+export type RenameDinoMutationHookResult = ReturnType<typeof useRenameDinoMutation>;
+export type RenameDinoMutationResult = Apollo.MutationResult<RenameDinoMutation>;
+export type RenameDinoMutationOptions = Apollo.BaseMutationOptions<RenameDinoMutation, RenameDinoMutationVariables>;
 export const SwitchDinoDocument = gql`
     mutation SwitchDino($input: DinoSwitch!) {
   switchDino(input: $input) {
