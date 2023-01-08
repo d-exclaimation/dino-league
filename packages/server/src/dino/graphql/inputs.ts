@@ -70,3 +70,18 @@ export class DinoSwitch {
   })
   rhs!: Dino["id"];
 }
+
+@InputType({
+  description: "Input to rename a dinosaur",
+})
+export class DinoRename {
+  @Field(() => ID, {
+    description: "The id of a dinosaur",
+  })
+  id!: string;
+
+  @Field(() => String, {
+    description: "The name value",
+  })
+  name!: string;
+}

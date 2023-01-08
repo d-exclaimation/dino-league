@@ -139,7 +139,10 @@ type Mutation {
   createDino(input: DinoCreate!): CreateDino!
 
   """Create a randomly generated Dino"""
-  createRandomDino: CreateDino!
+  crackAnEgg: CreateDino!
+
+  """Rename a dinosaur"""
+  renameDino(input: DinoRename!): AuthIndicatorReply!
 
   """Switch 2 dino around"""
   switchDino(input: DinoSwitch!): AuthIndicatorReply!
@@ -245,6 +248,15 @@ union AuthIndicatorReply = Unauthorized | Indicator | InputConstraint
 type Indicator {
   """A indicator flag, true for something did happen, false otherwise"""
   flag: Boolean!
+}
+
+"""Input to rename a dinosaur"""
+input DinoRename {
+  """The id of a dinosaur"""
+  id: ID!
+
+  """The name value"""
+  name: String!
 }
 
 """Input to switch 2 dinosaur"""

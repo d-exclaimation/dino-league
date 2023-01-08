@@ -5,7 +5,7 @@
 //  Created by d-exclaimation on 20 Dec 2022
 //
 
-import { randomInt } from "@dino/common";
+import { randomInt, weightedRandomElement } from "@dino/common";
 import { PrismaKnownError } from "@dino/prisma";
 import { Arg, Ctx, ID, Mutation, Resolver } from "type-graphql";
 import {
@@ -15,7 +15,14 @@ import {
   Unauthorized,
 } from "../common/graphql";
 import type { Context } from "../context";
-import { CreateDino, Dino, DinoCreate, DinoSwitch, NewDino } from "./graphql";
+import {
+  CreateDino,
+  Dino,
+  DinoCreate,
+  DinoRename,
+  DinoSwitch,
+  NewDino,
+} from "./graphql";
 
 @Resolver()
 export class DinoMutations {
@@ -56,17 +63,54 @@ export class DinoMutations {
   @Mutation(() => CreateDino, {
     description: "Create a randomly generated Dino",
   })
-  async createRandomDino(
-    @Ctx() { prisma, user }: Context
-  ): Promise<CreateDino> {
+  async crackAnEgg(@Ctx() { prisma, user }: Context): Promise<CreateDino> {
     if (!user) {
       return new Unauthorized({ operation: "createDino" });
     }
+
+    const { _max, _min } = await prisma.dino.aggregate({
+      where: { userId: user.id },
+      _max: { level: true },
+      _min: { level: true },
+    });
+
+    const [min, max] = [_min.level, _max.level];
+
     const dino = await prisma.createRandomDino({
-      level: randomInt({ start: 1, end: 100 }),
+      level: weightedRandomElement([
+        { weight: 1, value: randomInt({ start: max ?? 1, end: 125 }) },
+        { weight: 1, value: randomInt({ start: 1, end: min ?? 25 }) },
+        { weight: 3, value: randomInt({ start: min ?? 1, end: max ?? 25 }) },
+      ]),
       userId: user.id,
     });
     return new NewDino({ dino: Dino.from(dino) });
+  }
+
+  @Mutation(() => AuthIndicator, {
+    description: "Rename a dinosaur",
+  })
+  async renameDino(
+    @Arg("input") { id, name }: DinoRename,
+    @Ctx() { prisma, user }: Context
+  ): Promise<AuthIndicator> {
+    if (!user) {
+      return new Unauthorized({ operation: "switchDino" });
+    }
+    const exist = await prisma.dino.findFirst({
+      where: { id, userId: user.id },
+      select: { id: true },
+    });
+    if (!exist) {
+      return new Unauthorized({ operation: "switchDino" });
+    }
+
+    await prisma.dino.update({
+      data: { name },
+      where: { id },
+    });
+
+    return new Indicator({ flag: true });
   }
 
   @Mutation(() => AuthIndicator, {
