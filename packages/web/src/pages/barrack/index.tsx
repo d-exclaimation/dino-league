@@ -5,39 +5,12 @@
 //  Created by d-exclaimation on 06 Jan 2023
 //
 
-import { useCrackAnEggMutation } from "@dino/apollo";
-import { FC } from "react";
-import { useToastableMutation } from "../../common/Toast";
+import type { FC } from "react";
 import HomeButton from "../common/HomeButton";
 import Tabs from "../common/Tabs";
+import Egg from "./components/Egg";
 
 const BarrackPage: FC = () => {
-  const [crackAnEgg] = useCrackAnEggMutation();
-
-  const crackEggAction = useToastableMutation(
-    {
-      async mutation() {
-        const { data, errors } = await crackAnEgg({
-          refetchQueries: ["PartyView"],
-        });
-        if (!data || errors) throw errors?.at(0)?.message ?? "Unexpected error";
-
-        const res = data.createRandomDino;
-        switch (res.__typename) {
-          case "NewDino":
-            return `Egg cracked into a level ${res.dino.level} ${res.dino.variant} dino`;
-          case "Unauthorized":
-            throw "Cracking an egg require logging in";
-          case "InputConstraint":
-            throw `Invalid input for ${res.name}, due to ${res.reason}`;
-        }
-      },
-      error: "🚧 Unexpected error during the egg cracking",
-      pending: "Loading...",
-    },
-    [crackAnEgg]
-  );
-
   return (
     <div className="flex items-center justify-center bg-gradient-to-t from-[#d0cbc5] to-[#C0B2A2] w-screen h-screen">
       <HomeButton />
@@ -53,17 +26,7 @@ const BarrackPage: FC = () => {
                 </button>
               </div>
             ),
-            Egg: (
-              <div className="flex flex-col items-center justify-center w-full h-[70vh]">
-                <img src="/egg.gif" />
-                <button
-                  className="flex items-center justify-center px-3 py-2 rounded-md bg-emerald-500 text-white clickable"
-                  onClick={crackEggAction}
-                >
-                  <img className="w-8 pr-2" src="/coin.svg" /> 500
-                </button>
-              </div>
-            ),
+            Egg: <Egg />,
             Sales: (
               <div className="flex flex-col items-center justify-center w-full h-[70vh]">
                 <img src="/egg.gif" />
