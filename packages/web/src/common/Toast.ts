@@ -26,13 +26,11 @@ export function mutationToast({ mutation, error, pending }: MutationToastArgs) {
   });
 }
 
-export function useToastableMutation<
-  T extends (...args: any[]) => Promise<string>
->(
+export function useToastableMutation<T extends (args: any) => Promise<string>>(
   { mutation, ...rest }: Omit<MutationToastArgs, "mutation"> & { mutation: T },
   deps: DependencyList
 ) {
-  return useCallback(async (...args: Parameters<T>) => {
+  return useCallback(async (args: Parameters<T>[0]) => {
     await mutationToast({
       async mutation() {
         return mutation(args);
