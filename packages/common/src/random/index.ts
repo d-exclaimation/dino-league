@@ -5,6 +5,8 @@
 //  Created by d-exclaimation on 19 Nov 2022
 //
 
+import { fill } from "../array/fill";
+
 /**
  * Random functions arguments
  *
@@ -42,3 +44,13 @@ export const random = ({ start, end }: RandomArgs) => {
  */
 export const randomElement = <T>(iter: T[]): T =>
   iter[randomInt({ start: 0, end: iter.length })];
+
+/**
+ * Get a weighted random element from an array
+ * @param iter An iterable list / array with weight and value
+ * @returns One random element from the iterable given their weights
+ */
+export const weightedRandomElement = <T>(
+  iter: { weight: number; value: T }[]
+): T =>
+  randomElement(iter.flatMap(({ weight, value }) => fill(weight, () => value)));
