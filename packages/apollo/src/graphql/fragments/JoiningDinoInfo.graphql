@@ -1,0 +1,7 @@
+fragment JoiningDinoInfo on Dino {
+  id
+  name
+  variant
+  level
+  price
+}

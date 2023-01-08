@@ -139,6 +139,14 @@ export type DinoFilter = {
   variant?: InputMaybe<Variant>;
 };
 
+/** Input to rename a dinosaur */
+export type DinoRename = {
+  /** The id of a dinosaur */
+  id: Scalars['ID'];
+  /** The name value */
+  name: Scalars['String'];
+};
+
 /** Input to switch 2 dinosaur */
 export type DinoSwitch = {
   /** One of the dino's id to be switched */
@@ -183,15 +191,17 @@ export type Mutation = {
   __typename: 'Mutation';
   /** Put a dino from box to the party */
   addDinoToParty: AuthIndicatorReply;
+  /** Create a randomly generated Dino */
+  crackAnEgg: CreateDino;
   /** Create a Dino */
   createDino: CreateDino;
-  /** Create a randomly generated Dino */
-  createRandomDino: CreateDino;
   /** Log into a user with the given credentials */
   login: Login;
   /** Put a dino from party to the box */
   putDinoToBox: AuthIndicatorReply;
   quest: Quest;
+  /** Rename a dinosaur */
+  renameDino: AuthIndicatorReply;
   /** Switch 2 dino around */
   switchDino: AuthIndicatorReply;
 };
@@ -214,6 +224,11 @@ export type MutationLoginArgs = {
 
 export type MutationPutDinoToBoxArgs = {
   input: Scalars['ID'];
+};
+
+
+export type MutationRenameDinoArgs = {
+  input: DinoRename;
 };
 
 
@@ -302,6 +317,8 @@ export type BattlingDinoInfoFragment = { __typename: 'Dino', id: string, name: s
 
 export type FullDinoInfoFragment = { __typename: 'Dino', level: number, attack: number, speed: number, healing: number, arena: Arena, id: string, name: string, hp: number, percentage: number, variant: Variant };
 
+export type JoiningDinoInfoFragment = { __typename: 'Dino', id: string, name: string, variant: Variant, level: number, price: number };
+
 export type QuickDinoInfoFragment = { __typename: 'Dino', id: string, name: string, hp: number, percentage: number, variant: Variant };
 
 type Reply_Indicator_Fragment = { __typename: 'Indicator', flag: boolean };
@@ -322,7 +339,7 @@ export type AddToPartyMutation = { __typename: 'Mutation', addDinoToParty: { __t
 export type CrackAnEggMutationVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CrackAnEggMutation = { __typename: 'Mutation', createRandomDino: { __typename: 'InputConstraint', name: string, reason: string } | { __typename: 'NewDino', dino: { __typename: 'Dino', id: string, variant: Variant, name: string, level: number, hp: number, attack: number, speed: number } } | { __typename: 'Unauthorized', operation: string } };
+export type CrackAnEggMutation = { __typename: 'Mutation', crackAnEgg: { __typename: 'InputConstraint', name: string, reason: string } | { __typename: 'NewDino', dino: { __typename: 'Dino', id: string, name: string, variant: Variant, level: number, price: number } } | { __typename: 'Unauthorized', operation: string } };
 
 export type LoginMutationVariables = Exact<{
   input: LoginInfo;
@@ -403,6 +420,15 @@ export const FullDinoInfoFragmentDoc = gql`
   arena
 }
     ${QuickDinoInfoFragmentDoc}`;
+export const JoiningDinoInfoFragmentDoc = gql`
+    fragment JoiningDinoInfo on Dino {
+  id
+  name
+  variant
+  level
+  price
+}
+    `;
 export const ReplyFragmentDoc = gql`
     fragment Reply on AuthIndicatorReply {
   __typename
@@ -453,20 +479,14 @@ export type AddToPartyMutationResult = Apollo.MutationResult<AddToPartyMutation>
 export type AddToPartyMutationOptions = Apollo.BaseMutationOptions<AddToPartyMutation, AddToPartyMutationVariables>;
 export const CrackAnEggDocument = gql`
     mutation CrackAnEgg {
-  createRandomDino {
+  crackAnEgg {
     __typename
     ... on Unauthorized {
       operation
     }
     ... on NewDino {
       dino {
-        id
-        variant
-        name
-        level
-        hp
-        attack
-        speed
+        ...JoiningDinoInfo
       }
     }
     ... on InputConstraint {
@@ -475,7 +495,7 @@ export const CrackAnEggDocument = gql`
     }
   }
 }
-    `;
+    ${JoiningDinoInfoFragmentDoc}`;
 export type CrackAnEggMutationFn = Apollo.MutationFunction<CrackAnEggMutation, CrackAnEggMutationVariables>;
 
 /**
