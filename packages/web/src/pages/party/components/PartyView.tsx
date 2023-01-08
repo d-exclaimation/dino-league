@@ -18,7 +18,7 @@ type Props = {
 const PartyView: FC<Props> = ({ data, shownId }) => {
   const [putToBox] = usePutToBoxMutation();
 
-  const boxAction = useToastableMutation(
+  const partyAction = useToastableMutation(
     {
       async mutation(id: Dino["id"]) {
         const { data, errors } = await putToBox({
@@ -53,7 +53,7 @@ const PartyView: FC<Props> = ({ data, shownId }) => {
         Box: {
           bg: "bg-indigo-400",
           text: "text-indigo-600",
-          action: boxAction,
+          action: partyAction,
         },
         Sell: {
           bg: "bg-red-400",
