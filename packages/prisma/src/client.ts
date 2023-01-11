@@ -5,7 +5,7 @@
 //  Created by d-exclaimation on 20 Nov 2022
 //
 
-import { randomElement, randomInt } from "@dino/common";
+import { randomElement } from "@dino/common";
 import { Dino, Prisma, PrismaClient, User, Variant } from "@prisma/client";
 import { DinoLib } from "./dino";
 import { hash, verify } from "./hasher";
@@ -98,7 +98,7 @@ export class PrismaStorage<
   async createRandomDino({ level, ...rest }: CreateDinoArgs) {
     const variant = randomElement(DinoLib.ALL_VARIANTS);
     return this.createDino(variant, {
-      level: randomInt({ start: Math.ceil(level / 2), end: level }),
+      level,
       ...rest,
     });
   }
