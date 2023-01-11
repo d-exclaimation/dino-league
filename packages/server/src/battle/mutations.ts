@@ -45,6 +45,8 @@ export class BattleResolver {
       Dino.random({ start: minLevel, end: maxLevel })
     );
 
+    return this.simulation(party, enemies, user.location);
+
     // TODO: Apply final result
     // // MARK: Healing
     // await prisma.$transaction(
@@ -61,8 +63,6 @@ export class BattleResolver {
     // );
     // // TODO: Leveling up
     // // TODO: Periodic game events
-
-    return this.simulation(party, enemies, user.location);
   }
 
   private simulation(party1: Dino[], party2: Dino[], location: Arena): Battle {
