@@ -45,6 +45,23 @@ export class BattleResolver {
       Dino.random({ start: minLevel, end: maxLevel })
     );
 
+    // TODO: Apply final result
+    // // MARK: Healing
+    // await prisma.$transaction(
+    //   party
+    //     .map((dino) => ({
+    //       id: dino.id,
+    //       hp: dino.fainted()
+    //         ? 0
+    //         : Math.min(dino.maxHp(), dino.hp + dino.healing),
+    //     }))
+    //     .map(({ id, hp }) =>
+    //       prisma.dino.update({ where: { id }, data: { hp } })
+    //     )
+    // );
+    // // TODO: Leveling up
+    // // TODO: Periodic game events
+
     return this.simulation(party, enemies, user.location);
   }
 
