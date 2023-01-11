@@ -49,6 +49,8 @@ const JoiningDino: FC<Props> = ({ title, dino, close, open }) => {
       refetchQueries: ["PartyView"],
     });
 
+    setName("");
+
     if (!data || errors)
       return toast(errors?.at(0)?.message ?? "Unexpected error", {
         type: "error",
@@ -77,7 +79,7 @@ const JoiningDino: FC<Props> = ({ title, dino, close, open }) => {
           theme: "light",
         });
     }
-  }, [close, renameDino]);
+  }, [close, renameDino, setName]);
 
   return (
     <Transition.Root show={open} as={Fragment} afterLeave={onClose}>
