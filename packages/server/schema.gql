@@ -133,6 +133,7 @@ type User implements Identifiable {
 }
 
 type Mutation {
+  """Start a random quest"""
   quest: Quest!
 
   """Create a Dino"""

@@ -14,20 +14,23 @@ import { Battle, Quest } from "./graphql";
 
 @Resolver()
 export class BattleResolver {
-  @Mutation(() => Quest)
+  @Mutation(() => Quest, {
+    description: "Start a random quest",
+  })
   async quest(@Ctx() { prisma, user }: Context): Promise<Quest> {
     if (!user) {
       return new Unauthorized({ operation: "quest" });
     }
 
     // Mark: Setup
-    const party = await prisma.party
-      .findMany({
+    const party = (
+      await prisma.party.findMany({
         where: { userId: user.id },
         select: { dino: true },
         orderBy: { order: "asc" },
       })
-      .then((values) => values.map(({ dino }) => Dino.from(dino)));
+    ).map(({ dino }) => Dino.from(dino));
+
     const minLevel = Math.max(
       1,
       Math.min(...party.map(({ level }) => level)) * 0.8
@@ -36,6 +39,8 @@ export class BattleResolver {
       minLevel,
       Math.max(...party.map(({ level }) => level)) * 0.8
     );
+
+    // TODO: Better quest variants
     const enemies = fill(randomInt({ start: 1, end: 6 }), () =>
       Dino.random({ start: minLevel, end: maxLevel })
     );
