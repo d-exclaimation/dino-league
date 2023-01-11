@@ -38,7 +38,7 @@ const JoiningDino: FC<Props> = ({ title, dino, close, open }) => {
   );
 
   const onClose = useCallback(async () => {
-    if (!dino) return close();
+    if (!dino || !name) return close();
     const { data, errors } = await renameDino({
       variables: {
         input: {
@@ -48,8 +48,6 @@ const JoiningDino: FC<Props> = ({ title, dino, close, open }) => {
       },
       refetchQueries: ["PartyView"],
     });
-
-    setName("");
 
     if (!data || errors)
       return toast(errors?.at(0)?.message ?? "Unexpected error", {
@@ -63,6 +61,7 @@ const JoiningDino: FC<Props> = ({ title, dino, close, open }) => {
 
     switch (res.__typename) {
       case "Indicator":
+        setName("");
         return close();
       case "InputConstraint":
         return toast(`Invalid input for ${res.name} due to ${res.reason}`, {
@@ -79,7 +78,7 @@ const JoiningDino: FC<Props> = ({ title, dino, close, open }) => {
           theme: "light",
         });
     }
-  }, [close, renameDino, setName]);
+  }, [close, renameDino, setName, name]);
 
   return (
     <Transition.Root show={open} as={Fragment} afterLeave={onClose}>
