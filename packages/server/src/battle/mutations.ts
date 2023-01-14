@@ -135,9 +135,9 @@ export class BattleResolver {
 
     switch (questType) {
       case "easy":
-        return fill(randomInt({ start: 1, end: 4 }), () =>
+        return fill(randomInt({ start: 1, end: 6 }), () =>
           Dino.random({
-            start: start,
+            start: 1,
             end: Math.min(start * 1.25, end),
           })
         );
