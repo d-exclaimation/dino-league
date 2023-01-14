@@ -15,6 +15,8 @@ import { Battle, Quest } from "./graphql";
 const ALL_QUEST_TYPE = [
   "easy",
   "easy",
+  "easy",
+  "hard",
   "hard",
   "hard",
   "quickgreens",
