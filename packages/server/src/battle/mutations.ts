@@ -5,12 +5,24 @@
 //  Created by d-exclaimation on 04 Jan 2023
 //
 
-import { fill, random, randomInt } from "@dino/common";
+import { fill, random, randomElement, randomInt } from "@dino/common";
 import { Ctx, Mutation, Resolver } from "type-graphql";
 import { Unauthorized } from "../common/graphql";
 import type { Context } from "../context";
 import { Arena, Dino } from "../dino/graphql";
 import { Battle, Quest } from "./graphql";
+
+const ALL_QUEST_TYPE = [
+  "easy",
+  "easy",
+  "hard",
+  "hard",
+  "quickgreens",
+  "blandnbold",
+  "pinkwall",
+  "dangerzone",
+] as const;
+export type QuestType = typeof ALL_QUEST_TYPE[number];
 
 @Resolver()
 export class BattleResolver {
@@ -31,19 +43,7 @@ export class BattleResolver {
       })
     ).map(({ dino }) => Dino.from(dino));
 
-    const minLevel = Math.max(
-      1,
-      Math.min(...party.map(({ level }) => level)) * 0.8
-    );
-    const maxLevel = Math.max(
-      minLevel,
-      Math.max(...party.map(({ level }) => level)) * 0.8
-    );
-
-    // TODO: Better quest variants
-    const enemies = fill(randomInt({ start: 1, end: 6 }), () =>
-      Dino.random({ start: minLevel, end: maxLevel })
-    );
+    const enemies = this.questOpponent(party);
 
     return this.simulation(party, enemies, user.location);
 
@@ -65,6 +65,9 @@ export class BattleResolver {
     // // TODO: Periodic game events
   }
 
+  /**
+   * Simulate a battle
+   */
   private simulation(party1: Dino[], party2: Dino[], location: Arena): Battle {
     const battle = new Battle({ plan: [] });
 
@@ -118,6 +121,56 @@ export class BattleResolver {
 
       mut1 = attacking ? Math.max(0.1, mut1 - 0.1) : 1;
       mut2 = !attacking ? Math.max(0.1, mut2 - 0.1) : 1;
+    }
+  }
+
+  private questOpponent(party: Dino[]) {
+    const questType = randomElement([...ALL_QUEST_TYPE]);
+    const start = Math.round(
+      Math.max(1, Math.min(...party.map(({ level }) => level)))
+    );
+    const end = Math.round(
+      Math.max(start, Math.max(...party.map(({ level }) => level)) * 0.9)
+    );
+
+    switch (questType) {
+      case "easy":
+        return fill(randomInt({ start: 1, end: 4 }), () =>
+          Dino.random({
+            start: start,
+            end: Math.min(start * 1.25, end),
+          })
+        );
+      case "hard":
+        return fill(randomInt({ start: 4, end: 6 }), () =>
+          Dino.random({
+            start: Math.max(start, end * 0.75),
+            end: end,
+          })
+        );
+      case "quickgreens":
+        return fill(6, () => Dino.variantRandom("green", { start, end }));
+      case "blandnbold":
+        return fill(6, () =>
+          Dino.variantRandom(randomElement(["black", "blue", "white"]), {
+            start,
+            end,
+          })
+        );
+      case "pinkwall":
+        return fill(6, () =>
+          Dino.variantRandom("pink", {
+            start,
+            end,
+          })
+        );
+      case "dangerzone":
+        return fill(6, () =>
+          Dino.variantRandom(randomElement(["slate", "red"]), {
+            start,
+            end,
+          })
+        );
     }
   }
 }
