@@ -5,13 +5,20 @@
 //  Created by d-exclaimation on 04 Jan 2023
 //
 
-import { fill, random, randomElement, randomInt } from "@dino/common";
+import {
+  fill,
+  random,
+  randomElement,
+  randomInt,
+  weightedRandomElement,
+} from "@dino/common";
 import { Ctx, Mutation, Resolver } from "type-graphql";
 import { Unauthorized } from "../common/graphql";
 import type { Context } from "../context";
 import { Arena, Dino } from "../dino/graphql";
-import { Battle, Quest } from "./graphql";
+import { Battle, BattleEnd, Quest } from "./graphql";
 
+const LEVEL_SCALE = 1.01;
 const ALL_QUEST_TYPE = [
   "easy",
   "easy",
@@ -44,27 +51,60 @@ export class BattleResolver {
         orderBy: { order: "asc" },
       })
     ).map(({ dino }) => Dino.from(dino));
-
     const enemies = this.questOpponent(party);
 
-    return this.simulation(party, enemies, user.location);
+    // Mark: Simulate battle
+    const battle = this.simulation(party, enemies, user.location);
 
-    // TODO: Apply final result
-    // // MARK: Healing
-    // await prisma.$transaction(
-    //   party
-    //     .map((dino) => ({
-    //       id: dino.id,
-    //       hp: dino.fainted()
-    //         ? 0
-    //         : Math.min(dino.maxHp(), dino.hp + dino.healing),
-    //     }))
-    //     .map(({ id, hp }) =>
-    //       prisma.dino.update({ where: { id }, data: { hp } })
-    //     )
-    // );
-    // // TODO: Leveling up
-    // // TODO: Periodic game events
+    // Mark: Compute data from outcome
+    const isWin = (battle.plan.at(-1) as BattleEnd | undefined)?.win ?? false;
+    const levels = {
+      party: party.map(({ level }) => level).reduce((acc, x) => acc + x, 0),
+      enemy: enemies.map(({ level }) => level).reduce((acc, x) => acc + x, 0),
+    };
+    const chances = [
+      { weight: levels.party * (isWin ? 1 : 2), value: false },
+      { weight: levels.enemy, value: true },
+    ];
+
+    await prisma.$transaction(async (tx) => {
+      // Mark: Record battle history
+      await tx.history.create({
+        data: { isWin, userId: user.id, isQuest: true },
+        select: { id: true },
+      });
+
+      // Mark: Healing and/or level up
+      for (const dino of party) {
+        const { hp, healing, id } = dino;
+        const healed = Math.min(dino.maxHp(), hp + healing);
+
+        // Healed HP changes
+        await tx.dino.update({
+          data: { hp: dino.fainted() ? 0 : healed },
+          where: { id },
+        });
+
+        // Level up
+        if (!dino.fainted() && weightedRandomElement(chances)) {
+          await tx.dino.update({
+            data: {
+              attack: { multiply: LEVEL_SCALE },
+              healing: { multiply: LEVEL_SCALE },
+              hp: { multiply: LEVEL_SCALE },
+              price: { multiply: LEVEL_SCALE },
+              speed: { multiply: LEVEL_SCALE },
+              level: { increment: 1 },
+            },
+            where: { id },
+          });
+        }
+
+        // TODO: Apply game periodic events
+      }
+    });
+
+    return battle;
   }
 
   /**

@@ -51,6 +51,15 @@ model Party {
   @@id([userId, dinoId])
 }
 
+model History {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  userId    String    
+  enemyId   String?
+  isQuest   Boolean   @default(false)
+  isWin     Boolean   
+}
+
 enum Arena {
   DESERT
   GRASSLAND
