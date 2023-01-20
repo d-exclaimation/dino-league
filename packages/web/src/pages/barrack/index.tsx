@@ -7,6 +7,7 @@
 
 import type { FC } from "react";
 import { withAuthRedirect } from "../../hoc/withAuthRedirect";
+import { Lib } from "../../lib";
 import HomeButton from "../common/HomeButton";
 import Tabs from "../common/Tabs";
 import Egg from "./components/Egg";
@@ -22,8 +23,7 @@ const BarrackPage: FC = () => {
               <div className="flex flex-col items-center justify-center w-full h-[70vh]">
                 <img src="/black.gif" />
                 <button className="flex items-center justify-center px-3 py-2 rounded-md text-emerald-500 bg-white clickable">
-                  <img className="w-8 pr-2" src="/coin.svg" />{" "}
-                  {Math.round(342 * Math.pow(1.01, 10 - 1))}
+                  <img className="w-8 pr-2" src="/coin.svg" /> {Lib.price.rare}
                 </button>
               </div>
             ),
