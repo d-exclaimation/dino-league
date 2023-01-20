@@ -10,6 +10,7 @@ import {
   random,
   randomElement,
   randomInt,
+  Values,
   weightedRandomElement,
 } from "@dino/common";
 import { Ctx, Mutation, Resolver } from "type-graphql";
@@ -19,19 +20,23 @@ import { Arena, Dino } from "../dino/graphql";
 import { Battle, BattleEnd, Quest } from "./graphql";
 
 const LEVEL_SCALE = 1.01;
-const ALL_QUEST_TYPE = [
-  "easy",
-  "easy",
-  "easy",
-  "hard",
-  "hard",
-  "hard",
-  "quickgreens",
-  "blandnbold",
-  "pinkwall",
-  "dangerzone",
-] as const;
-export type QuestType = typeof ALL_QUEST_TYPE[number];
+const QuestType = {
+  easy: "easy",
+  hard: "hard",
+  speed: "quickgreens",
+  mono: "blandnbold",
+  wall: "pinkwall",
+  danger: "dangerzone",
+} as const;
+const ALL_QUEST_CHANCES = [
+  { weight: 5, value: QuestType.easy },
+  { weight: 1, value: QuestType.hard },
+  { weight: 1, value: QuestType.speed },
+  { weight: 1, value: QuestType.mono },
+  { weight: 1, value: QuestType.wall },
+  { weight: 1, value: QuestType.danger },
+];
+export type QuestType = Values<typeof QuestType>;
 
 @Resolver()
 export class BattleResolver {
@@ -167,7 +172,7 @@ export class BattleResolver {
   }
 
   private questOpponent(party: Dino[]) {
-    const questType = randomElement([...ALL_QUEST_TYPE]);
+    const questType = weightedRandomElement(ALL_QUEST_CHANCES);
     const start = Math.round(
       Math.max(1, Math.min(...party.map(({ level }) => level)))
     );
@@ -186,7 +191,7 @@ export class BattleResolver {
       case "hard":
         return fill(randomInt({ start: 4, end: 6 }), () =>
           Dino.random({
-            start: Math.max(start, end * 0.75),
+            start: Math.max(start, end / 2),
             end: end,
           })
         );

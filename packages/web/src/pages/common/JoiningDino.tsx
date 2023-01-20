@@ -10,6 +10,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { FC, Fragment, useCallback, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import { Color } from "../../common/Styling";
+import { Lib } from "../../lib";
 
 type Props = {
   title: string;
@@ -25,13 +26,13 @@ const JoiningDino: FC<Props> = ({ title, dino, close, open }) => {
   const price = useMemo(() => dino?.price ?? 0, [dino]);
   const rarityColor = useMemo(
     (): Color.of<"ring-offset"> =>
-      price > 1000
+      price > Lib.price.ultra
         ? "ring-offset-fuchsia-500"
-        : price > 755
+        : price > Lib.price.epic
         ? "ring-offset-indigo-500"
-        : price > 590
+        : price > Lib.price.rare
         ? "ring-offset-sky-500"
-        : price > 490
+        : price > Lib.price.uncommon
         ? "ring-offset-green-500"
         : "ring-offset-slate-300",
     [price]
@@ -114,11 +115,10 @@ const JoiningDino: FC<Props> = ({ title, dino, close, open }) => {
               ring-2 ${rarityColor}
               `}
             >
-              <Dialog.Title
-                as="h2"
-                className="text-xl font-medium leading-6 text-gray-900"
-              >
-                {title ?? "A dinosaur is joining your team"}
+              <Dialog.Title as={Fragment}>
+                <h2 className="text-xl font-medium leading-6 text-gray-900">
+                  {title ?? "A dinosaur is joining your team"}
+                </h2>
               </Dialog.Title>
               <div className="flex flex-col items-center justify-center w-full mt-2">
                 <div className="flex items-center justify-around w-full">

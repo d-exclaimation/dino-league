@@ -8,6 +8,7 @@
 import { JoiningDinoInfoFragment, useCrackAnEggMutation } from "@dino/apollo";
 import { FC, useCallback, useState } from "react";
 import { toast } from "react-toastify";
+import { Lib } from "../../../lib";
 import JoiningDino from "../../common/JoiningDino";
 
 const Egg: FC = () => {
@@ -66,7 +67,7 @@ const Egg: FC = () => {
           className="flex items-center justify-center px-3 py-2 rounded-md bg-emerald-500 text-white clickable"
           onClick={crackAnEggAction}
         >
-          <img className="w-8 pr-2" src="/coin.svg" /> 400
+          <img className="w-8 pr-2" src="/coin.svg" /> {Lib.price.egg}
         </button>
       </div>
     </>

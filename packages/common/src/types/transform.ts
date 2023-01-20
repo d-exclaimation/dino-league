@@ -23,3 +23,8 @@ export type Include<T, U> = T extends U ? T : never;
 export type Within<T extends object, U extends object> = {
   [P in Include<keyof T, keyof U>]: T[P];
 };
+
+/**
+ * Values of an object
+ */
+export type Values<T extends object> = T[keyof T];
