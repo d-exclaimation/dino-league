@@ -6,7 +6,7 @@
 //
 
 import { random, randomElement, randomInt, Struct, ulid } from "@dino/common";
-import { Dino as _Dino, DinoLib, Variant as _Variant } from "@dino/prisma";
+import { Dino as _Dino, Lib, Variant as _Variant } from "@dino/prisma";
 import { Arg, Field, Float, Int, ObjectType } from "type-graphql";
 import { Identifiable } from "../../identifiable/graphql";
 import { Arena, Variant } from "./others";
@@ -71,7 +71,7 @@ export class Dino extends Identifiable {
   })
   maxHp(): number {
     const scale = Math.pow(1.01, this.level - 1);
-    return DinoLib.variants[this.variant].hp * scale;
+    return Lib.variants[this.variant].hp * scale;
   }
 
   @Field(() => Float, {
@@ -96,8 +96,8 @@ export class Dino extends Identifiable {
 
   static random(args: Parameters<typeof randomInt>[0]) {
     const level = randomInt(args);
-    const defaults = DinoLib.variants[randomElement(DinoLib.ALL_VARIANTS)];
-    const { variant, arena, ...props } = DinoLib.adjusted(defaults, level);
+    const defaults = Lib.variants[randomElement(Lib.ALL_VARIANTS)];
+    const { variant, arena, ...props } = Lib.adjusted(defaults, level);
 
     return new Dino({
       id: ulid(),
@@ -114,8 +114,8 @@ export class Dino extends Identifiable {
     args: Parameters<typeof randomInt>[0]
   ) {
     const level = randomInt(args);
-    const defaults = DinoLib.variants[variant];
-    const { variant: _, arena, ...props } = DinoLib.adjusted(defaults, level);
+    const defaults = Lib.variants[variant];
+    const { variant: _, arena, ...props } = Lib.adjusted(defaults, level);
 
     return new Dino({
       id: ulid(),

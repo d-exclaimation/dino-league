@@ -7,7 +7,7 @@
 
 import { randomElement } from "@dino/common";
 import { Dino, Prisma, PrismaClient, User, Variant } from "@prisma/client";
-import { DinoLib } from "./dino";
+import { Lib } from "./dino";
 import { hash, verify } from "./hasher";
 
 export const createPrisma = <
@@ -84,7 +84,7 @@ export class PrismaStorage<
   }
 
   async createDino(variant: Variant, { level, name, userId }: CreateDinoArgs) {
-    const props = DinoLib.adjusted(DinoLib.variants[variant], level);
+    const props = Lib.adjusted(Lib.variants[variant], level);
     return this.dino.create({
       data: {
         name: name ?? variant,
@@ -96,7 +96,7 @@ export class PrismaStorage<
   }
 
   async createRandomDino({ level, ...rest }: CreateDinoArgs) {
-    const variant = randomElement(DinoLib.ALL_VARIANTS);
+    const variant = randomElement(Lib.ALL_VARIANTS);
     return this.createDino(variant, {
       level,
       ...rest,
