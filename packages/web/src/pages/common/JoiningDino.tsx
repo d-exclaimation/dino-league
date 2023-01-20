@@ -10,6 +10,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { FC, Fragment, useCallback, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import { Color } from "../../common/Styling";
+import { Lib } from "../../lib";
 
 type Props = {
   title: string;
@@ -25,13 +26,13 @@ const JoiningDino: FC<Props> = ({ title, dino, close, open }) => {
   const price = useMemo(() => dino?.price ?? 0, [dino]);
   const rarityColor = useMemo(
     (): Color.of<"ring-offset"> =>
-      price > 800
+      price > Lib.price.ultra
         ? "ring-offset-fuchsia-500"
-        : price > 650
+        : price > Lib.price.epic
         ? "ring-offset-indigo-500"
-        : price > 500
+        : price > Lib.price.rare
         ? "ring-offset-sky-500"
-        : price > 350
+        : price > Lib.price.uncommon
         ? "ring-offset-green-500"
         : "ring-offset-slate-300",
     [price]

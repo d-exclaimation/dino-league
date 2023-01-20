@@ -5,6 +5,8 @@
 //  Created by d-exclaimation on 20 Jan 2023
 //
 
+import { Values } from "../types/transform";
+
 export const variants = {
   white: {
     arena: "URBAN",
@@ -72,9 +74,7 @@ export const variants = {
   },
 } as const;
 
-type Variant = keyof typeof variants;
-
-export const ALL_VARIANTS: Variant[] = [
+export const ALL_VARIANTS: Array<keyof typeof variants> = [
   "black",
   "blue",
   "green",
@@ -84,3 +84,12 @@ export const ALL_VARIANTS: Variant[] = [
   "white",
   "yellow",
 ];
+
+export const price = {
+  get: ({ hp, attack, speed, healing }: Values<typeof variants>) =>
+    Math.round(3 * (hp / 100 + attack / 50 + speed / 100 + healing / 40) * 40),
+  avg: 273,
+  median: 294,
+};
+
+export const scaling = (level: number) => Math.pow(1.01, level - 1);
