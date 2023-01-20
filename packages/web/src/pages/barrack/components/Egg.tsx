@@ -66,7 +66,7 @@ const Egg: FC = () => {
           className="flex items-center justify-center px-3 py-2 rounded-md bg-emerald-500 text-white clickable"
           onClick={crackAnEggAction}
         >
-          <img className="w-8 pr-2" src="/coin.svg" /> 400
+          <img className="w-8 pr-2" src="/coin.svg" /> 300
         </button>
       </div>
     </>

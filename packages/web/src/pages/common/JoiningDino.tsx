@@ -25,13 +25,13 @@ const JoiningDino: FC<Props> = ({ title, dino, close, open }) => {
   const price = useMemo(() => dino?.price ?? 0, [dino]);
   const rarityColor = useMemo(
     (): Color.of<"ring-offset"> =>
-      price > 1000
+      price > 800
         ? "ring-offset-fuchsia-500"
-        : price > 755
+        : price > 650
         ? "ring-offset-indigo-500"
-        : price > 590
+        : price > 500
         ? "ring-offset-sky-500"
-        : price > 490
+        : price > 350
         ? "ring-offset-green-500"
         : "ring-offset-slate-300",
     [price]
@@ -114,11 +114,10 @@ const JoiningDino: FC<Props> = ({ title, dino, close, open }) => {
               ring-2 ${rarityColor}
               `}
             >
-              <Dialog.Title
-                as="h2"
-                className="text-xl font-medium leading-6 text-gray-900"
-              >
-                {title ?? "A dinosaur is joining your team"}
+              <Dialog.Title as={Fragment}>
+                <h2 className="text-xl font-medium leading-6 text-gray-900">
+                  {title ?? "A dinosaur is joining your team"}
+                </h2>
               </Dialog.Title>
               <div className="flex flex-col items-center justify-center w-full mt-2">
                 <div className="flex items-center justify-around w-full">

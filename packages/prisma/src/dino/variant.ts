@@ -20,7 +20,7 @@ export const variants: Record<Variant, DefaultDinoProps> = {
     hp: 75,
     attack: 37.5,
     speed: 60,
-    healing: 30,
+    healing: 15,
     variant: "white",
   },
   black: {
@@ -28,7 +28,7 @@ export const variants: Record<Variant, DefaultDinoProps> = {
     hp: 80,
     attack: 40,
     speed: 70,
-    healing: 20,
+    healing: 10,
     variant: "black",
   },
   blue: {
@@ -36,7 +36,7 @@ export const variants: Record<Variant, DefaultDinoProps> = {
     hp: 60,
     attack: 40,
     speed: 80,
-    healing: 20,
+    healing: 10,
     variant: "blue",
   },
   green: {
@@ -44,7 +44,7 @@ export const variants: Record<Variant, DefaultDinoProps> = {
     hp: 60,
     attack: 30,
     speed: 100,
-    healing: 20,
+    healing: 10,
     variant: "green",
   },
   pink: {
@@ -52,7 +52,7 @@ export const variants: Record<Variant, DefaultDinoProps> = {
     hp: 100,
     attack: 10,
     speed: 50,
-    healing: 40,
+    healing: 20,
     variant: "pink",
   },
   red: {
@@ -60,7 +60,7 @@ export const variants: Record<Variant, DefaultDinoProps> = {
     hp: 80,
     attack: 50,
     speed: 40,
-    healing: 20,
+    healing: 10,
     variant: "red",
   },
   slate: {
@@ -68,7 +68,7 @@ export const variants: Record<Variant, DefaultDinoProps> = {
     hp: 40,
     attack: 45,
     speed: 80,
-    healing: 24,
+    healing: 12,
     variant: "slate",
   },
   yellow: {
@@ -76,7 +76,7 @@ export const variants: Record<Variant, DefaultDinoProps> = {
     hp: 80,
     attack: 20,
     speed: 75,
-    healing: 30,
+    healing: 15,
     variant: "yellow",
   },
 };

@@ -5,54 +5,13 @@
 //  Created by d-exclaimation on 04 Jan 2023
 //
 
-import {
-  Arena,
-  BattleEnd,
-  BattleInit,
-  BattleTurn,
-  BattlingDinoInfoFragment,
-  useAuth,
-  useQuestMutation,
-} from "@dino/apollo";
+import { Arena, useAuth, useQuestMutation } from "@dino/apollo";
 import { FC, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
-import { Color } from "../../common/Styling";
+import { withAuthRedirect } from "../../hoc/withAuthRedirect";
 import BattleView from "../common/BattleView";
 import HomeButton from "../common/HomeButton";
 
-type BattleDinoDisplay = {
-  damage?: number;
-  dino: BattlingDinoInfoFragment;
-  remaining: number;
-  attacking: boolean;
-};
-
-type Battling = {
-  yours: BattlingDinoInfoFragment;
-  opponents: BattlingDinoInfoFragment;
-};
-
-type BattlePlan =
-  | BattleEnd
-  | (Omit<BattleInit, "yours" | "opponents"> & Battling)
-  | (Omit<BattleTurn, "yours" | "opponents"> & Battling);
-
-const damageColor = (num: number, hp: number): Color.Bg => {
-  const percentage = Math.round((num * 100) / hp);
-  if (percentage < 25) return "bg-sky-400";
-  if (percentage < 50) return "bg-green-400";
-  if (percentage < 75) return "bg-amber-400";
-  return "bg-red-400";
-};
-
-const hpColor = (percentage: number): Color.Text => {
-  if (percentage < 33) return "text-red-500";
-  if (percentage < 67) return "text-amber-500";
-  return "text-green-500";
-};
-
 const PvEPage: FC = () => {
-  const nav = useNavigate();
   const { user } = useAuth();
   const [quest] = useQuestMutation();
 
@@ -78,4 +37,4 @@ const PvEPage: FC = () => {
   );
 };
 
-export default PvEPage;
+export default withAuthRedirect(PvEPage);

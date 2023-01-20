@@ -6,6 +6,7 @@
 //
 
 import type { FC } from "react";
+import { withAuthRedirect } from "../../hoc/withAuthRedirect";
 import HomeButton from "../common/HomeButton";
 import Tabs from "../common/Tabs";
 import Egg from "./components/Egg";
@@ -42,4 +43,4 @@ const BarrackPage: FC = () => {
   );
 };
 
-export default BarrackPage;
+export default withAuthRedirect(BarrackPage);
