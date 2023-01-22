@@ -5,7 +5,7 @@
 //  Created by d-exclaimation on 20 Nov 2022
 //
 
-export * from "@d-exclaimation/union";
+export * from "@d-exclaimation/common/union";
 export * from "./array/fill";
 export * from "./errors";
 export * from "./lib";

@@ -5,7 +5,7 @@
 //  Created by d-exclaimation on 28 Dec 2022
 //
 
-import type { Narrow, Union } from "@d-exclaimation/union";
+import type { Narrow, Union } from "@d-exclaimation/common/union";
 
 /**
  * Result construct from Swift, Rust, and Scala
@@ -26,9 +26,9 @@ export type Result<T, E = Error> = Union<{
 export function result<T>(fn: () => T): Result<T, Error> {
   try {
     const data = fn();
-    return { __type: "ok", data };
+    return { __t: "ok", data };
   } catch (e: unknown) {
-    return { __type: "err", err: e instanceof Error ? e : new Error(`${e}`) };
+    return { __t: "err", err: e instanceof Error ? e : new Error(`${e}`) };
   }
 }
 
@@ -42,9 +42,9 @@ export async function asyncResult<T>(
 ): Promise<Result<T, Error>> {
   try {
     const data = await fn();
-    return { __type: "ok", data };
+    return { __t: "ok", data };
   } catch (e: unknown) {
-    return { __type: "err", err: e instanceof Error ? e : new Error(`${e}`) };
+    return { __t: "err", err: e instanceof Error ? e : new Error(`${e}`) };
   }
 }
 
@@ -52,7 +52,7 @@ export async function asyncResult<T>(
  * Wrap a data as ok result
  */
 export const ok = <T>(data: T): Narrow<Result<T, never>, "ok"> => ({
-  __type: "ok",
+  __t: "ok",
   data,
 });
 
@@ -60,7 +60,7 @@ export const ok = <T>(data: T): Narrow<Result<T, never>, "ok"> => ({
  * Wrap a data as error result
  */
 export const err = <E>(err: E): Narrow<Result<never, E>, "err"> => ({
-  __type: "err",
+  __t: "err",
   err,
 });
 
