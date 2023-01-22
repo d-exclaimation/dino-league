@@ -56,10 +56,10 @@ export class BattleResolver {
         orderBy: { order: "asc" },
       })
     ).map(({ dino }) => Dino.from(dino));
-    const enemies = this.questOpponent(party);
+    const enemies = this.randomQuest(party);
 
     // Mark: Simulate battle
-    const battle = this.simulation(party, enemies, user.location);
+    const battle = Battle.simulated(party, enemies, user.location);
 
     // Mark: Compute data from outcome
     const isWin = (battle.plan.at(-1) as BattleEnd | undefined)?.win ?? false;
@@ -112,9 +112,6 @@ export class BattleResolver {
     return battle;
   }
 
-  /**
-   * Simulate a battle
-   */
   private simulation(party1: Dino[], party2: Dino[], location: Arena): Battle {
     const battle = new Battle({ plan: [] });
 
@@ -171,7 +168,12 @@ export class BattleResolver {
     }
   }
 
-  private questOpponent(party: Dino[]) {
+  /**
+   * Get a random quest party
+   * @param party The player's party to based the randomness of
+   * @returns A generated random quest party
+   */
+  private randomQuest(party: Dino[]) {
     const questType = weightedRandomElement(ALL_QUEST_CHANCES);
     const start = Math.round(
       Math.max(1, Math.min(...party.map(({ level }) => level)))

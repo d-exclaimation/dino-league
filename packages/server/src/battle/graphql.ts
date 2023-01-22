@@ -5,10 +5,10 @@
 //  Created by d-exclaimation on 04 Jan 2023
 //
 
-import { Struct } from "@dino/common";
+import { random, Struct } from "@dino/common";
 import { createUnionType, Field, ObjectType } from "type-graphql";
 import { Unauthorized } from "../common/graphql";
-import { Dino } from "../dino/graphql";
+import { Arena, Dino } from "../dino/graphql";
 
 @ObjectType({
   description: "Initial battle information",
@@ -135,6 +135,69 @@ export class Battle {
 
   end(args: Struct.infer<BattleEnd>) {
     this.plan.push(new BattleEnd(args));
+  }
+
+  /**
+   * Simulated a battle and its plan according to the 2 parties involved
+   * @param prisma
+   * @param lhs
+   * @param rhs
+   * @param location
+   */
+  static simulated(lhs: Dino[], rhs: Dino[], location: Arena) {
+    const battle = new Battle({ plan: [] });
+
+    let [i1, i2] = [0, 0];
+    let [mut1, mut2] = [1, 1];
+
+    const left = () => lhs[i1];
+    const right = () => rhs[i2];
+
+    // Mark: -> Init
+    battle.init({
+      yours: left(),
+      opponents: right(),
+      yoursRemaining: lhs.filter((dino) => !dino.fainted()).length,
+      opponentsRemaining: rhs.filter((dino) => !dino.fainted()).length,
+    });
+
+    while (true) {
+      // Mark: .. -> Init, repeat until no switch is needed
+      while (left().fainted() || right().fainted()) {
+        i1 += left().fainted() ? 1 : 0;
+        i2 += right().fainted() ? 1 : 0;
+
+        // Mark: ... -> End
+        if (i1 >= lhs.length || i2 >= rhs.length) {
+          battle.end({ win: i1 < lhs.length });
+          return battle;
+        }
+
+        battle.init({
+          yours: left(),
+          opponents: right(),
+          yoursRemaining: lhs.filter((dino) => !dino.fainted()).length,
+          opponentsRemaining: rhs.filter((dino) => !dino.fainted()).length,
+        });
+      }
+
+      // Mark: ... -> Turn
+      const yoursSpeed = random({ end: left().speed * mut1 });
+      const opponentsSpeed = random({ end: right().speed * mut2 });
+      const attacking = yoursSpeed >= opponentsSpeed;
+
+      const damage = (attacking ? left() : right()).damage(location);
+      (attacking ? right() : left()).take(damage);
+      battle.turn({
+        yours: left(),
+        opponents: right(),
+        attacking,
+        damage,
+      });
+
+      mut1 = attacking ? Math.max(0.1, mut1 - 0.1) : 1;
+      mut2 = !attacking ? Math.max(0.1, mut2 - 0.1) : 1;
+    }
   }
 }
 
