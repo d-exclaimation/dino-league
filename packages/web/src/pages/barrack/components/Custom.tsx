@@ -16,7 +16,10 @@ const Custom: FC = () => {
   const [level, setLevel] = useState(1);
 
   const price = useMemo(
-    () => Math.round(Lib.price.get(Lib.variants[variant]) * Lib.scaling(level)),
+    () =>
+      Math.round(
+        Lib.price.get(Lib.variants[variant]) * Lib.scaling(level) * 1.25
+      ),
     [variant, level]
   );
 
