@@ -11,11 +11,20 @@ type Props = {
   type: string;
   value: string;
   label?: string;
+  min?: number;
+  max?: number;
   bind: (e: React.ChangeEvent<HTMLInputElement>) => void;
   children?: React.ReactNode;
 };
 
-const FormInput: FC<Props> = ({ bind, label, type, value, children }) => {
+const FormInput: FC<Props> = ({
+  bind,
+  label,
+  type,
+  value,
+  children,
+  ...rest
+}) => {
   const labelName = useMemo(
     () =>
       label ??
@@ -33,6 +42,7 @@ const FormInput: FC<Props> = ({ bind, label, type, value, children }) => {
         value={value}
         placeholder=" "
         onChange={bind}
+        {...rest}
       />
       <label
         htmlFor={type}

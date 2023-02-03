@@ -11,7 +11,7 @@ export const Lib = {
   ...CommonLib,
   price: {
     ...CommonLib.price,
-    egg: 300,
+    egg: 250,
     uncommon: Math.round(CommonLib.scaling(25) * CommonLib.price.median),
     rare: Math.round(CommonLib.scaling(50) * CommonLib.price.median),
     epic: Math.round(CommonLib.scaling(75) * CommonLib.price.median),
