@@ -11,3 +11,4 @@ generates:
     config:
       withRefetchFn: true
       nonOptionalTypename: true
+      constEnums: true

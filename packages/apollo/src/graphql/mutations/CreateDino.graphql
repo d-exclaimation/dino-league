@@ -1,0 +1,16 @@
+mutation CreateDino($input: DinoCreate!) {
+  createDino(input: $input) {
+    ... on Unauthorized {
+      operation
+    }
+    ... on NewDino {
+      dino {
+        ...JoiningDinoInfo
+      }
+    }
+    ... on InputConstraint {
+      name
+      reason
+    }
+  }
+}

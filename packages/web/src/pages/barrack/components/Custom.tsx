@@ -5,6 +5,7 @@
 //  Created by d-exclaimation on 03 Feb 2023
 //
 
+import { useCreateDinoMutation, Variant } from "@dino/apollo";
 import { Listbox, Transition } from "@headlessui/react";
 import { FC, Fragment, useMemo, useState } from "react";
 import { Color } from "../../../common/Styling";
@@ -12,6 +13,7 @@ import { Lib } from "../../../lib";
 import FormInput from "../../common/FormInput";
 
 const Custom: FC = () => {
+  const [mutate] = useCreateDinoMutation();
   const [variant, setVariant] = useState<keyof typeof Lib.variants>("white");
   const [level, setLevel] = useState(1);
 
@@ -131,6 +133,17 @@ const Custom: FC = () => {
         <div className="flex w-full items-center justify-center">
           <button
             className={`flex py-2 my-2 items-center justify-center px-3 rounded-md ${rarity} bg-white clickable`}
+            onClick={async () => {
+              // TODO: Add error checking
+              await mutate({
+                variables: {
+                  input: {
+                    variant: variant as Variant,
+                    level,
+                  },
+                },
+              });
+            }}
           >
             <img className="w-8 pr-2" src="/coin.svg" /> {price}
           </button>

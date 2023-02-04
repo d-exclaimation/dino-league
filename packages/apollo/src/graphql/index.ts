@@ -16,13 +16,13 @@ export type Scalars = {
 };
 
 /** The battlefield environment */
-export enum Arena {
+export const enum Arena {
   Desert = 'DESERT',
   Grassland = 'GRASSLAND',
   Hills = 'HILLS',
   Ocean = 'OCEAN',
   Urban = 'URBAN'
-}
+};
 
 /** Indicated reply that require authentication */
 export type AuthIndicatorReply = Indicator | InputConstraint | Unauthorized;
@@ -199,6 +199,7 @@ export type Mutation = {
   login: Login;
   /** Put a dino from party to the box */
   putDinoToBox: AuthIndicatorReply;
+  /** Start a random quest */
   quest: Quest;
   /** Rename a dinosaur */
   renameDino: AuthIndicatorReply;
@@ -294,7 +295,7 @@ export type User = Identifiable & {
 };
 
 /** The variant of dinosaur */
-export enum Variant {
+export const enum Variant {
   /** Bold comes in black */
   Black = 'black',
   /** Jumping expert */
@@ -311,7 +312,7 @@ export enum Variant {
   White = 'white',
   /** Can't lose if you don't get hit */
   Yellow = 'yellow'
-}
+};
 
 export type BattlingDinoInfoFragment = { __typename: 'Dino', id: string, name: string, variant: Variant, level: number, hp: number, percentage: number };
 
@@ -340,6 +341,13 @@ export type CrackAnEggMutationVariables = Exact<{ [key: string]: never; }>;
 
 
 export type CrackAnEggMutation = { __typename: 'Mutation', crackAnEgg: { __typename: 'InputConstraint', name: string, reason: string } | { __typename: 'NewDino', dino: { __typename: 'Dino', id: string, name: string, variant: Variant, level: number, price: number } } | { __typename: 'Unauthorized', operation: string } };
+
+export type CreateDinoMutationVariables = Exact<{
+  input: DinoCreate;
+}>;
+
+
+export type CreateDinoMutation = { __typename: 'Mutation', createDino: { __typename: 'InputConstraint', name: string, reason: string } | { __typename: 'NewDino', dino: { __typename: 'Dino', id: string, name: string, variant: Variant, level: number, price: number } } | { __typename: 'Unauthorized', operation: string } };
 
 export type LoginMutationVariables = Exact<{
   input: LoginInfo;
@@ -528,6 +536,50 @@ export function useCrackAnEggMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CrackAnEggMutationHookResult = ReturnType<typeof useCrackAnEggMutation>;
 export type CrackAnEggMutationResult = Apollo.MutationResult<CrackAnEggMutation>;
 export type CrackAnEggMutationOptions = Apollo.BaseMutationOptions<CrackAnEggMutation, CrackAnEggMutationVariables>;
+export const CreateDinoDocument = gql`
+    mutation CreateDino($input: DinoCreate!) {
+  createDino(input: $input) {
+    ... on Unauthorized {
+      operation
+    }
+    ... on NewDino {
+      dino {
+        ...JoiningDinoInfo
+      }
+    }
+    ... on InputConstraint {
+      name
+      reason
+    }
+  }
+}
+    ${JoiningDinoInfoFragmentDoc}`;
+export type CreateDinoMutationFn = Apollo.MutationFunction<CreateDinoMutation, CreateDinoMutationVariables>;
+
+/**
+ * __useCreateDinoMutation__
+ *
+ * To run a mutation, you first call `useCreateDinoMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateDinoMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createDinoMutation, { data, loading, error }] = useCreateDinoMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateDinoMutation(baseOptions?: Apollo.MutationHookOptions<CreateDinoMutation, CreateDinoMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateDinoMutation, CreateDinoMutationVariables>(CreateDinoDocument, options);
+      }
+export type CreateDinoMutationHookResult = ReturnType<typeof useCreateDinoMutation>;
+export type CreateDinoMutationResult = Apollo.MutationResult<CreateDinoMutation>;
+export type CreateDinoMutationOptions = Apollo.BaseMutationOptions<CreateDinoMutation, CreateDinoMutationVariables>;
 export const LoginDocument = gql`
     mutation Login($input: LoginInfo!) {
   login(input: $input) {

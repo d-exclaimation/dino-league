@@ -5,12 +5,12 @@
   "main": "dist/index.js",
   "types": "src/index.ts",
   "scripts": {
-    "migrate": "npx prisma migrate deploy",
-    "generate": "npx prisma generate",
+    "migrate": "prisma migrate deploy",
+    "generate": "prisma generate",
     "clean": "rm -rf dist",
     "clean:all": "trash .turbo node_modules dist",
-    "format": "npx prisma format",
-    "dev": "npx prisma studio --browser none",
+    "format": "prisma format",
+    "dev": "prisma studio --browser none",
     "build": "swc ./src -d ./dist"
   },
   "keywords": [],
