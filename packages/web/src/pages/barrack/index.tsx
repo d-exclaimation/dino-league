@@ -24,9 +24,9 @@ const BarrackPage: FC = () => {
             Sales: (
               <div className="flex flex-col items-center justify-center w-full h-[70vh]">
                 <img src="/egg.gif" />
-                <button className="flex items-center justify-center px-3 py-2 rounded-md bg-emerald-500 text-white clickable">
-                  <img className="w-8 pr-2" src="/coin.svg" /> 500
-                </button>
+                <div className="bg-white/70 rounded-md px-4 py-3 text-sm md:text-base font-mono">
+                  Sales are not available at the moment, come back later
+                </div>
               </div>
             ),
           }}
