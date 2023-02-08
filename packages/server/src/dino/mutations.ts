@@ -301,13 +301,11 @@ export class DinoMutations {
             orderBy: { order: "asc" },
             select: { dinoId: true },
           });
-          const ids = res.map(({ dinoId }) => dinoId);
-
           await tx.party.deleteMany({
             where: { userId: user.id },
           });
           await tx.party.createMany({
-            data: ids.map((dinoId, order) => ({
+            data: res.map(({ dinoId }, order) => ({
               userId: user.id,
               dinoId,
               order,
