@@ -105,7 +105,10 @@ const PartyPage: FC = () => {
           <button className="p-2 my-2 mx-2 flex-grow bg-cyan-400 rounded-md text-white">
             Item
           </button>
-          <button className="p-2 my-2 mx-2 flex-grow bg-rose-400 rounded-md text-white">
+          <button
+            disabled
+            className="p-2 my-2 mx-2 flex-grow bg-rose-400 disabled:bg-black/5 rounded-md text-white disabled:text-rose-400/50"
+          >
             Sell
           </button>
         </div>

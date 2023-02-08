@@ -87,7 +87,7 @@ const Custom: FC = () => {
   return (
     <>
       <JoiningDino
-        title="Egg cracked into a dinosaur"
+        title="A dinosaur is joining your team"
         close={() => setOpen(false)}
         dino={joining}
         open={open}
