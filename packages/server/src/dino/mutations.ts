@@ -44,18 +44,11 @@ export class DinoMutations {
       });
     }
 
-    const hasFullParty = await user.hasFullParty({ prisma, user, ...rest });
-
     const res = await prisma.createDino(variant, {
       level,
       name: !!name ? name : undefined,
       userId: user.id,
     });
-
-    // New dino add to party if available
-    if (!hasFullParty) {
-      await prisma.addToParty({ dinoId: res.id, userId: user.id });
-    }
 
     return new NewDino({ dino: Dino.from(res) });
   }
@@ -251,6 +244,92 @@ export class DinoMutations {
       }
 
       await prisma.addToParty({ dinoId: dino.id, userId: user.id });
+
+      return new Indicator({ flag: true });
+    } catch (e: unknown) {
+      logger.customError(e, "addDinoToParty");
+      if (!(e instanceof PrismaKnownError)) {
+        throw e;
+      }
+
+      if (e.code === "P2015" || e.code === "P2003") {
+        return new Unauthorized({ operation: "addDinoToParty" });
+      }
+
+      return new Indicator({ flag: false });
+    }
+  }
+
+  @Mutation(() => AuthIndicator, {
+    description: "Sell a dino and earn money back",
+  })
+  async sellDino(
+    @Arg("input", () => ID) input: string,
+    @Ctx() { prisma, user, logger }: Context
+  ): Promise<AuthIndicator> {
+    if (!user) {
+      return new Unauthorized({ operation: "sellDino" });
+    }
+
+    try {
+      const dino = await prisma.dino.findUnique({
+        where: { id: input },
+        select: {
+          id: true,
+          price: true,
+          user: { select: { id: true } },
+          party: true,
+        },
+      });
+
+      if (!dino) {
+        return new InputConstraint({
+          name: "input",
+          reason: "Not a valid Dino id",
+        });
+      }
+
+      if (dino.user?.id !== user.id) {
+        return new Unauthorized({ operation: "addDinoToParty" });
+      }
+
+      await prisma.$transaction(async (tx) => {
+        if (dino.party !== null) {
+          // Reorganise party and remove from party
+          const res = await tx.party.findMany({
+            where: { userId: user.id, dinoId: { not: input } },
+            orderBy: { order: "asc" },
+            select: { dinoId: true },
+          });
+          const ids = res.map(({ dinoId }) => dinoId);
+
+          await tx.party.deleteMany({
+            where: { userId: user.id },
+          });
+          await tx.party.createMany({
+            data: ids.map((dinoId, order) => ({
+              userId: user.id,
+              dinoId,
+              order,
+            })),
+          });
+        }
+
+        await tx.dino.delete({
+          where: { id: input },
+        });
+
+        await tx.user.update({
+          where: {
+            id: user.id,
+          },
+          data: {
+            cash: {
+              increment: Math.round(dino.price),
+            },
+          },
+        });
+      });
 
       return new Indicator({ flag: true });
     } catch (e: unknown) {
