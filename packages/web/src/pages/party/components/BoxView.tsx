@@ -18,9 +18,10 @@ type Props = {
   data: QuickDinoInfoFragment[] | undefined;
   shownId?: Dino["id"] | null;
   canAddToParty: boolean;
+  lastDino?: boolean;
 };
 
-const BoxView: FC<Props> = ({ data, shownId, canAddToParty }) => {
+const BoxView: FC<Props> = ({ data, shownId, canAddToParty, lastDino }) => {
   const [addToParty] = useAddToPartyMutation();
 
   const partyAction = useToastableMutation(
@@ -55,6 +56,7 @@ const BoxView: FC<Props> = ({ data, shownId, canAddToParty }) => {
       data={data}
       shownId={shownId}
       bg="bg-slate-100"
+      lastDino={lastDino}
       actions={{
         Party: {
           bg: "bg-violet-400",

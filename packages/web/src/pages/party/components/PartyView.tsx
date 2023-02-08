@@ -13,9 +13,10 @@ import DinoListView from "./DinoListView";
 type Props = {
   data: QuickDinoInfoFragment[] | undefined;
   shownId?: Dino["id"] | null;
+  lastDino?: boolean;
 };
 
-const PartyView: FC<Props> = ({ data, shownId }) => {
+const PartyView: FC<Props> = ({ data, shownId, lastDino }) => {
   const [putToBox] = usePutToBoxMutation();
 
   const partyAction = useToastableMutation(
@@ -49,6 +50,7 @@ const PartyView: FC<Props> = ({ data, shownId }) => {
       title="Party"
       data={data}
       shownId={shownId}
+      lastDino={lastDino}
       actions={{
         Box: {
           bg: "bg-indigo-400",

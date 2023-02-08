@@ -23,6 +23,7 @@ type Props = {
   data: QuickDinoInfoFragment[] | undefined;
   shownId?: Dino["id"] | null;
   bg?: Color.Bg;
+  lastDino?: boolean;
   actions: {
     [name: string]: {
       bg: Color.Bg;
@@ -33,7 +34,14 @@ type Props = {
   };
 };
 
-const DinoListView: FC<Props> = ({ title, data, actions, bg, shownId }) => {
+const DinoListView: FC<Props> = ({
+  title,
+  data,
+  actions,
+  bg,
+  shownId,
+  lastDino,
+}) => {
   const nav = useNavigate();
   const [switchDino] = useSwitchDinoMutation();
   const [sellDino] = useSellDinoMutation();
@@ -116,6 +124,7 @@ const DinoListView: FC<Props> = ({ title, data, actions, bg, shownId }) => {
                 Sell: {
                   bg: "bg-red-400",
                   text: "text-red-600",
+                  disabled: lastDino,
                   action: (id) => sellAction(id),
                 },
               }}

@@ -31,6 +31,10 @@ const PartyPage: FC = () => {
   const hasFullParty = useMemo(() => data?.me?.hasFullParty ?? true, [data]);
   const party = useMemo(() => data?.me?.party, [data]);
   const box = useMemo(() => data?.me?.box, [data]);
+  const count = useMemo(
+    () => (box && party ? box.length + party.length : 0),
+    [box, party]
+  );
 
   const health = useMemo(() => {
     if (!dino) return undefined;
@@ -107,10 +111,15 @@ const PartyPage: FC = () => {
         </div>
         <div className="w-full h-max pb-2 bg-gray-100">
           {(!party || party.length > 0) && (
-            <PartyView data={party} shownId={id} />
+            <PartyView data={party} shownId={id} lastDino={count <= 1} />
           )}
           {(!box || box.length > 0) && (
-            <BoxView data={box} shownId={id} canAddToParty={!hasFullParty} />
+            <BoxView
+              data={box}
+              shownId={id}
+              canAddToParty={!hasFullParty}
+              lastDino={count <= 1}
+            />
           )}
         </div>
       </div>
