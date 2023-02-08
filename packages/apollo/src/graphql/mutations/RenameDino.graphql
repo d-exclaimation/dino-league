@@ -1,14 +1,5 @@
 mutation RenameDino($input: DinoRename!) {
   renameDino(input: $input) {
-    ... on Unauthorized {
-      operation
-    }
-    ... on Indicator {
-      flag
-    }
-    ... on InputConstraint {
-      name
-      reason
-    }
+    ...Reply
   }
 }

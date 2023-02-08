@@ -9,7 +9,7 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@d-exclaimation/union": "^0.2.0",
+    "@d-exclaimation/common": "^0.2.0",
     "@dino/apollo": "*",
     "@dino/common": "*",
     "@headlessui-float/react": "^0.10.1",

@@ -1,0 +1,5 @@
+mutation SellDino($input: ID!) {
+  sellDino(input: $input) {
+    ...Reply
+  }
+}

@@ -5,12 +5,15 @@
 //  Created by d-exclaimation on 27 Dec 2022
 //
 
+import { macrotask } from "@d-exclaimation/common/v8";
 import {
   Dino,
   QuickDinoInfoFragment,
+  useSellDinoMutation,
   useSwitchDinoMutation,
 } from "@dino/apollo";
 import { FC, Fragment } from "react";
+import { useNavigate } from "react-router-dom";
 import type { Color } from "../../../common/Styling";
 import { useToastableMutation } from "../../../common/Toast";
 import MinoDinoView from "./MinoDinoView";
@@ -31,7 +34,10 @@ type Props = {
 };
 
 const DinoListView: FC<Props> = ({ title, data, actions, bg, shownId }) => {
+  const nav = useNavigate();
   const [switchDino] = useSwitchDinoMutation();
+  const [sellDino] = useSellDinoMutation();
+
   const switchAction = useToastableMutation(
     {
       async mutation(id: Dino["id"]) {
@@ -61,6 +67,36 @@ const DinoListView: FC<Props> = ({ title, data, actions, bg, shownId }) => {
     [switchDino, shownId]
   );
 
+  const sellAction = useToastableMutation(
+    {
+      async mutation(id: Dino["id"]) {
+        const { data, errors } = await sellDino({
+          variables: {
+            input: id,
+          },
+          refetchQueries: ["PartyView"],
+        });
+
+        if (!data || errors) {
+          throw errors?.at(0)?.message ?? "Unexpected error happened";
+        }
+
+        switch (data.sellDino.__typename) {
+          case "Indicator":
+            if (shownId === id) {
+              macrotask(() => nav("/party"));
+            }
+            return "Dinosaurs sold";
+          case "Unauthorized":
+            throw "You can't sell a dino you don't own";
+          case "InputConstraint":
+            throw `${data.sellDino.name} field is incorrect, ${data.sellDino.reason}`;
+        }
+      },
+    },
+    [sellDino, shownId, nav]
+  );
+
   return (
     <div className="py-2">
       <span className="mx-4 text-xl font-semibold">{title}</span>
@@ -77,6 +113,11 @@ const DinoListView: FC<Props> = ({ title, data, actions, bg, shownId }) => {
                   action: (id) => switchAction(id),
                 },
                 ...actions,
+                Sell: {
+                  bg: "bg-red-400",
+                  text: "text-red-600",
+                  action: (id) => sellAction(id),
+                },
               }}
             />
           </Fragment>

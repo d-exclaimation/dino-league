@@ -55,13 +55,6 @@ const PartyView: FC<Props> = ({ data, shownId }) => {
           text: "text-indigo-600",
           action: partyAction,
         },
-        Sell: {
-          bg: "bg-red-400",
-          text: "text-red-600",
-          action(id) {
-            console.info(`Selling ${id}`);
-          },
-        },
       }}
     />
   );

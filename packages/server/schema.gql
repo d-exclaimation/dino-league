@@ -154,6 +154,9 @@ type Mutation {
   """Put a dino from box to the party"""
   addDinoToParty(input: ID!): AuthIndicatorReply!
 
+  """Sell a dino and earn money back"""
+  sellDino(input: ID!): AuthIndicatorReply!
+
   """Log into a user with the given credentials"""
   login(input: LoginInfo!): Login!
 }
