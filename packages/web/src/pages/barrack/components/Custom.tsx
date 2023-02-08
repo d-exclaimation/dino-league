@@ -93,8 +93,8 @@ const Custom: FC = () => {
         open={open}
       />
       <div className="flex flex-col items-center justify-center w-full h-max">
-        <div className="w-1/2 p-4 md:p-10">
-          <img src={`/${variant}.gif`} />
+        <div className="flex items-center justify-center p-4 md:p-10">
+          <img className="w-1/2 max-w-sm" src={`/${variant}.gif`} />
         </div>
         <div className="px-6 py-1 w-full mx-2 bg-white/50 rounded-sm">
           <Listbox value={variant} onChange={setVariant}>

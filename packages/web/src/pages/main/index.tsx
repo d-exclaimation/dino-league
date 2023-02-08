@@ -64,15 +64,15 @@ const MainPage: FC = () => {
   }
 
   return (
-    <div className="w-screen h-screen bg-[#C0B2A2]">
+    <div className="w-screen h-screen md:h-max bg-[#C0B2A2]">
       <div className="flex flex-col justify-start items-start my-3 mx-4">
         <div className="flex flex-row justify-between items-start w-full">
           <img
             className="w-14 my-2 rounded-full"
             src={`https://avatars.dicebear.com/api/adventurer-neutral/${user?.id}.svg`} // TODO: use user id or username
           />
-          <button>
-            <img className="w-10 h-10 p-1 mt-2" src="/logout.svg" />
+          <button className="p-1 m-1 rounded-lg bg-white clickable">
+            <img className="w-10 h-10 p-1" src="/logout.svg" />
           </button>
         </div>
         <span>Hello</span>

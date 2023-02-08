@@ -6,7 +6,7 @@
 //
 
 import { useAuth, useLoginMutation } from "@dino/apollo";
-import { FC, useCallback, useState } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { mutationToast } from "../../common/Toast";
 import FormInput from "../common/FormInput";
@@ -45,7 +45,16 @@ const LoginPage: FC = () => {
     });
 
     setForm({ email: "", password: "" });
-  }, [form, login, setForm, refetch]);
+  }, [form.email, form.password, login, setForm, refetch]);
+
+  useEffect(() => {
+    const listener = () => console.log("Submitted");
+    window.addEventListener("submit", listener);
+
+    return () => {
+      window.removeEventListener("submit", listener);
+    };
+  }, [submit]);
 
   return (
     <div className="w-screen h-screen flex items-center justify-center flex-col gap-5 bg-[#C0B2A2]">
