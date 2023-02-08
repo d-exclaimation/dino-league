@@ -5,14 +5,15 @@
 //  Created by d-exclaimation on 20 Dec 2022
 //
 
-import { randomInt, weightedRandomElement } from "@dino/common";
-import { PrismaKnownError } from "@dino/prisma";
+import { randomElement, randomInt, weightedRandomElement } from "@dino/common";
+import { Lib, PrismaKnownError } from "@dino/prisma";
 import { Arg, Ctx, ID, Mutation, Resolver } from "type-graphql";
 import {
   AuthIndicator,
   Indicator,
   InputConstraint,
   Unauthorized,
+  Underfunded,
 } from "../common/graphql";
 import type { Context } from "../context";
 import {
@@ -31,7 +32,7 @@ export class DinoMutations {
   })
   async createDino(
     @Arg("input") { level, name, variant }: DinoCreate,
-    @Ctx() { prisma, user, ...rest }: Context
+    @Ctx() { prisma, user }: Context
   ): Promise<CreateDino> {
     if (!user) {
       return new Unauthorized({ operation: "createDino" });
@@ -44,11 +45,27 @@ export class DinoMutations {
       });
     }
 
-    const res = await prisma.createDino(variant, {
-      level,
-      name: !!name ? name : undefined,
-      userId: user.id,
-    });
+    const required = Math.round(
+      Lib.price.get(Lib.variants[variant]) * Lib.scaling(level)
+    );
+
+    const cash = user.cash - required;
+
+    if (cash < 0) {
+      return new Underfunded({ owned: user.cash, required });
+    }
+
+    const [_, res] = await prisma.$transaction([
+      prisma.user.update({ data: { cash }, where: { id: user.id } }),
+      prisma.dino.create({
+        data: {
+          level,
+          name: !!name ? name : variant,
+          userId: user.id,
+          ...Lib.adjusted(Lib.variants[variant], level),
+        },
+      }),
+    ]);
 
     return new NewDino({ dino: Dino.from(res) });
   }
@@ -68,15 +85,34 @@ export class DinoMutations {
     });
 
     const [min, max] = [_min.level, _max.level];
+    const variant = randomElement(Lib.ALL_VARIANTS);
+    const level = weightedRandomElement([
+      { weight: 1, value: randomInt({ start: max ?? 1, end: 125 }) },
+      { weight: 1, value: randomInt({ start: 1, end: min ?? 25 }) },
+      { weight: 3, value: randomInt({ start: min ?? 1, end: max ?? 25 }) },
+    ]);
 
-    const dino = await prisma.createRandomDino({
-      level: weightedRandomElement([
-        { weight: 1, value: randomInt({ start: max ?? 1, end: 125 }) },
-        { weight: 1, value: randomInt({ start: 1, end: min ?? 25 }) },
-        { weight: 3, value: randomInt({ start: min ?? 1, end: max ?? 25 }) },
-      ]),
-      userId: user.id,
-    });
+    const required = Math.round(
+      Lib.price.get(Lib.variants[variant]) * Lib.scaling(level)
+    );
+
+    const cash = user.cash - required;
+
+    if (cash < 0) {
+      return new Underfunded({ owned: user.cash, required });
+    }
+    const [_, dino] = await prisma.$transaction([
+      prisma.user.update({ data: { cash }, where: { id: user.id } }),
+      prisma.dino.create({
+        data: {
+          level,
+          name: variant,
+          userId: user.id,
+          ...Lib.adjusted(Lib.variants[variant], level),
+        },
+      }),
+    ]);
+
     return new NewDino({ dino: Dino.from(dino) });
   }
 

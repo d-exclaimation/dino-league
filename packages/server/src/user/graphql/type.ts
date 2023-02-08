@@ -7,7 +7,7 @@
 
 import { Struct } from "@dino/common";
 import { User as _User } from "@dino/prisma";
-import { Ctx, Field, ObjectType } from "type-graphql";
+import { Ctx, Field, Int, ObjectType } from "type-graphql";
 import type { Context } from "../../context";
 import { Arena, Dino } from "../../dino/graphql";
 import { Identifiable } from "../../identifiable/graphql";
@@ -22,13 +22,19 @@ export class User extends Identifiable {
   })
   location: Arena;
 
-  constructor({ id, location }: Struct.infer<User>) {
+  @Field(() => Int, {
+    description: "The amount of money owned by the user",
+  })
+  cash: number;
+
+  constructor({ id, location, cash }: Struct.infer<User>) {
     super({ id });
     this.location = location;
+    this.cash = cash;
   }
 
-  static from({ id, location }: _User) {
-    return new User({ id, location: Arena[location] });
+  static from({ id, location, cash }: _User) {
+    return new User({ id, location: Arena[location], cash });
   }
 
   @Field(() => [Dino], {

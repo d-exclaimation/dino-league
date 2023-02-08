@@ -122,6 +122,9 @@ type User implements Identifiable {
   """The current arena the user is in"""
   location: Arena!
 
+  """The amount of money owned by the user"""
+  cash: Int!
+
   """Get all Dinosaur in this user's party"""
   party: [Dino!]!
 
@@ -216,7 +219,7 @@ type BattleEnd {
 }
 
 """Create Dino mutation result"""
-union CreateDino = Unauthorized | NewDino | InputConstraint
+union CreateDino = Unauthorized | NewDino | InputConstraint | Underfunded
 
 """New Dino has been created"""
 type NewDino {
@@ -231,6 +234,15 @@ type InputConstraint {
 
   """The reason of violation"""
   reason: String!
+}
+
+"""An operation is blocked to lack of funds"""
+type Underfunded {
+  """Money owned"""
+  owned: Float!
+
+  """Money require"""
+  required: Float!
 }
 
 """Filter argument(s) for Dino(s)"""
@@ -250,7 +262,7 @@ union AuthIndicatorReply = Unauthorized | Indicator | InputConstraint
 
 """Indicator that an operation has done successfully something or not"""
 type Indicator {
-  """A indicator flag, true for something did happen, false otherwise"""
+  """An indicator flag, true for something did happen, false otherwise"""
   flag: Boolean!
 }
 

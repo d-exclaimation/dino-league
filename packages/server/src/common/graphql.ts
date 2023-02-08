@@ -49,12 +49,32 @@ export class InputConstraint {
 export class Indicator {
   @Field({
     description:
-      "A indicator flag, true for something did happen, false otherwise",
+      "An indicator flag, true for something did happen, false otherwise",
   })
   flag: boolean;
 
   constructor({ flag }: Struct.infer<Indicator>) {
     this.flag = flag;
+  }
+}
+
+@ObjectType({
+  description: "An operation is blocked to lack of funds",
+})
+export class Underfunded {
+  @Field({
+    description: "Money owned",
+  })
+  owned: number;
+
+  @Field({
+    description: "Money require",
+  })
+  required: number;
+
+  constructor({ owned, required }: Struct.infer<Underfunded>) {
+    this.owned = owned;
+    this.required = required;
   }
 }
 

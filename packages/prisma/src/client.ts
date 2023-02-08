@@ -5,9 +5,7 @@
 //  Created by d-exclaimation on 20 Nov 2022
 //
 
-import { randomElement } from "@dino/common";
-import { Dino, Prisma, PrismaClient, User, Variant } from "@prisma/client";
-import { Lib } from "./dino";
+import { Dino, Prisma, PrismaClient, User } from "@prisma/client";
 import { hash, verify } from "./hasher";
 
 export const createPrisma = <
@@ -80,26 +78,6 @@ export class PrismaStorage<
         userId,
         order: party.length,
       },
-    });
-  }
-
-  async createDino(variant: Variant, { level, name, userId }: CreateDinoArgs) {
-    const props = Lib.adjusted(Lib.variants[variant], level);
-    return this.dino.create({
-      data: {
-        name: name ?? variant,
-        level,
-        userId,
-        ...props,
-      },
-    });
-  }
-
-  async createRandomDino({ level, ...rest }: CreateDinoArgs) {
-    const variant = randomElement(Lib.ALL_VARIANTS);
-    return this.createDino(variant, {
-      level,
-      ...rest,
     });
   }
 
