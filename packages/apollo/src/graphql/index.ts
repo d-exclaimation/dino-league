@@ -71,7 +71,7 @@ export type BattleTurn = {
 };
 
 /** Create Dino mutation result */
-export type CreateDino = InputConstraint | NewDino | Unauthorized;
+export type CreateDino = InputConstraint | NewDino | Unauthorized | Underfunded;
 
 /** User credentials */
 export type Credentials = {
@@ -163,7 +163,7 @@ export type Identifiable = {
 /** Indicator that an operation has done successfully something or not */
 export type Indicator = {
   __typename: 'Indicator';
-  /** A indicator flag, true for something did happen, false otherwise */
+  /** An indicator flag, true for something did happen, false otherwise */
   flag: Scalars['Boolean'];
 };
 
@@ -286,11 +286,22 @@ export type Unauthorized = {
   operation: Scalars['String'];
 };
 
+/** An operation is blocked to lack of funds */
+export type Underfunded = {
+  __typename: 'Underfunded';
+  /** Money owned */
+  owned: Scalars['Float'];
+  /** Money require */
+  required: Scalars['Float'];
+};
+
 /** A valid user of the game */
 export type User = Identifiable & {
   __typename: 'User';
   /** Get all Dinosaur in this user's party */
   box: Array<Dino>;
+  /** The amount of money owned by the user */
+  cash: Scalars['Int'];
   /** True if the user has a full party */
   hasFullParty: Scalars['Boolean'];
   /** A unique ID for this entity */
@@ -347,14 +358,14 @@ export type AddToPartyMutation = { __typename: 'Mutation', addDinoToParty: { __t
 export type CrackAnEggMutationVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CrackAnEggMutation = { __typename: 'Mutation', crackAnEgg: { __typename: 'InputConstraint', name: string, reason: string } | { __typename: 'NewDino', dino: { __typename: 'Dino', id: string, name: string, variant: Variant, level: number, price: number } } | { __typename: 'Unauthorized', operation: string } };
+export type CrackAnEggMutation = { __typename: 'Mutation', crackAnEgg: { __typename: 'InputConstraint', name: string, reason: string } | { __typename: 'NewDino', dino: { __typename: 'Dino', id: string, name: string, variant: Variant, level: number, price: number } } | { __typename: 'Unauthorized', operation: string } | { __typename: 'Underfunded' } };
 
 export type CreateDinoMutationVariables = Exact<{
   input: DinoCreate;
 }>;
 
 
-export type CreateDinoMutation = { __typename: 'Mutation', createDino: { __typename: 'InputConstraint', name: string, reason: string } | { __typename: 'NewDino', dino: { __typename: 'Dino', id: string, name: string, variant: Variant, level: number, price: number } } | { __typename: 'Unauthorized', operation: string } };
+export type CreateDinoMutation = { __typename: 'Mutation', createDino: { __typename: 'InputConstraint', name: string, reason: string } | { __typename: 'NewDino', dino: { __typename: 'Dino', id: string, name: string, variant: Variant, level: number, price: number } } | { __typename: 'Unauthorized', operation: string } | { __typename: 'Underfunded' } };
 
 export type LoginMutationVariables = Exact<{
   input: LoginInfo;
@@ -406,7 +417,7 @@ export type DinosaurQuery = { __typename: 'Query', dinosaur?: { __typename: 'Din
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename: 'Query', me?: { __typename: 'User', id: string, location: Arena } | null };
+export type MeQuery = { __typename: 'Query', me?: { __typename: 'User', id: string, location: Arena, cash: number } | null };
 
 export type PartyViewQueryVariables = Exact<{
   dino: SearchById;
@@ -880,6 +891,7 @@ export const MeDocument = gql`
   me {
     id
     location
+    cash
   }
 }
     `;

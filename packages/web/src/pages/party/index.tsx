@@ -6,9 +6,8 @@
 //
 
 import { usePartyViewQuery } from "@dino/apollo";
-import { FC, useMemo } from "react";
+import { FC, useEffect, useMemo } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { nextLoop } from "../../common/VirtualDom";
 import { withAuthRedirect } from "../../hoc/withAuthRedirect";
 import HomeButton from "../common/HomeButton";
 import BoxView from "./components/BoxView";
@@ -53,11 +52,11 @@ const PartyPage: FC = () => {
     return `${variant.toLowerCase()}.gif`;
   }, [data]);
 
-  if (!id && !loading && party?.at(0)?.id) {
-    nextLoop(() =>
-      nav(`/party?id=${encodeURIComponent(party?.at(0)?.id ?? "")}`, {})
-    );
-  }
+  useEffect(() => {
+    if (!id && !loading && party?.at(0)?.id) {
+      nav(`/party?id=${encodeURIComponent(party?.at(0)?.id ?? "")}`, {});
+    }
+  }, [loading, id]);
 
   if (error) {
     return (

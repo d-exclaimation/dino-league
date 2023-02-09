@@ -82,7 +82,7 @@ const DinoListView: FC<Props> = ({
           variables: {
             input: id,
           },
-          refetchQueries: ["PartyView"],
+          refetchQueries: ["PartyView", "Me"],
         });
 
         if (!data || errors) {

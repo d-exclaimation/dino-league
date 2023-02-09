@@ -5,13 +5,18 @@
 //  Created by d-exclaimation on 08 Jan 2023
 //
 
-import { JoiningDinoInfoFragment, useCrackAnEggMutation } from "@dino/apollo";
+import {
+  JoiningDinoInfoFragment,
+  useAuth,
+  useCrackAnEggMutation,
+} from "@dino/apollo";
 import { FC, useCallback, useState } from "react";
 import { toast } from "react-toastify";
 import { Lib } from "../../../lib";
 import JoiningDino from "../../common/JoiningDino";
 
 const Egg: FC = () => {
+  const { user } = useAuth();
   const [open, setOpen] = useState(false);
   const [joining, setJoining] =
     useState<Omit<JoiningDinoInfoFragment, "__typename">>();
@@ -19,7 +24,7 @@ const Egg: FC = () => {
 
   const crackAnEggAction = useCallback(async () => {
     const { data, errors } = await crackAnEgg({
-      refetchQueries: ["PartyView"],
+      refetchQueries: ["PartyView", "Me"],
     });
 
     if (!data || errors)
@@ -38,7 +43,14 @@ const Egg: FC = () => {
         break;
       case "Unauthorized":
         return toast("Cracking an egg require logging in", {
-          type: "error",
+          type: "warning",
+          autoClose: 2000,
+          pauseOnHover: true,
+          theme: "light",
+        });
+      case "Underfunded":
+        return toast("You don't have enough funds to crack an egg", {
+          type: "warning",
           autoClose: 2000,
           pauseOnHover: true,
           theme: "light",
@@ -64,7 +76,10 @@ const Egg: FC = () => {
       <div className="flex flex-col items-center justify-center w-full h-[70vh]">
         <img src="/egg.gif" />
         <button
-          className="flex items-center justify-center px-3 py-2 rounded-md bg-emerald-500 text-white clickable"
+          disabled={Lib.price.egg > (user?.cash ?? 0)}
+          className="flex items-center justify-center px-3 py-2 
+          rounded-md bg-emerald-500 text-white
+          enabled:clickable disabled:opacity-60"
           onClick={crackAnEggAction}
         >
           <img className="w-8 pr-2" src="/coin.svg" /> {Lib.price.egg}

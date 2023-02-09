@@ -7,7 +7,6 @@
 
 import {
   fill,
-  random,
   randomElement,
   randomInt,
   Values,
@@ -16,7 +15,7 @@ import {
 import { Ctx, Mutation, Resolver } from "type-graphql";
 import { Unauthorized } from "../common/graphql";
 import type { Context } from "../context";
-import { Arena, Dino } from "../dino/graphql";
+import { Dino } from "../dino/graphql";
 import { Battle, BattleEnd, Quest } from "./graphql";
 
 const LEVEL_SCALE = 1.01;
@@ -79,6 +78,22 @@ export class BattleResolver {
         select: { id: true },
       });
 
+      // Mark: Earn cash
+      if (isWin) {
+        await tx.user.update({
+          data: {
+            cash: {
+              increment: Math.round(
+                enemies.map(({ price }) => price).reduce((acc, x) => acc + x, 0)
+              ),
+            },
+          },
+          where: {
+            id: user.id,
+          },
+        });
+      }
+
       // Mark: Healing and/or level up
       for (const dino of party) {
         const { hp, healing, id } = dino;
@@ -110,62 +125,6 @@ export class BattleResolver {
     });
 
     return battle;
-  }
-
-  private simulation(party1: Dino[], party2: Dino[], location: Arena): Battle {
-    const battle = new Battle({ plan: [] });
-
-    let [i1, i2] = [0, 0];
-    let [mut1, mut2] = [1, 1];
-
-    const yours = () => party1[i1];
-    const opponents = () => party2[i2];
-
-    // Mark: -> Init
-    battle.init({
-      yours: yours(),
-      opponents: opponents(),
-      yoursRemaining: activeCount(party1),
-      opponentsRemaining: activeCount(party2),
-    });
-
-    while (true) {
-      // Mark: .. -> Init, repeat until no switch is needed
-      while (yours().fainted() || opponents().fainted()) {
-        i1 += yours().fainted() ? 1 : 0;
-        i2 += opponents().fainted() ? 1 : 0;
-
-        // Mark: ... -> End
-        if (i1 >= party1.length || i2 >= party2.length) {
-          battle.end({ win: i1 < party1.length });
-          return battle;
-        }
-
-        battle.init({
-          yours: yours(),
-          opponents: opponents(),
-          yoursRemaining: activeCount(party1),
-          opponentsRemaining: activeCount(party2),
-        });
-      }
-
-      // Mark: ... -> Turn
-      const yoursSpeed = random({ end: yours().speed * mut1 });
-      const opponentsSpeed = random({ end: opponents().speed * mut2 });
-      const attacking = yoursSpeed >= opponentsSpeed;
-
-      const damage = (attacking ? yours() : opponents()).damage(location);
-      (attacking ? opponents() : yours()).take(damage);
-      battle.turn({
-        yours: yours(),
-        opponents: opponents(),
-        attacking,
-        damage,
-      });
-
-      mut1 = attacking ? Math.max(0.1, mut1 - 0.1) : 1;
-      mut2 = !attacking ? Math.max(0.1, mut2 - 0.1) : 1;
-    }
   }
 
   /**

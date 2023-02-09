@@ -7,12 +7,6 @@
 
 import { useCallback, useEffect, useRef } from "react";
 
-/**
- * Run an action at the beginning of the next event loop (after state changes)
- * @param action Action to be registered
- */
-export const nextLoop = (action: () => void) => setTimeout(action, 0);
-
 type TimeoutArgs = {
   timeout?: number;
   action: TimerHandler;

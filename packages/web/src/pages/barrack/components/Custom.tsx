@@ -7,6 +7,7 @@
 
 import {
   JoiningDinoInfoFragment,
+  useAuth,
   useCreateDinoMutation,
   Variant,
 } from "@dino/apollo";
@@ -19,6 +20,7 @@ import FormInput from "../../common/FormInput";
 import JoiningDino from "../../common/JoiningDino";
 
 const Custom: FC = () => {
+  const { user } = useAuth();
   const [createDino] = useCreateDinoMutation();
   const [variant, setVariant] = useState<keyof typeof Lib.variants>("white");
   const [level, setLevel] = useState(1);
@@ -50,7 +52,7 @@ const Custom: FC = () => {
           level: level,
         },
       },
-      refetchQueries: ["PartyView"],
+      refetchQueries: ["PartyView", "Me"],
     });
 
     if (!data || errors)
@@ -69,7 +71,14 @@ const Custom: FC = () => {
         break;
       case "Unauthorized":
         return toast("Cracking an egg require logging in", {
-          type: "error",
+          type: "warning",
+          autoClose: 2000,
+          pauseOnHover: true,
+          theme: "light",
+        });
+      case "Underfunded":
+        return toast("You don't have enough funds to crack an egg", {
+          type: "warning",
           autoClose: 2000,
           pauseOnHover: true,
           theme: "light",
@@ -190,7 +199,11 @@ const Custom: FC = () => {
           </div>
           <div className="flex w-full items-center justify-center">
             <button
-              className={`flex py-2 my-2 items-center justify-center px-3 rounded-md ${rarity} bg-white clickable`}
+              disabled={price > (user?.cash ?? 0)}
+              className={`flex py-2 my-2 items-center justify-center px-3 
+                rounded-md ${rarity} bg-white enabled:clickable
+                disabled:opacity-60
+              `}
               onClick={buy}
             >
               <img className="w-8 pr-2" src="/coin.svg" /> {price}

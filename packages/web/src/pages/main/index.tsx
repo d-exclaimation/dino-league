@@ -76,7 +76,10 @@ const MainPage: FC = () => {
           </button>
         </div>
         <span>Hello</span>
-        <span className="font-medium text-xl md:text-2xl">{user?.id}</span>
+        <span className="font-medium text-xl md:text-2xl">
+          {user?.id}
+          <span className="mx-1 text-base text-black/50">{user?.cash}</span>
+        </span>
       </div>
       <div className="py-3 px-5">
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-5">
