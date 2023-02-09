@@ -5,7 +5,7 @@
 //  Created by d-exclaimation on 20 Nov 2022
 //
 
-import { Without } from "@dino/common";
+import type { Without } from "@dino/common";
 import { Dino, Prisma } from "@prisma/client";
 
 /**

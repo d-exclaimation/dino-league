@@ -4,14 +4,11 @@
 //
 //  Created by d-exclaimation on 25 Nov 2022
 //
-import { Variant } from "@dino/apollo";
 import AuthProvider from "@dino/apollo/src/auth/AuthProvider";
 import type { FC } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import { Lib } from "./lib";
 import BarrackPage from "./pages/barrack";
-import JoiningDino from "./pages/common/JoiningDino";
 import LoginPage from "./pages/login";
 import MainPage from "./pages/main";
 import PartyPage from "./pages/party";
@@ -37,23 +34,6 @@ const router = createBrowserRouter([
   {
     path: "/barrack",
     element: <BarrackPage />,
-  },
-  {
-    path: "/test",
-    element: (
-      <JoiningDino
-        title="A dinosaur joined your team"
-        close={() => {}}
-        open
-        dino={{
-          id: "",
-          level: 10,
-          name: "Blue",
-          variant: Variant.Blue,
-          price: Math.round(362 * Math.pow(Lib.LEVEL_SCALE, 10 - 1)),
-        }}
-      />
-    ),
   },
   {
     path: "*",

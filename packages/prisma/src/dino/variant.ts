@@ -12,9 +12,7 @@ export function adjusted(
   level: number
 ) {
   const scale = Lib.scaling(level);
-  const price = Math.round(
-    3 * (hp / 100 + attack / 50 + speed / 100 + healing / 40) * 40
-  );
+  const price = Lib.price.get(Lib.variants[rest.variant]);
   return {
     hp: scale * hp,
     attack: scale * attack,

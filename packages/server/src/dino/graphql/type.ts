@@ -70,7 +70,7 @@ export class Dino extends Identifiable {
     description: "The max hp of this Dinosaur",
   })
   maxHp(): number {
-    const scale = Math.pow(1.01, this.level - 1);
+    const scale = Lib.scaling(this.level);
     return Lib.variants[this.variant].hp * scale;
   }
 

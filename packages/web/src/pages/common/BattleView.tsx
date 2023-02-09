@@ -5,6 +5,7 @@
 //  Created by d-exclaimation on 05 Jan 2023
 //
 
+import type { Palette } from "@d-exclaimation/common/tailwind";
 import {
   Arena,
   BattleEnd,
@@ -14,7 +15,6 @@ import {
 } from "@dino/apollo";
 import { FC, useCallback, useState } from "react";
 import { toast } from "react-toastify";
-import { Color } from "../../common/Styling";
 import { useManagedTimeout } from "../../common/VirtualDom";
 
 type BattleDinoDisplay = {
@@ -36,7 +36,7 @@ type Props = {
   start: () => Promise<BattlePlan[]>;
 };
 
-const dmg = ({ damage, dino }: BattleDinoDisplay): Color.Bg => {
+const dmg = ({ damage, dino }: BattleDinoDisplay): Palette["bg"] => {
   if (!damage) return "bg-transparent";
   const percentage = Math.round((damage * 100) / dino.hp);
   if (percentage < 25) return "bg-sky-400";
@@ -45,7 +45,7 @@ const dmg = ({ damage, dino }: BattleDinoDisplay): Color.Bg => {
   return "bg-red-400";
 };
 
-const hp = ({ dino: { percentage } }: BattleDinoDisplay): Color.Text => {
+const hp = ({ dino: { percentage } }: BattleDinoDisplay): Palette["text"] => {
   if (percentage < 33) return "text-red-500";
   if (percentage < 67) return "text-amber-500";
   return "text-green-500";

@@ -185,6 +185,3 @@ export class BattleResolver {
     }
   }
 }
-
-const activeCount = (party: Dino[]) =>
-  party.filter((dino) => !dino.fainted()).length;

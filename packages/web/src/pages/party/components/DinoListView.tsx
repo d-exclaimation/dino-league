@@ -5,6 +5,7 @@
 //  Created by d-exclaimation on 27 Dec 2022
 //
 
+import type { Palette } from "@d-exclaimation/common/tailwind";
 import { macrotask } from "@d-exclaimation/common/v8";
 import {
   Dino,
@@ -14,7 +15,6 @@ import {
 } from "@dino/apollo";
 import { FC, Fragment } from "react";
 import { useNavigate } from "react-router-dom";
-import type { Color } from "../../../common/Styling";
 import { useToastableMutation } from "../../../common/Toast";
 import MinoDinoView from "./MinoDinoView";
 
@@ -22,12 +22,12 @@ type Props = {
   title: string;
   data: QuickDinoInfoFragment[] | undefined;
   shownId?: Dino["id"] | null;
-  bg?: Color.Bg;
+  bg?: Palette["bg"];
   lastDino?: boolean;
   actions: {
     [name: string]: {
-      bg: Color.Bg;
-      text: Color.Text;
+      bg: Palette["bg"];
+      text: Palette["bg"];
       disabled?: boolean;
       action: (id: Dino["id"]) => void | Promise<void>;
     };
@@ -112,7 +112,7 @@ const DinoListView: FC<Props> = ({
         {(data ?? []).map((props) => (
           <Fragment key={props.id}>
             <MinoDinoView
-              bg={bg ?? "bg-white"}
+              bg={(bg as Palette["bg"]) ?? "bg-white"}
               dino={props}
               actions={{
                 Swap: {

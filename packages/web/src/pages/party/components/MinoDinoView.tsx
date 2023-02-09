@@ -12,20 +12,20 @@
 //  Created by d-exclaimation on 17 Dec 2022
 //
 
+import type { Palette } from "@d-exclaimation/common/tailwind";
 import type { Dino, PlaceholderPartyQuery } from "@dino/apollo";
 import { Float } from "@headlessui-float/react";
 import { Menu } from "@headlessui/react";
 import { FC } from "react";
 import { Link } from "react-router-dom";
-import type { Color } from "../../../common/Styling";
 
 type Props = {
-  bg: Color.Bg;
+  bg: Palette["bg"];
   dino: Omit<PlaceholderPartyQuery["dinosaurs"][number], "__typename">;
   actions?: {
     [name: string]: {
-      bg: Color.Bg;
-      text: Color.Text;
+      bg: Palette["bg"];
+      text: Palette["text"];
       disabled?: boolean;
       action: (id: Dino["id"]) => void | Promise<void>;
     };

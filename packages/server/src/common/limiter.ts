@@ -9,7 +9,16 @@ import { clamp } from "@dino/common";
 import { createMethodDecorator } from "type-graphql";
 import type { Context } from "../context";
 
+/**
+ * Data structure to handle imprinting of user IP and their last request date
+ */
 class Imprints extends Map<string, Date> {
+  /**
+   * Verify that the current IP is not making larger the max difference
+   * @param ip
+   * @param maxDiff
+   * @returns
+   */
   verify(ip: string, maxDiff: number): boolean {
     const curr = new Date();
     const prev = this.get(ip);

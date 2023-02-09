@@ -26,12 +26,6 @@ export const createPrisma = <
   optionsArg?: Prisma.Subset<T, Prisma.PrismaClientOptions>
 ) => new PrismaStorage<T, U, GlobalReject>(optionsArg);
 
-type CreateDinoArgs = {
-  level: number;
-  name?: string;
-  userId?: User["id"];
-};
-
 type CreatePartyArgs = {
   userId: User["id"];
   dinoId: Dino["id"];

@@ -7,7 +7,6 @@
 
 export * from "@d-exclaimation/common/union";
 export * from "./array/fill";
-export * from "./errors";
 export * from "./lib";
 export * from "./number";
 export * from "./random";

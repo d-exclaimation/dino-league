@@ -7,4 +7,7 @@
 
 import * as dino from "./dino";
 
+/**
+ * Common lib / source of truth for all dino knowledge
+ */
 export const Lib = { ...dino };

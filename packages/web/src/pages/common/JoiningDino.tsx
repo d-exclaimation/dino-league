@@ -5,11 +5,11 @@
 //  Created by d-exclaimation on 08 Jan 2023
 //
 
+import type { Palette } from "@d-exclaimation/common/tailwind";
 import { JoiningDinoInfoFragment, useRenameDinoMutation } from "@dino/apollo";
 import { Dialog, Transition } from "@headlessui/react";
 import { FC, Fragment, useCallback, useMemo, useState } from "react";
 import { toast } from "react-toastify";
-import { Color } from "../../common/Styling";
 import { Lib } from "../../lib";
 
 type Props = {
@@ -25,7 +25,7 @@ const JoiningDino: FC<Props> = ({ title, dino, close, open }) => {
 
   const price = useMemo(() => dino?.price ?? 0, [dino]);
   const rarityColor = useMemo(
-    (): Color.of<"ring-offset"> =>
+    (): Palette["ring-offset"] =>
       price > Lib.price.ultra
         ? "ring-offset-fuchsia-500"
         : price > Lib.price.epic

@@ -5,6 +5,7 @@
 //  Created by d-exclaimation on 03 Feb 2023
 //
 
+import type { Palette } from "@d-exclaimation/common/tailwind";
 import {
   JoiningDinoInfoFragment,
   useAuth,
@@ -14,7 +15,6 @@ import {
 import { Listbox, Transition } from "@headlessui/react";
 import { FC, Fragment, useCallback, useMemo, useState } from "react";
 import { toast } from "react-toastify";
-import { Color } from "../../../common/Styling";
 import { Lib } from "../../../lib";
 import FormInput from "../../common/FormInput";
 import JoiningDino from "../../common/JoiningDino";
@@ -38,7 +38,7 @@ const Custom: FC = () => {
     [variant, level]
   );
 
-  const rarity = useMemo((): Color.Text => {
+  const rarity = useMemo((): Palette["text"] => {
     if (price <= Lib.price.avg) return "text-black";
     if (price <= Lib.price.uncommon) return "text-emerald-500";
     if (price <= Lib.price.rare) return "text-blue-500";

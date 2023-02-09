@@ -7,8 +7,14 @@
 
 import { Values } from "../types/transform";
 
+/**
+ * Scaling on each level difference
+ */
 export const LEVEL_SCALE = 1 + 0.03;
 
+/**
+ * Variants base stats for all dino
+ */
 export const variants = {
   white: {
     arena: "URBAN",
@@ -87,6 +93,10 @@ export const ALL_VARIANTS: Array<keyof typeof variants> = [
   "yellow",
 ];
 
+/**
+ * Compute a price given all the dino stats
+ * @param param0 All the base stats
+ */
 function computePrice({ hp, attack, speed, healing }: Values<typeof variants>) {
   return Math.round(
     3 * (hp / 100 + attack / 50 + speed / 100 + healing / 40) * 40
@@ -94,15 +104,32 @@ function computePrice({ hp, attack, speed, healing }: Values<typeof variants>) {
 }
 
 export const price = {
+  /**
+   * Compute a price given all the dino stats
+   * @param param0 All the base stats
+   */
   get: computePrice,
+  /**
+   * Average price for all dino at level 1
+   */
   avg: Math.round(
     ALL_VARIANTS.map((v) => variants[v])
       .map((v) => computePrice(v))
       .reduce((acc, x) => acc + x, 0) / ALL_VARIANTS.length
   ),
-  median: 350,
-  egg: 300,
+  /**
+   * Price of a random egg
+   */
+  egg: 350,
+  /**
+   * Price increase for direct purchase of dinosaur
+   */
   tax: 1.25,
 };
 
+/**
+ * The amout of scaling given a level
+ * @param level The desired level
+ * @returns A number for scaling
+ */
 export const scaling = (level: number) => Math.pow(LEVEL_SCALE, level - 1);

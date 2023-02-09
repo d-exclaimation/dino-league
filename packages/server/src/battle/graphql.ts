@@ -139,10 +139,6 @@ export class Battle {
 
   /**
    * Simulated a battle and its plan according to the 2 parties involved
-   * @param prisma
-   * @param lhs
-   * @param rhs
-   * @param location
    */
   static simulated(lhs: Dino[], rhs: Dino[], location: Arena) {
     const battle = new Battle({ plan: [] });
