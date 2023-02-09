@@ -5,37 +5,13 @@
 //  Created by d-exclaimation on 04 Jan 2023
 //
 
-import {
-  fill,
-  Lib,
-  randomElement,
-  randomInt,
-  Values,
-  weightedRandomElement,
-} from "@dino/common";
+import { Lib, weightedRandomElement } from "@dino/common";
 import { Ctx, Mutation, Resolver } from "type-graphql";
 import { Unauthorized } from "../common/graphql";
 import type { Context } from "../context";
 import { Dino } from "../dino/graphql";
 import { Battle, BattleEnd, Quest } from "./graphql";
-
-const QuestType = {
-  easy: "easy",
-  hard: "hard",
-  speed: "quickgreens",
-  mono: "blandnbold",
-  wall: "pinkwall",
-  danger: "dangerzone",
-} as const;
-const ALL_QUEST_CHANCES = [
-  { weight: 10, value: QuestType.easy },
-  { weight: 1, value: QuestType.hard },
-  { weight: 1, value: QuestType.speed },
-  { weight: 1, value: QuestType.mono },
-  { weight: 1, value: QuestType.wall },
-  { weight: 1, value: QuestType.danger },
-];
-export type QuestType = Values<typeof QuestType>;
+import { randomQuest } from "./quest";
 
 @Resolver()
 export class BattleResolver {
@@ -55,7 +31,17 @@ export class BattleResolver {
         orderBy: { order: "asc" },
       })
     ).map(({ dino }) => Dino.from(dino));
-    const enemies = this.randomQuest(party);
+    const enemies = randomQuest({
+      size: party.length,
+      level: {
+        min: Math.min(...party.map(({ level }) => level)),
+        max: Math.max(...party.map(({ level }) => level)),
+        avg: Math.round(
+          party.map(({ level }) => level).reduce((acc, x) => acc + x, 0) /
+            party.length
+        ),
+      },
+    });
 
     // Mark: Simulate battle
     if (party.length <= 0) {
@@ -128,60 +114,5 @@ export class BattleResolver {
     });
 
     return battle;
-  }
-
-  /**
-   * Get a random quest party
-   * @param party The player's party to based the randomness of
-   * @returns A generated random quest party
-   */
-  private randomQuest(party: Dino[]) {
-    const questType = weightedRandomElement(ALL_QUEST_CHANCES);
-    const start = Math.round(
-      Math.max(1, Math.min(...party.map(({ level }) => level)))
-    );
-    const end = Math.round(
-      Math.max(start, Math.max(...party.map(({ level }) => level)) * 0.9)
-    );
-
-    switch (questType) {
-      case "easy":
-        return fill(randomInt({ start: 1, end: party.length }), () =>
-          Dino.random({
-            start: 1,
-            end: Math.min(start * 1.25, end),
-          })
-        );
-      case "hard":
-        return fill(randomInt({ start: 4, end: 6 }), () =>
-          Dino.random({
-            start: Math.max(start, end / 2),
-            end: end,
-          })
-        );
-      case "quickgreens":
-        return fill(6, () => Dino.variantRandom("green", { start, end }));
-      case "blandnbold":
-        return fill(6, () =>
-          Dino.variantRandom(randomElement(["black", "blue", "white"]), {
-            start,
-            end,
-          })
-        );
-      case "pinkwall":
-        return fill(6, () =>
-          Dino.variantRandom("pink", {
-            start,
-            end,
-          })
-        );
-      case "dangerzone":
-        return fill(6, () =>
-          Dino.variantRandom(randomElement(["slate", "red"]), {
-            start,
-            end,
-          })
-        );
-    }
   }
 }
