@@ -9,6 +9,7 @@ import AuthProvider from "@dino/apollo/src/auth/AuthProvider";
 import type { FC } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
+import { Lib } from "./lib";
 import BarrackPage from "./pages/barrack";
 import JoiningDino from "./pages/common/JoiningDino";
 import LoginPage from "./pages/login";
@@ -49,7 +50,7 @@ const router = createBrowserRouter([
           level: 10,
           name: "Blue",
           variant: Variant.Blue,
-          price: Math.round(362 * Math.pow(1.01, 10 - 1)),
+          price: Math.round(362 * Math.pow(Lib.LEVEL_SCALE, 10 - 1)),
         }}
       />
     ),

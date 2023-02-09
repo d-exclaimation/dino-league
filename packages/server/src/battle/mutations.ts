@@ -7,6 +7,7 @@
 
 import {
   fill,
+  Lib,
   randomElement,
   randomInt,
   Values,
@@ -18,7 +19,6 @@ import type { Context } from "../context";
 import { Dino } from "../dino/graphql";
 import { Battle, BattleEnd, Quest } from "./graphql";
 
-const LEVEL_SCALE = 1.01;
 const QuestType = {
   easy: "easy",
   hard: "hard",
@@ -28,7 +28,7 @@ const QuestType = {
   danger: "dangerzone",
 } as const;
 const ALL_QUEST_CHANCES = [
-  { weight: 5, value: QuestType.easy },
+  { weight: 10, value: QuestType.easy },
   { weight: 1, value: QuestType.hard },
   { weight: 1, value: QuestType.speed },
   { weight: 1, value: QuestType.mono },
@@ -50,7 +50,7 @@ export class BattleResolver {
     // Mark: Setup
     const party = (
       await prisma.party.findMany({
-        where: { userId: user.id },
+        where: { userId: user.id, dino: { hp: { gt: 0 } } },
         select: { dino: true },
         orderBy: { order: "asc" },
       })
@@ -58,6 +58,9 @@ export class BattleResolver {
     const enemies = this.randomQuest(party);
 
     // Mark: Simulate battle
+    if (party.length <= 0) {
+      return new Battle({ plan: [new BattleEnd({ win: false })] });
+    }
     const battle = Battle.simulated(party, enemies, user.location);
 
     // Mark: Compute data from outcome
@@ -109,11 +112,11 @@ export class BattleResolver {
         if (!dino.fainted() && weightedRandomElement(chances)) {
           await tx.dino.update({
             data: {
-              attack: { multiply: LEVEL_SCALE },
-              healing: { multiply: LEVEL_SCALE },
-              hp: { multiply: LEVEL_SCALE },
-              price: { multiply: LEVEL_SCALE },
-              speed: { multiply: LEVEL_SCALE },
+              attack: { multiply: Lib.LEVEL_SCALE },
+              healing: { multiply: Lib.LEVEL_SCALE },
+              hp: { multiply: Lib.LEVEL_SCALE },
+              price: { multiply: Lib.LEVEL_SCALE },
+              speed: { multiply: Lib.LEVEL_SCALE },
               level: { increment: 1 },
             },
             where: { id },
@@ -143,7 +146,7 @@ export class BattleResolver {
 
     switch (questType) {
       case "easy":
-        return fill(randomInt({ start: 1, end: 6 }), () =>
+        return fill(randomInt({ start: 1, end: party.length }), () =>
           Dino.random({
             start: 1,
             end: Math.min(start * 1.25, end),

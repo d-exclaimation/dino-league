@@ -53,8 +53,14 @@ const PartyPage: FC = () => {
   }, [data]);
 
   useEffect(() => {
-    if (!id && !loading && party?.at(0)?.id) {
+    if (id || loading) {
+      return;
+    }
+    if (party?.at(0)?.id) {
       nav(`/party?id=${encodeURIComponent(party?.at(0)?.id ?? "")}`, {});
+    }
+    if (box?.at(0)?.id) {
+      nav(`/party?id=${encodeURIComponent(box?.at(0)?.id ?? "")}`, {});
     }
   }, [loading, id]);
 

@@ -7,6 +7,8 @@
 
 import { Values } from "../types/transform";
 
+export const LEVEL_SCALE = 1 + 0.03;
+
 export const variants = {
   white: {
     arena: "URBAN",
@@ -85,11 +87,22 @@ export const ALL_VARIANTS: Array<keyof typeof variants> = [
   "yellow",
 ];
 
+function computePrice({ hp, attack, speed, healing }: Values<typeof variants>) {
+  return Math.round(
+    3 * (hp / 100 + attack / 50 + speed / 100 + healing / 40) * 40
+  );
+}
+
 export const price = {
-  get: ({ hp, attack, speed, healing }: Values<typeof variants>) =>
-    Math.round(3 * (hp / 100 + attack / 50 + speed / 100 + healing / 40) * 40),
-  avg: 273,
-  median: 294,
+  get: computePrice,
+  avg: Math.round(
+    ALL_VARIANTS.map((v) => variants[v])
+      .map((v) => computePrice(v))
+      .reduce((acc, x) => acc + x, 0) / ALL_VARIANTS.length
+  ),
+  median: 350,
+  egg: 300,
+  tax: 1.25,
 };
 
-export const scaling = (level: number) => Math.pow(1.01, level - 1);
+export const scaling = (level: number) => Math.pow(LEVEL_SCALE, level - 1);

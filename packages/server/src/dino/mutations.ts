@@ -46,7 +46,7 @@ export class DinoMutations {
     }
 
     const required = Math.round(
-      Lib.price.get(Lib.variants[variant]) * Lib.scaling(level)
+      Lib.price.get(Lib.variants[variant]) * Lib.scaling(level) * Lib.price.tax
     );
 
     const cash = user.cash - required;
@@ -73,7 +73,9 @@ export class DinoMutations {
   @Mutation(() => CreateDino, {
     description: "Create a randomly generated Dino",
   })
-  async crackAnEgg(@Ctx() { prisma, user }: Context): Promise<CreateDino> {
+  async crackAnEgg(
+    @Ctx() { prisma, user, logger }: Context
+  ): Promise<CreateDino> {
     if (!user) {
       return new Unauthorized({ operation: "createDino" });
     }
@@ -89,13 +91,13 @@ export class DinoMutations {
     const level = weightedRandomElement([
       { weight: 1, value: randomInt({ start: max ?? 1, end: 125 }) },
       { weight: 1, value: randomInt({ start: 1, end: min ?? 25 }) },
-      { weight: 3, value: randomInt({ start: min ?? 1, end: max ?? 25 }) },
+      {
+        weight: 3,
+        value: randomInt({ start: min ?? 1, end: max ?? 25 }),
+      },
     ]);
 
-    const required = Math.round(
-      Lib.price.get(Lib.variants[variant]) * Lib.scaling(level)
-    );
-
+    const required = Math.round(Lib.price.egg);
     const cash = user.cash - required;
 
     if (cash < 0) {

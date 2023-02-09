@@ -11,10 +11,9 @@ export const Lib = {
   ...CommonLib,
   price: {
     ...CommonLib.price,
-    egg: 250,
-    uncommon: Math.round(CommonLib.scaling(25) * CommonLib.price.median),
-    rare: Math.round(CommonLib.scaling(50) * CommonLib.price.median),
-    epic: Math.round(CommonLib.scaling(75) * CommonLib.price.median),
-    ultra: Math.round(CommonLib.scaling(100) * CommonLib.price.median),
+    uncommon: Math.round(CommonLib.scaling(25) * CommonLib.price.avg),
+    rare: Math.round(CommonLib.scaling(50) * CommonLib.price.avg),
+    epic: Math.round(CommonLib.scaling(75) * CommonLib.price.avg),
+    ultra: Math.round(CommonLib.scaling(100) * CommonLib.price.avg),
   },
 };

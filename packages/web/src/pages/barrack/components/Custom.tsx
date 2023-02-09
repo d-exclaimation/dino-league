@@ -31,7 +31,9 @@ const Custom: FC = () => {
   const price = useMemo(
     () =>
       Math.round(
-        Lib.price.get(Lib.variants[variant]) * Lib.scaling(level) * 1.25
+        Lib.price.get(Lib.variants[variant]) *
+          Lib.scaling(level) *
+          Lib.price.tax
       ),
     [variant, level]
   );
