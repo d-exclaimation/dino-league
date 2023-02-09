@@ -20,7 +20,8 @@
     "env:link": "ln -f .env ./packages/prisma/.env",
     "studio": "turbo run studio",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "new": "chmod +x ./scripts/*.sh; ./scripts/new-workspace.sh"
+    "new": "chmod +x ./scripts/*.sh; ./scripts/new-workspace.sh",
+    "image": "docker build -t dino-league ."
   },
   "devDependencies": {
     "prettier": "latest",

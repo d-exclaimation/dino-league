@@ -3,7 +3,7 @@ FROM node:lts
 WORKDIR /app
 
 # Use pnpm
-RUN npm install -g pnpm
+RUN curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm
 RUN npm install -g turbo
 
 # Root configs
@@ -19,11 +19,14 @@ COPY packages/prisma/package.json .
 COPY packages/server/package.json .
 COPY packages/tsconfig/package.json .
 
-# Install
-RUN pnpm install
+# Fetch
+RUN pnpm fetch 
 
 # All files
 COPY . .
+
+# Install
+RUN pnpm install
 
 # Generate
 RUN turbo run generate --filter=prisma
