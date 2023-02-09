@@ -108,5 +108,11 @@ export function randomQuest({ size, level }: Args) {
     }
   };
 
-  return fill(amount, () => Dino.variantRandom(variant(), range));
+  return {
+    enemies: fill(amount, () => Dino.variantRandom(variant(), range)),
+    meta: {
+      difficulty,
+      type,
+    },
+  };
 }

@@ -18,7 +18,7 @@ export class BattleResolver {
   @Mutation(() => Quest, {
     description: "Start a random quest",
   })
-  async quest(@Ctx() { prisma, user }: Context): Promise<Quest> {
+  async quest(@Ctx() { prisma, user, logger }: Context): Promise<Quest> {
     if (!user) {
       return new Unauthorized({ operation: "quest" });
     }
@@ -31,7 +31,7 @@ export class BattleResolver {
         orderBy: { order: "asc" },
       })
     ).map(({ dino }) => Dino.from(dino));
-    const enemies = randomQuest({
+    const { enemies, meta } = randomQuest({
       size: party.length,
       level: {
         min: Math.min(...party.map(({ level }) => level)),
@@ -42,6 +42,12 @@ export class BattleResolver {
         ),
       },
     });
+
+    logger
+      .scope("quest")
+      .info(
+        `Quest(${meta.type}, d: ${meta.difficulty}) played by User(${user.id})`
+      );
 
     // Mark: Simulate battle
     if (party.length <= 0) {
