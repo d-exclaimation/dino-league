@@ -117,6 +117,9 @@ export class BattleResolver {
 
         // TODO: Apply game periodic events
       }
+
+      // TODO: Show events through this
+      return "";
     });
 
     return battle;

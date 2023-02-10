@@ -50,10 +50,10 @@ const MainPage: FC = () => {
         action: () => nav("/party"),
       },
       {
-        icon: "/party.png",
+        icon: "/inventory.png",
         title: "Inventory",
         subtitle: "Manage your items",
-        action: () => nav("/party"),
+        action: () => nav("/inventory"),
       },
     ],
     []

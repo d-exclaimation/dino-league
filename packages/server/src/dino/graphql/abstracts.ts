@@ -5,7 +5,7 @@
 //  Created by d-exclaimation on 21 Dec 2022
 //
 
-import { Struct } from "@dino/common";
+import type { Plain } from "@dino/common";
 import { createUnionType, Field, ObjectType } from "type-graphql";
 import {
   InputConstraint,
@@ -19,7 +19,7 @@ export class NewDino {
   @Field(() => Dino, { description: "The new Dino created" })
   dino: Dino;
 
-  constructor({ dino }: Struct.infer<NewDino>) {
+  constructor({ dino }: Plain<NewDino>) {
     this.dino = dino;
   }
 }

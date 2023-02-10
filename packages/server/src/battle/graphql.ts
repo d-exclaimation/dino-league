@@ -5,7 +5,7 @@
 //  Created by d-exclaimation on 04 Jan 2023
 //
 
-import { random, Struct } from "@dino/common";
+import { Plain, random } from "@dino/common";
 import { createUnionType, Field, ObjectType } from "type-graphql";
 import { Unauthorized } from "../common/graphql";
 import { Arena, Dino } from "../dino/graphql";
@@ -39,7 +39,7 @@ export class BattleInit {
     opponents,
     yoursRemaining,
     opponentsRemaining,
-  }: Struct.infer<BattleInit>) {
+  }: Plain<BattleInit>) {
     this.yours = yours.clone();
     this.opponents = opponents.clone();
     this.yoursRemaining = yoursRemaining;
@@ -71,12 +71,7 @@ export class BattleTurn {
   })
   damage: number;
 
-  constructor({
-    yours,
-    opponents,
-    damage,
-    attacking,
-  }: Struct.infer<BattleTurn>) {
+  constructor({ yours, opponents, damage, attacking }: Plain<BattleTurn>) {
     this.yours = yours.clone();
     this.opponents = opponents.clone();
     this.damage = damage;
@@ -93,7 +88,7 @@ export class BattleEnd {
   })
   win: boolean;
 
-  constructor({ win }: Struct.infer<BattleEnd>) {
+  constructor({ win }: Plain<BattleEnd>) {
     this.win = win;
   }
 }
@@ -121,19 +116,19 @@ export class Battle {
   })
   plan: BattleInfo[];
 
-  constructor({ plan }: Struct.infer<Battle>) {
+  constructor({ plan }: Plain<Battle>) {
     this.plan = plan;
   }
 
-  init(args: Struct.infer<BattleInit>) {
+  init(args: Plain<BattleInit>) {
     this.plan.push(new BattleInit(args));
   }
 
-  turn(args: Struct.infer<BattleTurn>) {
+  turn(args: Plain<BattleTurn>) {
     this.plan.push(new BattleTurn(args));
   }
 
-  end(args: Struct.infer<BattleEnd>) {
+  end(args: Plain<BattleEnd>) {
     this.plan.push(new BattleEnd(args));
   }
 

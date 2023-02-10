@@ -6,6 +6,7 @@
 //
 
 export * from "@d-exclaimation/common/union";
+export * from "./array/entries";
 export * from "./array/fill";
 export * from "./lib";
 export * from "./number";

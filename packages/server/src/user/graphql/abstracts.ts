@@ -5,7 +5,7 @@
 //  Created by d-exclaimation on 28 Dec 2022
 //
 
-import { Struct } from "@dino/common";
+import type { Plain } from "@dino/common";
 import { createUnionType, Field, ObjectType } from "type-graphql";
 import { Unauthorized } from "../../common/graphql";
 import { User } from "./type";
@@ -24,7 +24,7 @@ export class Credentials {
   })
   token: string;
 
-  constructor({ token, user }: Struct.infer<Credentials>) {
+  constructor({ token, user }: Plain<Credentials>) {
     this.user = user;
     this.token = token;
   }
@@ -49,7 +49,7 @@ export class InvalidEmail {
   })
   reason: string;
 
-  constructor({ reason }: Struct.infer<InvalidEmail>) {
+  constructor({ reason }: Plain<InvalidEmail>) {
     this.reason = reason;
   }
 }

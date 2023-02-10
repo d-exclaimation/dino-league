@@ -28,12 +28,12 @@ const Tabs: FC<Props> = ({ children }) => {
             key={key}
             className={({ selected }) => `w-full rounded-lg py-2.5 text-sm 
             font-medium leading-5 text-amber-700
-          ring-white ring-opacity-60 ring-offset-2 
-          ring-offset-amber-300 focus:outline-none focus:ring-2 ${
-            selected
-              ? "bg-white shadow"
-              : "text-amber-50 hover:bg-white/[0.12] hover:text-white"
-          }`}
+            ring-white ring-opacity-60 ring-offset-2 
+            ring-offset-amber-300 focus:outline-none focus:ring-2 ${
+              selected
+                ? "bg-white shadow"
+                : "text-amber-50 hover:bg-white/[0.12] hover:text-white"
+            }`}
           >
             {key}
           </Tab>

@@ -9,6 +9,7 @@ import type { FC } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import BarrackPage from "./pages/barrack";
+import InventoryPage from "./pages/inventory";
 import LoginPage from "./pages/login";
 import MainPage from "./pages/main";
 import PartyPage from "./pages/party";
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
   {
     path: "/barrack",
     element: <BarrackPage />,
+  },
+  {
+    path: "/inventory",
+    element: <InventoryPage />,
   },
   {
     path: "*",

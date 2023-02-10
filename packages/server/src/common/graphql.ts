@@ -5,7 +5,7 @@
 //  Created by d-exclaimation on 20 Dec 2022
 //
 
-import { Struct } from "@dino/common";
+import type { Plain } from "@dino/common";
 import { createUnionType, Field, ObjectType } from "type-graphql";
 
 @ObjectType({
@@ -17,7 +17,7 @@ export class Unauthorized {
   })
   operation: string;
 
-  constructor({ operation }: Struct.infer<Unauthorized>) {
+  constructor({ operation }: Plain<Unauthorized>) {
     this.operation = operation;
   }
 }
@@ -36,7 +36,7 @@ export class InputConstraint {
   })
   reason: string;
 
-  constructor({ name, reason }: Struct.infer<InputConstraint>) {
+  constructor({ name, reason }: Plain<InputConstraint>) {
     this.name = name;
     this.reason = reason;
   }
@@ -53,7 +53,7 @@ export class Indicator {
   })
   flag: boolean;
 
-  constructor({ flag }: Struct.infer<Indicator>) {
+  constructor({ flag }: Plain<Indicator>) {
     this.flag = flag;
   }
 }
@@ -72,7 +72,7 @@ export class Underfunded {
   })
   required: number;
 
-  constructor({ owned, required }: Struct.infer<Underfunded>) {
+  constructor({ owned, required }: Plain<Underfunded>) {
     this.owned = owned;
     this.required = required;
   }

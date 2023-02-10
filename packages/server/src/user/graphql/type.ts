@@ -5,7 +5,7 @@
 //  Created by d-exclaimation on 28 Dec 2022
 //
 
-import { Struct } from "@dino/common";
+import type { Plain } from "@dino/common";
 import { User as _User } from "@dino/prisma";
 import { Ctx, Field, Int, ObjectType } from "type-graphql";
 import type { Context } from "../../context";
@@ -27,7 +27,7 @@ export class User extends Identifiable {
   })
   cash: number;
 
-  constructor({ id, location, cash }: Struct.infer<User>) {
+  constructor({ id, location, cash }: Plain<User>) {
     super({ id });
     this.location = location;
     this.cash = cash;
