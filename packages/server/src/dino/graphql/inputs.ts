@@ -7,31 +7,7 @@
 
 import { Dino } from "@dino/prisma";
 import { Field, ID, InputType, Int } from "type-graphql";
-import { Arena, Variant } from "./others";
-
-@InputType({
-  description: "Filter argument(s) for Dino(s)",
-})
-export class DinoFilter {
-  @Field(() => Variant, {
-    nullable: true,
-    description: "The variant of one or many Dino(s)",
-  })
-  variant?: Variant;
-
-  @Field(() => Arena, {
-    nullable: true,
-
-    description: "The arena of choice of one or many Dino(s)",
-  })
-  arena?: Arena;
-
-  @Field(() => Int, {
-    description: "The limit of result to take",
-    defaultValue: 20,
-  })
-  take!: number;
-}
+import { Variant } from "./others";
 
 @InputType({
   description: "Filter argument(s) for Dino(s)",

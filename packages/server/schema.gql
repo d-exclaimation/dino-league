@@ -7,9 +7,6 @@ type Query {
   """Find a Dino by their ID"""
   dinosaur(input: SearchByID!): Dino
 
-  """Get all dinosaurs"""
-  dinosaurs(input: DinoFilter!): [Dino!]!
-
   """Get the current authenticated user"""
   me: User
 }
@@ -102,18 +99,6 @@ input SearchByID {
   id: ID!
 }
 
-"""Filter argument(s) for Dino(s)"""
-input DinoFilter {
-  """The variant of one or many Dino(s)"""
-  variant: Variant
-
-  """The arena of choice of one or many Dino(s)"""
-  arena: Arena
-
-  """The limit of result to take"""
-  take: Int! = 20
-}
-
 """A valid user of the game"""
 type User implements Identifiable {
   """A unique ID for this entity"""
@@ -128,11 +113,56 @@ type User implements Identifiable {
   """Get all Dinosaur in this user's party"""
   party: [Dino!]!
 
-  """Get all Dinosaur in this user's party"""
+  """Get all Dinosaur in this user's box"""
   box: [Dino!]!
 
   """True if the user has a full party"""
   hasFullParty: Boolean!
+
+  """Get all Items in this user's inventory"""
+  inventory: [Item!]!
+}
+
+"""A usable item in a player's inventory"""
+type Item implements Identifiable {
+  """A unique ID for this entity"""
+  id: ID!
+
+  """The type of item"""
+  variant: Consumable!
+}
+
+"""Types of consumable items"""
+enum Consumable {
+  """Increase level by 1"""
+  icecream
+
+  """Heal to full health"""
+  meal
+
+  """Heal by 40% of the max HP"""
+  berry
+
+  """Heal 200 HP"""
+  potion
+
+  """Reset stats and Heal 20% of max HP"""
+  milk
+
+  """Adds 150 HP (No limit)"""
+  powder
+
+  """Increase Healing by 5%"""
+  burger
+
+  """Increase Attack by 5%"""
+  chocolate
+
+  """Increase Speed by 5%"""
+  soda
+
+  """Increase Healing and Attack by 1%"""
+  cupcake
 }
 
 type Mutation {

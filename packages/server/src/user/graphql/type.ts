@@ -11,6 +11,7 @@ import { Ctx, Field, Int, ObjectType } from "type-graphql";
 import type { Context } from "../../context";
 import { Arena, Dino } from "../../dino/graphql";
 import { Identifiable } from "../../identifiable/graphql";
+import { Item } from "../../item/graphql";
 
 @ObjectType({
   implements: Identifiable,
@@ -50,9 +51,10 @@ export class User extends Identifiable {
   }
 
   @Field(() => [Dino], {
-    description: "Get all Dinosaur in this user's party",
+    description: "Get all Dinosaur in this user's box",
   })
   async box(@Ctx() { prisma }: Context): Promise<Dino[]> {
+    // TODO: Paginated this
     const res = await prisma.dino.findMany({
       where: {
         userId: this.id,
@@ -81,5 +83,20 @@ export class User extends Identifiable {
       logger.customError(e, "User.hasFullParty");
       return true;
     }
+  }
+
+  @Field(() => [Item], {
+    description: "Get all Items in this user's inventory",
+  })
+  async inventory(@Ctx() { prisma }: Context) {
+    const res = await prisma.item.findMany({
+      where: {
+        userId: this.id,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    return res.map((each) => Item.from(each));
   }
 }
