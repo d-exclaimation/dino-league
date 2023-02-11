@@ -70,6 +70,30 @@ export type BattleTurn = {
   yours: Dino;
 };
 
+/** Types of consumable items */
+export const enum Consumable {
+  /** Heal by 40% of the max HP */
+  Berry = 'berry',
+  /** Increase Healing by 5% */
+  Burger = 'burger',
+  /** Increase Attack by 5% */
+  Chocolate = 'chocolate',
+  /** Increase Healing and Attack by 1% */
+  Cupcake = 'cupcake',
+  /** Increase level by 1 */
+  Icecream = 'icecream',
+  /** Heal to full health */
+  Meal = 'meal',
+  /** Reset stats and Heal 20% of max HP */
+  Milk = 'milk',
+  /** Heal 200 HP */
+  Potion = 'potion',
+  /** Adds 150 HP (No limit) */
+  Powder = 'powder',
+  /** Increase Speed by 5% */
+  Soda = 'soda'
+};
+
 /** Create Dino mutation result */
 export type CreateDino = InputConstraint | NewDino | Unauthorized | Underfunded;
 
@@ -129,16 +153,6 @@ export type DinoCreate = {
   variant: Variant;
 };
 
-/** Filter argument(s) for Dino(s) */
-export type DinoFilter = {
-  /** The arena of choice of one or many Dino(s) */
-  arena?: InputMaybe<Arena>;
-  /** The limit of result to take */
-  take?: Scalars['Int'];
-  /** The variant of one or many Dino(s) */
-  variant?: InputMaybe<Variant>;
-};
-
 /** Input to rename a dinosaur */
 export type DinoRename = {
   /** The id of a dinosaur */
@@ -174,6 +188,15 @@ export type InputConstraint = {
   name: Scalars['String'];
   /** The reason of violation */
   reason: Scalars['String'];
+};
+
+/** A usable item in a player's inventory */
+export type Item = Identifiable & {
+  __typename: 'Item';
+  /** A unique ID for this entity */
+  id: Scalars['ID'];
+  /** The type of item */
+  variant: Consumable;
 };
 
 /** Login result */
@@ -255,8 +278,6 @@ export type Query = {
   __typename: 'Query';
   /** Find a Dino by their ID */
   dinosaur?: Maybe<Dino>;
-  /** Get all dinosaurs */
-  dinosaurs: Array<Dino>;
   /** Get the current authenticated user */
   me?: Maybe<User>;
 };
@@ -264,11 +285,6 @@ export type Query = {
 
 export type QueryDinosaurArgs = {
   input: SearchById;
-};
-
-
-export type QueryDinosaursArgs = {
-  input: DinoFilter;
 };
 
 /** Quest results */
@@ -298,7 +314,7 @@ export type Underfunded = {
 /** A valid user of the game */
 export type User = Identifiable & {
   __typename: 'User';
-  /** Get all Dinosaur in this user's party */
+  /** Get all Dinosaur in this user's box */
   box: Array<Dino>;
   /** The amount of money owned by the user */
   cash: Scalars['Int'];
@@ -306,6 +322,8 @@ export type User = Identifiable & {
   hasFullParty: Scalars['Boolean'];
   /** A unique ID for this entity */
   id: Scalars['ID'];
+  /** Get all Items in this user's inventory */
+  inventory: Array<Item>;
   /** The current arena the user is in */
   location: Arena;
   /** Get all Dinosaur in this user's party */
@@ -414,6 +432,11 @@ export type DinosaurQueryVariables = Exact<{
 
 export type DinosaurQuery = { __typename: 'Query', dinosaur?: { __typename: 'Dino', id: string, level: number, hp: number, attack: number, speed: number, healing: number, arena: Arena, variant: Variant, name: string, percentage: number } | null };
 
+export type InventoryPageQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type InventoryPageQuery = { __typename: 'Query', me?: { __typename: 'User', id: string, inventory: Array<{ __typename: 'Item', id: string, variant: Consumable }> } | null };
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -425,11 +448,6 @@ export type PartyViewQueryVariables = Exact<{
 
 
 export type PartyViewQuery = { __typename: 'Query', dinosaur?: { __typename: 'Dino', level: number, attack: number, speed: number, healing: number, arena: Arena, id: string, name: string, hp: number, percentage: number, variant: Variant } | null, me?: { __typename: 'User', id: string, hasFullParty: boolean, party: Array<{ __typename: 'Dino', id: string, name: string, hp: number, percentage: number, variant: Variant }>, box: Array<{ __typename: 'Dino', id: string, name: string, hp: number, percentage: number, variant: Variant }> } | null };
-
-export type PlaceholderPartyQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type PlaceholderPartyQuery = { __typename: 'Query', dinosaurs: Array<{ __typename: 'Dino', id: string, name: string, hp: number, percentage: number, variant: Variant }> };
 
 export const BattlingDinoInfoFragmentDoc = gql`
     fragment BattlingDinoInfo on Dino {
@@ -886,6 +904,47 @@ export type DinosaurQueryResult = Apollo.QueryResult<DinosaurQuery, DinosaurQuer
 export function refetchDinosaurQuery(variables: DinosaurQueryVariables) {
       return { query: DinosaurDocument, variables: variables }
     }
+export const InventoryPageDocument = gql`
+    query InventoryPage {
+  me {
+    id
+    inventory {
+      id
+      variant
+    }
+  }
+}
+    `;
+
+/**
+ * __useInventoryPageQuery__
+ *
+ * To run a query within a React component, call `useInventoryPageQuery` and pass it any options that fit your needs.
+ * When your component renders, `useInventoryPageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useInventoryPageQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useInventoryPageQuery(baseOptions?: Apollo.QueryHookOptions<InventoryPageQuery, InventoryPageQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<InventoryPageQuery, InventoryPageQueryVariables>(InventoryPageDocument, options);
+      }
+export function useInventoryPageLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<InventoryPageQuery, InventoryPageQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<InventoryPageQuery, InventoryPageQueryVariables>(InventoryPageDocument, options);
+        }
+export type InventoryPageQueryHookResult = ReturnType<typeof useInventoryPageQuery>;
+export type InventoryPageLazyQueryHookResult = ReturnType<typeof useInventoryPageLazyQuery>;
+export type InventoryPageQueryResult = Apollo.QueryResult<InventoryPageQuery, InventoryPageQueryVariables>;
+export function refetchInventoryPageQuery(variables?: InventoryPageQueryVariables) {
+      return { query: InventoryPageDocument, variables: variables }
+    }
 export const MeDocument = gql`
     query Me {
   me {
@@ -973,45 +1032,4 @@ export type PartyViewLazyQueryHookResult = ReturnType<typeof usePartyViewLazyQue
 export type PartyViewQueryResult = Apollo.QueryResult<PartyViewQuery, PartyViewQueryVariables>;
 export function refetchPartyViewQuery(variables: PartyViewQueryVariables) {
       return { query: PartyViewDocument, variables: variables }
-    }
-export const PlaceholderPartyDocument = gql`
-    query PlaceholderParty {
-  dinosaurs(input: {take: 5}) {
-    id
-    name
-    hp
-    percentage
-    variant
-  }
-}
-    `;
-
-/**
- * __usePlaceholderPartyQuery__
- *
- * To run a query within a React component, call `usePlaceholderPartyQuery` and pass it any options that fit your needs.
- * When your component renders, `usePlaceholderPartyQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = usePlaceholderPartyQuery({
- *   variables: {
- *   },
- * });
- */
-export function usePlaceholderPartyQuery(baseOptions?: Apollo.QueryHookOptions<PlaceholderPartyQuery, PlaceholderPartyQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PlaceholderPartyQuery, PlaceholderPartyQueryVariables>(PlaceholderPartyDocument, options);
-      }
-export function usePlaceholderPartyLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PlaceholderPartyQuery, PlaceholderPartyQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PlaceholderPartyQuery, PlaceholderPartyQueryVariables>(PlaceholderPartyDocument, options);
-        }
-export type PlaceholderPartyQueryHookResult = ReturnType<typeof usePlaceholderPartyQuery>;
-export type PlaceholderPartyLazyQueryHookResult = ReturnType<typeof usePlaceholderPartyLazyQuery>;
-export type PlaceholderPartyQueryResult = Apollo.QueryResult<PlaceholderPartyQuery, PlaceholderPartyQueryVariables>;
-export function refetchPlaceholderPartyQuery(variables?: PlaceholderPartyQueryVariables) {
-      return { query: PlaceholderPartyDocument, variables: variables }
     }

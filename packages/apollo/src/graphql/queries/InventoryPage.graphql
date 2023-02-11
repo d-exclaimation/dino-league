@@ -1,0 +1,9 @@
+query InventoryPage {
+  me {
+    id
+    inventory {
+      id
+      variant
+    }
+  }
+}
