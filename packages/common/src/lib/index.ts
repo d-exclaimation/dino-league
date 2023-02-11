@@ -6,8 +6,9 @@
 //
 
 import * as dino from "./dino";
+import * as item from "./item";
 
 /**
  * Common lib / source of truth for all dino knowledge
  */
-export const Lib = { ...dino };
+export const Lib = { ...dino, ...item };
