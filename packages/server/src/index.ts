@@ -82,6 +82,7 @@ async function main() {
         try {
           const { id } = jwt;
           const user = await prisma.user.findUnique({ where: { id } });
+
           return {
             prisma,
             user: user ? User.from(user) : undefined,
