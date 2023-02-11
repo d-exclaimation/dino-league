@@ -23,5 +23,5 @@ export type Base = {
   Dino: Without<Dino, Prisma.DinoInclude & KeyDates>;
 };
 
-export { Arena, Variant } from "@prisma/client";
-export type { Dino, Party, User } from "@prisma/client";
+export { Arena, Consumable, Variant } from "@prisma/client";
+export type { Dino, History, Item, Party, User } from "@prisma/client";

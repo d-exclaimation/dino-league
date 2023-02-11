@@ -21,6 +21,7 @@ model User {
   location  Arena     @default(GRASSLAND)
   dinos     Dino[]
   party     Party[]
+  items     Item[]
 }
 
 model Dino {
@@ -60,6 +61,14 @@ model History {
   isWin     Boolean   
 }
 
+model Item {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  variant   Consumable 
+  userId    String
+  user      User    @relation(fields: [userId], references: [id])
+}
+
 enum Arena {
   DESERT
   GRASSLAND
@@ -77,4 +86,17 @@ enum Variant {
   slate
   white
   yellow
+}
+
+enum Consumable {
+  icecream
+  meal
+  berry
+  potion
+  milk
+  powder
+  burger
+  chocolate
+  soda
+  cupcake
 }
