@@ -6,9 +6,11 @@
 //
 
 import { Lib as CommonLib } from "@dino/common";
+import * as effect from "./effect";
 import * as variant from "./variant";
 
 export const Lib = {
-  ...variant,
   ...CommonLib,
+  ...variant,
+  ...effect,
 };

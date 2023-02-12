@@ -190,6 +190,9 @@ type Mutation {
   """Sell a dino and earn money back"""
   sellDino(input: ID!): AuthIndicatorReply!
 
+  """Use an item on a dino"""
+  useItem(input: ItemUse!): AuthIndicatorReply!
+
   """Log into a user with the given credentials"""
   login(input: LoginInfo!): Login!
 }
@@ -312,6 +315,15 @@ input DinoSwitch {
 
   """One of the dino's id to be switched"""
   rhs: ID!
+}
+
+"""Input for using an item"""
+input ItemUse {
+  """The id of the item"""
+  item: ID!
+
+  """The id of the dino"""
+  dino: ID!
 }
 
 """Login result"""
