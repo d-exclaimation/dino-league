@@ -199,6 +199,14 @@ export type Item = Identifiable & {
   variant: Consumable;
 };
 
+/** Input for using an item */
+export type ItemUse = {
+  /** The id of the dino */
+  dino: Scalars['ID'];
+  /** The id of the item */
+  item: Scalars['ID'];
+};
+
 /** Login result */
 export type Login = Credentials | Unauthorized;
 
@@ -230,6 +238,8 @@ export type Mutation = {
   sellDino: AuthIndicatorReply;
   /** Switch 2 dino around */
   switchDino: AuthIndicatorReply;
+  /** Use an item on a dino */
+  useItem: AuthIndicatorReply;
 };
 
 
@@ -265,6 +275,11 @@ export type MutationSellDinoArgs = {
 
 export type MutationSwitchDinoArgs = {
   input: DinoSwitch;
+};
+
+
+export type MutationUseItemArgs = {
+  input: ItemUse;
 };
 
 /** New Dino has been created */
@@ -352,6 +367,8 @@ export const enum Variant {
 
 export type BattlingDinoInfoFragment = { __typename: 'Dino', id: string, name: string, variant: Variant, level: number, hp: number, percentage: number };
 
+export type DinoUseItemInfoFragment = { __typename: 'Dino', id: string, name: string, variant: Variant, hp: number, level: number, attack: number, speed: number, healing: number, percentage: number };
+
 export type FullDinoInfoFragment = { __typename: 'Dino', level: number, attack: number, speed: number, healing: number, arena: Arena, id: string, name: string, hp: number, percentage: number, variant: Variant };
 
 export type JoiningDinoInfoFragment = { __typename: 'Dino', id: string, name: string, variant: Variant, level: number, price: number };
@@ -425,6 +442,13 @@ export type SwitchDinoMutationVariables = Exact<{
 
 export type SwitchDinoMutation = { __typename: 'Mutation', switchDino: { __typename: 'Indicator', flag: boolean } | { __typename: 'InputConstraint', name: string, reason: string } | { __typename: 'Unauthorized', operation: string } };
 
+export type UseItemMutationVariables = Exact<{
+  input: ItemUse;
+}>;
+
+
+export type UseItemMutation = { __typename: 'Mutation', useItem: { __typename: 'Indicator', flag: boolean } | { __typename: 'InputConstraint', name: string, reason: string } | { __typename: 'Unauthorized', operation: string } };
+
 export type DinosaurQueryVariables = Exact<{
   input: SearchById;
 }>;
@@ -435,7 +459,7 @@ export type DinosaurQuery = { __typename: 'Query', dinosaur?: { __typename: 'Din
 export type InventoryPageQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type InventoryPageQuery = { __typename: 'Query', me?: { __typename: 'User', id: string, inventory: Array<{ __typename: 'Item', id: string, variant: Consumable }> } | null };
+export type InventoryPageQuery = { __typename: 'Query', me?: { __typename: 'User', id: string, inventory: Array<{ __typename: 'Item', id: string, variant: Consumable }>, party: Array<{ __typename: 'Dino', id: string, name: string, variant: Variant, hp: number, level: number, attack: number, speed: number, healing: number, percentage: number }> } | null };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -456,6 +480,19 @@ export const BattlingDinoInfoFragmentDoc = gql`
   variant
   level
   hp
+  percentage
+}
+    `;
+export const DinoUseItemInfoFragmentDoc = gql`
+    fragment DinoUseItemInfo on Dino {
+  id
+  name
+  variant
+  hp
+  level
+  attack
+  speed
+  healing
   percentage
 }
     `;
@@ -857,6 +894,39 @@ export function useSwitchDinoMutation(baseOptions?: Apollo.MutationHookOptions<S
 export type SwitchDinoMutationHookResult = ReturnType<typeof useSwitchDinoMutation>;
 export type SwitchDinoMutationResult = Apollo.MutationResult<SwitchDinoMutation>;
 export type SwitchDinoMutationOptions = Apollo.BaseMutationOptions<SwitchDinoMutation, SwitchDinoMutationVariables>;
+export const UseItemDocument = gql`
+    mutation UseItem($input: ItemUse!) {
+  useItem(input: $input) {
+    ...Reply
+  }
+}
+    ${ReplyFragmentDoc}`;
+export type UseItemMutationFn = Apollo.MutationFunction<UseItemMutation, UseItemMutationVariables>;
+
+/**
+ * __useUseItemMutation__
+ *
+ * To run a mutation, you first call `useUseItemMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUseItemMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [useItemMutation, { data, loading, error }] = useUseItemMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUseItemMutation(baseOptions?: Apollo.MutationHookOptions<UseItemMutation, UseItemMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UseItemMutation, UseItemMutationVariables>(UseItemDocument, options);
+      }
+export type UseItemMutationHookResult = ReturnType<typeof useUseItemMutation>;
+export type UseItemMutationResult = Apollo.MutationResult<UseItemMutation>;
+export type UseItemMutationOptions = Apollo.BaseMutationOptions<UseItemMutation, UseItemMutationVariables>;
 export const DinosaurDocument = gql`
     query Dinosaur($input: SearchByID!) {
   dinosaur(input: $input) {
@@ -912,9 +982,12 @@ export const InventoryPageDocument = gql`
       id
       variant
     }
+    party {
+      ...DinoUseItemInfo
+    }
   }
 }
-    `;
+    ${DinoUseItemInfoFragmentDoc}`;
 
 /**
  * __useInventoryPageQuery__

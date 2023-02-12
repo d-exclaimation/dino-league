@@ -5,5 +5,8 @@ query InventoryPage {
       id
       variant
     }
+    party {
+      ...DinoUseItemInfo
+    }
   }
 }

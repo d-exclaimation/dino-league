@@ -1,0 +1,5 @@
+mutation UseItem($input: ItemUse!) {
+  useItem(input: $input) {
+    ...Reply
+  }
+}

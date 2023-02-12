@@ -1,0 +1,11 @@
+fragment DinoUseItemInfo on Dino {
+  id
+  name
+  variant
+  hp
+  level
+  attack
+  speed
+  healing
+  percentage
+}
