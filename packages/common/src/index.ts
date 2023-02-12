@@ -11,6 +11,7 @@ export * from "./array/fill";
 export * from "./lib";
 export * from "./number";
 export * from "./random";
+export * from "./string";
 export * from "./types/struct";
 export * from "./types/transform";
 export * from "./ulid";
