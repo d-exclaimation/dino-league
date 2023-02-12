@@ -27,7 +27,7 @@ type Props = {
   actions: {
     [name: string]: {
       bg: Palette["bg"];
-      text: Palette["bg"];
+      text: Palette["text"];
       disabled?: boolean;
       action: (id: Dino["id"]) => void | Promise<void>;
     };

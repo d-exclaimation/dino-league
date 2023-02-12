@@ -13,7 +13,7 @@
 //
 
 import type { Palette } from "@d-exclaimation/common/tailwind";
-import type { Dino, PlaceholderPartyQuery } from "@dino/apollo";
+import type { Dino, QuickDinoInfoFragment } from "@dino/apollo";
 import { Float } from "@headlessui-float/react";
 import { Menu } from "@headlessui/react";
 import { FC } from "react";
@@ -21,7 +21,7 @@ import { Link } from "react-router-dom";
 
 type Props = {
   bg: Palette["bg"];
-  dino: Omit<PlaceholderPartyQuery["dinosaurs"][number], "__typename">;
+  dino: Omit<QuickDinoInfoFragment, "__typename">;
   actions?: {
     [name: string]: {
       bg: Palette["bg"];
@@ -92,7 +92,7 @@ const MinoDinoView: FC<Props> = ({
               )}
             </Menu.Item>
           </div>
-          <div className="px-1 py-1 z-10">
+          <div className="px-1 py-1 z-30">
             {Object.keys(actions).map((name) => {
               const { bg, action, text, disabled } = actions[name];
               return (
