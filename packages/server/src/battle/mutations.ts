@@ -107,7 +107,7 @@ export class BattleResolver {
               attack: { multiply: Lib.LEVEL_SCALE },
               healing: { multiply: Lib.LEVEL_SCALE },
               hp: { multiply: Lib.LEVEL_SCALE },
-              price: { multiply: Lib.LEVEL_SCALE },
+              price: Math.round(Lib.LEVEL_SCALE * dino.price),
               speed: { multiply: Lib.LEVEL_SCALE },
               level: { increment: 1 },
             },

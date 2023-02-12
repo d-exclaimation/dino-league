@@ -11,6 +11,7 @@ import { BattleResolver } from "./battle/mutations";
 import { __prod__ } from "./constant/artifacts";
 import { DinoMutations } from "./dino/mutations";
 import { DinoQueries } from "./dino/queries";
+import { ItemMutations } from "./item/mutations";
 import { UserMutations } from "./user/mutations";
 import { UserQueries } from "./user/queries";
 
@@ -22,6 +23,7 @@ export const createSchema = async () =>
       UserQueries,
       UserMutations,
       BattleResolver,
+      ItemMutations,
     ],
     validate: false,
     emitSchemaFile: !__prod__

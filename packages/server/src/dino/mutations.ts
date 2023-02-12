@@ -367,6 +367,7 @@ export class DinoMutations {
         });
       });
 
+      // TODO: Tell how much money is owned
       return new Indicator({ flag: true });
     } catch (e: unknown) {
       logger.customError(e, "addDinoToParty");
