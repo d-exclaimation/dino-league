@@ -5,7 +5,7 @@
 //  Created by d-exclaimation on 12 Feb 2023
 //
 
-import { fill } from "@dino/common";
+import { fill, sum } from "@dino/common";
 import { Lib } from "@dino/prisma";
 import { Arg, Ctx, Mutation, Resolver } from "type-graphql";
 import {
@@ -30,9 +30,8 @@ export class ItemMutations {
       return new Unauthorized({ operation: "buyItem" });
     }
 
-    const cost = orders.reduce(
-      (acc, { variant, amount }) => acc + Lib.items[variant].price * amount,
-      0
+    const cost = sum(
+      orders.map(({ variant, amount }) => Lib.items[variant].price * amount)
     );
 
     if (user.cash < cost) {
