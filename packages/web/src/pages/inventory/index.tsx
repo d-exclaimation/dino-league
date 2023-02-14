@@ -14,6 +14,7 @@ import {
 } from "@dino/apollo";
 import { FC, useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { withAuthRedirect } from "../../hoc/withAuthRedirect";
 import { Lib } from "../../lib";
 import HomeButton from "../common/HomeButton";
 import PartyDialog from "./components/PartyDialog";
@@ -131,4 +132,4 @@ const InventoryPage: FC = () => {
   );
 };
 
-export default InventoryPage;
+export default withAuthRedirect(InventoryPage);

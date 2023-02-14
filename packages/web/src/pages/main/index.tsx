@@ -47,7 +47,7 @@ const MainPage: FC = () => {
         icon: "/shop.png",
         title: "Shop",
         subtitle: "Buy items",
-        action: () => nav("/party"),
+        action: () => nav("/shop"),
       },
       {
         icon: "/inventory.png",

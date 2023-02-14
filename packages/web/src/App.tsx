@@ -14,6 +14,7 @@ import LoginPage from "./pages/login";
 import MainPage from "./pages/main";
 import PartyPage from "./pages/party";
 import PvEPage from "./pages/pve";
+import ShopPage from "./pages/shop";
 
 const router = createBrowserRouter([
   {
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
   {
     path: "/inventory",
     element: <InventoryPage />,
+  },
+  {
+    path: "/shop",
+    element: <ShopPage />,
   },
   {
     path: "*",
