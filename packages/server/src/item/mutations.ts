@@ -5,6 +5,7 @@
 //  Created by d-exclaimation on 12 Feb 2023
 //
 
+import { fill } from "@dino/common";
 import { Lib } from "@dino/prisma";
 import { Arg, Ctx, Mutation, Resolver } from "type-graphql";
 import {
@@ -14,10 +15,52 @@ import {
   Unauthorized,
 } from "../common/graphql";
 import { Context } from "../context";
-import { ItemUse } from "./graphql/inputs";
+import { ItemBuy, ItemUse } from "./graphql/inputs";
 
 @Resolver()
 export class ItemMutations {
+  @Mutation(() => AuthIndicator, {
+    description: "Buy an item",
+  })
+  async buyItem(
+    @Arg("input") { orders }: ItemBuy,
+    @Ctx() { user, prisma }: Context
+  ): Promise<AuthIndicator> {
+    if (!user) {
+      return new Unauthorized({ operation: "buyItem" });
+    }
+
+    const cost = orders.reduce(
+      (acc, { variant, amount }) => acc + Lib.items[variant].price * amount,
+      0
+    );
+
+    if (user.cash < cost) {
+      return new InputConstraint({ name: "cash", reason: "insufficient" });
+    }
+
+    const { count } = await prisma.$transaction(async (tx) => {
+      const items = await tx.item.createMany({
+        data: orders.flatMap(({ variant, amount }) =>
+          fill(amount, () => ({
+            variant,
+            userId: user.id,
+          }))
+        ),
+      });
+
+      await tx.user.update({
+        where: { id: user.id },
+        data: {
+          cash: { decrement: cost },
+        },
+      });
+      return items;
+    });
+
+    return new Indicator({ flag: count > 0 });
+  }
+
   @Mutation(() => AuthIndicator, {
     description: "Use an item on a dino",
   })

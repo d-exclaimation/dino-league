@@ -190,6 +190,9 @@ type Mutation {
   """Sell a dino and earn money back"""
   sellDino(input: ID!): AuthIndicatorReply!
 
+  """Buy an item"""
+  buyItem(input: ItemBuy!): AuthIndicatorReply!
+
   """Use an item on a dino"""
   useItem(input: ItemUse!): AuthIndicatorReply!
 
@@ -315,6 +318,21 @@ input DinoSwitch {
 
   """One of the dino's id to be switched"""
   rhs: ID!
+}
+
+"""Input for buying items"""
+input ItemBuy {
+  """The array of items to buy"""
+  orders: [ItemOrder!]!
+}
+
+"""Input for buying a type of item"""
+input ItemOrder {
+  """The item to buy"""
+  variant: Consumable!
+
+  """The amount of item to buy"""
+  amount: Int!
 }
 
 """Input for using an item"""
