@@ -58,7 +58,7 @@ const CartDialog: FC<Props> = ({
           >
             <Dialog.Panel
               className="border-0 transition-all max-w-lg w-[90vw]
-              transform overflow-scroll max-h-[90vh] rounded-2xl 
+              transform overflow-auto max-h-[90vh] rounded-2xl 
               bg-white p-6 text-left align-middle shadow-xl"
             >
               <Dialog.Title as={Fragment}>
@@ -67,32 +67,35 @@ const CartDialog: FC<Props> = ({
                 </h2>
               </Dialog.Title>
               <div className="flex flex-col items-center justify-center w-full mt-2">
-                <div className="flex flex-col w-full overflow-scroll py-2 divide-y-2">
-                  {items.map(({ id, variant }) => (
-                    <div
-                      className="flex items-center justify-between px-2 w-full bg-black/5"
-                      key={id}
-                    >
-                      <div className="flex items-center justify-start">
-                        <img
-                          className="p-2 w-10"
-                          src={`/${variant.toString()}.png`}
-                        />
-                        <span>{capitalized(variant)}</span>
-                        <span className="px-2 text-xs text-black/50">
-                          {Lib.items[variant].description}
-                        </span>
-                      </div>
-                      <button
-                        className="inline-flex justify-center rounded-md
+                <div className="flex flex-col w-full overflow-auto py-2 divide-y-2">
+                  {items.length === 0 ? (
+                    <span className="font-light">
+                      There's no item in your cart
+                    </span>
+                  ) : (
+                    items.map(({ id, variant }) => (
+                      <div
+                        className="flex items-center justify-between px-2 w-full bg-black/5"
+                        key={id}
+                      >
+                        <div className="flex items-center justify-start">
+                          <img
+                            className="p-2 w-10"
+                            src={`/${variant.toString()}.png`}
+                          />
+                          <span>{capitalized(variant)}</span>
+                        </div>
+                        <button
+                          className="inline-flex justify-center rounded-md
                         px-2 py-1 text-xs bg-red-200
                         font-medium clickable"
-                        onClick={() => onRemove(id)}
-                      >
-                        <img src="/delete.svg" />
-                      </button>
-                    </div>
-                  ))}
+                          onClick={() => onRemove(id)}
+                        >
+                          <img src="/delete.svg" />
+                        </button>
+                      </div>
+                    ))
+                  )}
                 </div>
                 <div className="flex w-full items-center justify-end mt-4">
                   <button

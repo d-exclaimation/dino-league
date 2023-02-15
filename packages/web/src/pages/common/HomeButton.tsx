@@ -12,10 +12,10 @@ const HomeButton: FC = () => {
   const nav = useNavigate();
   return (
     <button
-      className="fixed top-2 right-2 clickable bg-black/5 rounded-lg"
+      className="fixed top-2 right-2 clickable bg-white z-50 rounded-lg"
       onClick={() => nav("/")}
     >
-      <img className="w-10 md:w-12" src="/back.svg" />
+      <img className="w-10 md:w-12 p-2" src="/back.svg" />
     </button>
   );
 };

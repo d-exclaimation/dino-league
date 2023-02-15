@@ -98,7 +98,7 @@ const InventoryPage: FC = () => {
         onSelect={useItemAction}
       />
       {/* TODO: Item effect dialog */}
-      <div className="flex flex-col items-center justify-center w-screen h-screen overflow-scroll bg-gradient-to-t from-[#d0cbc5] to-[#C0B2A2]">
+      <div className="flex flex-col items-center justify-center w-screen h-screen overflow-auto bg-gradient-to-t from-[#d0cbc5] to-[#C0B2A2]">
         <HomeButton />
         <div
           className="w-[95%] max-w-2xl rounded-md h-10 bg-amber-900/20
@@ -106,7 +106,7 @@ const InventoryPage: FC = () => {
         >
           <h3 className="font-sans font-light text-sm text-white">Inventory</h3>
         </div>
-        <div className="w-[95%] max-w-2xl h-[70vh] bg-white rounded-md overflow-y-scroll">
+        <div className="w-[95%] max-w-2xl h-[70vh] p-1 bg-white rounded-md overflow-y-auto">
           {data?.me?.inventory
             ?.map(({ id, variant }) => ({
               id,
@@ -115,7 +115,7 @@ const InventoryPage: FC = () => {
             }))
             ?.map(({ variant, name, description, id }) => (
               <button
-                className="flex items-center justify-start w-full m-1 clickable bg-black/5"
+                className="flex items-center justify-start w-full clickable bg-black/5"
                 key={id}
                 onClick={() => setSelected({ id, variant })}
               >

@@ -8,6 +8,7 @@
 export * from "@d-exclaimation/common/union";
 export * from "./array/entries";
 export * from "./array/fill";
+export * from "./array/remove";
 export * from "./lib";
 export * from "./number";
 export * from "./random";

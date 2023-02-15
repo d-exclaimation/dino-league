@@ -75,18 +75,20 @@ const PartyPage: FC = () => {
   return (
     <div className="w-screen h-screen bg-[#C0B2A2]">
       <HomeButton />
-      <div className="flex items-center justify-evenly flex-row h-[45%]">
-        <div className="flex flex-col items-start justify-center">
-          <span className="text-7xl text-white border-b-2 border-white my-2">
+      <div className="flex items-center justify-center flex-row h-[45%]">
+        <div className="flex flex-col items-end justify-center">
+          <span className="text-5xl md:text-7xl text-white border-b-2 border-white my-2">
             {dino?.level.toString() ?? "..."}
           </span>
-          <span className="text-white/70">{dino?.name ?? "..."}</span>
+          <span className="text-white/70 text-xs md:text-base">
+            {dino?.name ?? "..."}
+          </span>
         </div>
-        <img className="w-60 md:w-72" alt="Image" src={imageSrc} />
+        <img className="w-48 md:w-72" alt="Image" src={imageSrc} />
       </div>
       <div className="w-full h-[55%] bg-white">
         <div className="w-full bg-white h-40">
-          <div className="flex flex-row h-full w-full items-center md:justify-center overflow-scroll p-2">
+          <div className="flex flex-row h-full w-full items-center md:justify-center overflow-auto p-2">
             <DinoStat title="HP" rating={health}>
               {dino?.hp?.toFixed(1) ?? "..."}
             </DinoStat>

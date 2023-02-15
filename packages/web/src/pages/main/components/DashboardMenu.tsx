@@ -18,7 +18,7 @@ const DashboardMenu: FC<Props> = ({ title, subtitle, icon, action }) => {
   return (
     <button
       className="
-      flex items-center justify-center md:justify-start h-60 md:h-80
+      flex items-center justify-center md:justify-start h-60 md:h-72
       flex-col md:flex-row
       rounded-xl p-6 bg-white
       active:bg-gray-100 clickable
