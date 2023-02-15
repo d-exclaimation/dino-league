@@ -6,6 +6,9 @@
   .clickable {
     @apply transform shadow-sm shadow-gray-400 active:brightness-90 active:scale-95 active:shadow-md md:hover:scale-95 md:hover:shadow-md
   }
+  .background {
+    @apply bg-gradient-to-t from-[#d0cbc5] to-[#C0B2A2]
+  }
 }
 
 ._input {

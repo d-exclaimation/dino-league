@@ -14,7 +14,7 @@ import Egg from "./components/Egg";
 
 const BarrackPage: FC = () => {
   return (
-    <div className="flex items-center justify-center bg-gradient-to-t from-[#d0cbc5] to-[#C0B2A2] w-screen min-h-screen h-max">
+    <div className="flex items-center justify-center background w-screen min-h-screen h-max">
       <HomeButton />
       <div className="w-full max-w-2xl px-2 sm:px-0">
         <Tabs>

@@ -57,7 +57,7 @@ const LoginPage: FC = () => {
   }, [submit]);
 
   return (
-    <div className="w-screen h-screen flex items-center justify-center flex-col gap-5 bg-[#C0B2A2]">
+    <div className="w-screen h-screen flex items-center justify-center flex-col gap-5 background">
       <div className="h-20 m-2">
         <LoadingBar text="Login" />
       </div>

@@ -5,8 +5,10 @@
 //  Created by d-exclaimation on 14 Feb 2023
 //
 
-import { entries, match, removeFirst, ulid, Union } from "@dino/common";
-import { FC, useMemo, useReducer, useState } from "react";
+import { Consumable, useAuth, useBuyItemMutation } from "@dino/apollo";
+import { entries, match, removeFirst, sum, ulid, Union } from "@dino/common";
+import { FC, useCallback, useMemo, useReducer, useState } from "react";
+import { toast } from "react-toastify";
 import { withAuthRedirect } from "../../hoc/withAuthRedirect";
 import { Lib } from "../../lib";
 import HomeButton from "../common/HomeButton";
@@ -24,9 +26,12 @@ type Act = Union<{
   add: { variant: keyof typeof Lib.items };
   remove: { variant: keyof typeof Lib.items };
   delete: { id: string };
+  clear: {};
 }>;
 
 const ShopPage: FC = () => {
+  const [buyItem] = useBuyItemMutation();
+  const { user } = useAuth();
   const [open, setOpen] = useState(false);
   const [{ items }, dispatch] = useReducer(
     ({ items }: Cart, action: Act) =>
@@ -48,6 +53,9 @@ const ShopPage: FC = () => {
         delete: ({ id }) => ({
           items: removeFirst(items, (item) => item.id === id),
         }),
+
+        // Clearing the cart
+        clear: () => ({ items: [] }),
       }) satisfies Cart,
     {
       items: [],
@@ -65,6 +73,58 @@ const ShopPage: FC = () => {
     [items]
   );
 
+  const cost = useMemo(
+    () => sum(items.map(({ variant }) => Lib.items[variant].price)),
+    [items]
+  );
+
+  const buyItemAction = useCallback(async (): Promise<void> => {
+    const { data, errors } = await buyItem({
+      variables: {
+        input: {
+          orders: entries(totals).map(([variant, amount]) => ({
+            variant: variant as Consumable,
+            amount,
+          })),
+        },
+      },
+      refetchQueries: ["Me", "InventoryPage"],
+    });
+
+    if (!data || errors?.length) {
+      toast(errors?.at(0)?.message ?? "Unexpected error", {
+        type: "error",
+      });
+      return;
+    }
+
+    switch (data.buyItem.__typename) {
+      case "Indicator":
+        if (!data.buyItem.flag) {
+          toast("You don't have enough money", {
+            type: "error",
+          });
+          return;
+        }
+        setOpen(false);
+        dispatch({ __t: "clear" });
+        toast("Successfully bought items", {
+          type: "success",
+        });
+        break;
+      case "Unauthorized":
+        toast("You are not logged in", {
+          type: "error",
+        });
+        break;
+      case "InputConstraint":
+        toast("You don't have enough money", {
+          type: "error",
+        });
+        break;
+    }
+  }, [buyItem, totals, setOpen, dispatch]);
+
   return (
     <>
       <HomeButton />
@@ -72,7 +132,7 @@ const ShopPage: FC = () => {
         items={items}
         open={open}
         onClose={() => setOpen(false)}
-        onSubmit={() => console.log("TODO: Submit")}
+        onSubmit={buyItemAction}
         onRemove={(id) => dispatch({ __t: "delete", id })}
       />
       <div className="flex items-center justify-center w-screen h-screen overflow-y-auto bg-gradient-to-t from-[#d0cbc5] to-[#C0B2A2]">
@@ -88,10 +148,17 @@ const ShopPage: FC = () => {
                 <span className="text-xs text-center font-light text-black/50">
                   {description}
                 </span>
+                <span className="flex item-center justify-center gap-1 text-xs text-center font-light text-black">
+                  <img className="w-3" src="/coin.svg" />
+                  {price}
+                </span>
               </div>
               <div className="flex mt-1 items-center justify-center text-white w-40 rounded-md">
                 <button
-                  className="bg-red-500 flex-1 rounded-l-md clickable"
+                  disabled={!totals[variant]}
+                  className="flex py-1 items-center justify-center
+                  rounded-l-md bg-red-500 enabled:clickable
+                  disabled:opacity-60 flex-1"
                   onClick={() => dispatch({ __t: "remove", variant })}
                 >
                   -
@@ -100,7 +167,10 @@ const ShopPage: FC = () => {
                   {totals[variant] ?? 0}
                 </span>
                 <button
-                  className="bg-emerald-500 flex-1 rounded-r-md clickable"
+                  disabled={cost >= (user?.cash ?? 0)}
+                  className="flex py-1 items-center justify-center
+                  rounded-r-md bg-emerald-500 enabled:clickable
+                  disabled:opacity-60 flex-1"
                   onClick={() => dispatch({ __t: "add", variant })}
                 >
                   +

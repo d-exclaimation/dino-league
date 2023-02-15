@@ -1,0 +1,5 @@
+mutation BuyItem($input: ItemBuy!) {
+  buyItem(input: $input) {
+    ...Reply
+  }
+}

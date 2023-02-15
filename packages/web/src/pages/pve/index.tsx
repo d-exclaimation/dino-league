@@ -30,7 +30,7 @@ const PvEPage: FC = () => {
   }, [quest]);
 
   return (
-    <div className="flex items-center justify-center w-screen h-screen bg-gradient-to-t from-white to-[#C0B2A2]">
+    <div className="flex items-center justify-center w-screen h-screen background">
       <HomeButton />
       <BattleView location={user?.location ?? Arena.Desert} start={start} />
     </div>

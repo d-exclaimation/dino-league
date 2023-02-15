@@ -64,7 +64,7 @@ const MainPage: FC = () => {
   }
 
   return (
-    <div className="w-screen min-h-screen h-max bg-[#C0B2A2]">
+    <div className="w-screen min-h-screen h-max background">
       <div className="flex flex-col justify-start items-start my-2 mx-2">
         <div className="flex flex-row justify-between items-start w-full">
           <img

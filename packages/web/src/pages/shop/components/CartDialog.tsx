@@ -5,9 +5,9 @@
 //  Created by d-exclaimation on 14 Feb 2023
 //
 
-import { capitalized } from "@dino/common";
+import { capitalized, sum } from "@dino/common";
 import { Dialog, Transition } from "@headlessui/react";
-import { FC, Fragment } from "react";
+import { FC, Fragment, useMemo } from "react";
 import { Lib } from "../../../lib";
 
 type Item = {
@@ -30,6 +30,10 @@ const CartDialog: FC<Props> = ({
   onRemove,
   onSubmit,
 }) => {
+  const cost = useMemo(
+    () => sum(items.map(({ variant }) => Lib.items[variant].price)),
+    [items]
+  );
   return (
     <Transition.Root show={open} as={Fragment} afterLeave={onClose}>
       <Dialog
@@ -101,12 +105,13 @@ const CartDialog: FC<Props> = ({
                   <button
                     type="button"
                     className="inline-flex justify-center rounded-md 
-                   bg-emerald-50 px-4 py-2 
+                   bg-emerald-50 px-4 py-2 items-center
                     text-sm font-medium text-emerald-700
                     clickable"
                     onClick={onSubmit}
                   >
-                    Purchase
+                    <img src="/coin.svg" className="w-4 mr-2" />
+                    {cost}
                   </button>
                 </div>
               </div>

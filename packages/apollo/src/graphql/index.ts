@@ -199,6 +199,20 @@ export type Item = Identifiable & {
   variant: Consumable;
 };
 
+/** Input for buying items */
+export type ItemBuy = {
+  /** The array of items to buy */
+  orders: Array<ItemOrder>;
+};
+
+/** Input for buying a type of item */
+export type ItemOrder = {
+  /** The amount of item to buy */
+  amount: Scalars['Int'];
+  /** The item to buy */
+  variant: Consumable;
+};
+
 /** Input for using an item */
 export type ItemUse = {
   /** The id of the dino */
@@ -222,6 +236,8 @@ export type Mutation = {
   __typename: 'Mutation';
   /** Put a dino from box to the party */
   addDinoToParty: AuthIndicatorReply;
+  /** Buy an item */
+  buyItem: AuthIndicatorReply;
   /** Create a randomly generated Dino */
   crackAnEgg: CreateDino;
   /** Create a Dino */
@@ -245,6 +261,11 @@ export type Mutation = {
 
 export type MutationAddDinoToPartyArgs = {
   input: Scalars['ID'];
+};
+
+
+export type MutationBuyItemArgs = {
+  input: ItemBuy;
 };
 
 
@@ -389,6 +410,13 @@ export type AddToPartyMutationVariables = Exact<{
 
 
 export type AddToPartyMutation = { __typename: 'Mutation', addDinoToParty: { __typename: 'Indicator', flag: boolean } | { __typename: 'InputConstraint', name: string, reason: string } | { __typename: 'Unauthorized', operation: string } };
+
+export type BuyItemMutationVariables = Exact<{
+  input: ItemBuy;
+}>;
+
+
+export type BuyItemMutation = { __typename: 'Mutation', buyItem: { __typename: 'Indicator', flag: boolean } | { __typename: 'InputConstraint', name: string, reason: string } | { __typename: 'Unauthorized', operation: string } };
 
 export type CrackAnEggMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -572,6 +600,39 @@ export function useAddToPartyMutation(baseOptions?: Apollo.MutationHookOptions<A
 export type AddToPartyMutationHookResult = ReturnType<typeof useAddToPartyMutation>;
 export type AddToPartyMutationResult = Apollo.MutationResult<AddToPartyMutation>;
 export type AddToPartyMutationOptions = Apollo.BaseMutationOptions<AddToPartyMutation, AddToPartyMutationVariables>;
+export const BuyItemDocument = gql`
+    mutation BuyItem($input: ItemBuy!) {
+  buyItem(input: $input) {
+    ...Reply
+  }
+}
+    ${ReplyFragmentDoc}`;
+export type BuyItemMutationFn = Apollo.MutationFunction<BuyItemMutation, BuyItemMutationVariables>;
+
+/**
+ * __useBuyItemMutation__
+ *
+ * To run a mutation, you first call `useBuyItemMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useBuyItemMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [buyItemMutation, { data, loading, error }] = useBuyItemMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useBuyItemMutation(baseOptions?: Apollo.MutationHookOptions<BuyItemMutation, BuyItemMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<BuyItemMutation, BuyItemMutationVariables>(BuyItemDocument, options);
+      }
+export type BuyItemMutationHookResult = ReturnType<typeof useBuyItemMutation>;
+export type BuyItemMutationResult = Apollo.MutationResult<BuyItemMutation>;
+export type BuyItemMutationOptions = Apollo.BaseMutationOptions<BuyItemMutation, BuyItemMutationVariables>;
 export const CrackAnEggDocument = gql`
     mutation CrackAnEgg {
   crackAnEgg {

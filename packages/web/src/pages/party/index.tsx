@@ -66,14 +66,14 @@ const PartyPage: FC = () => {
 
   if (error) {
     return (
-      <div className="w-screen md:w-96 h-screen bg-[#C0B2A2] flex items-center justify-center">
+      <div className="w-screen md:w-96 h-screen background items-center justify-center">
         <div className="text-xl text-white animate-pulse">{error.message}</div>
       </div>
     );
   }
 
   return (
-    <div className="w-screen h-screen bg-[#C0B2A2]">
+    <div className="w-screen h-screen background">
       <HomeButton />
       <div className="flex items-center justify-center flex-row h-[45%]">
         <div className="flex flex-col items-end justify-center">
@@ -108,17 +108,7 @@ const PartyPage: FC = () => {
             </DinoStat>
           </div>
         </div>
-        <div className="flex flex-row w-full items-center gap-2 md:gap-6 bg-white">
-          <button className="p-2 my-2 mx-2 flex-grow bg-cyan-400 rounded-md text-white">
-            Item
-          </button>
-          <button
-            disabled
-            className="p-2 my-2 mx-2 flex-grow bg-rose-400 disabled:bg-black/5 rounded-md text-white disabled:text-rose-400/50"
-          >
-            Sell
-          </button>
-        </div>
+
         <div className="w-full h-max pb-2 bg-gray-100">
           {(!party || party.length > 0) && (
             <PartyView data={party} shownId={id} lastDino={count <= 1} />

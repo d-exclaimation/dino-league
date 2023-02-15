@@ -98,7 +98,7 @@ const InventoryPage: FC = () => {
         onSelect={useItemAction}
       />
       {/* TODO: Item effect dialog */}
-      <div className="flex flex-col items-center justify-center w-screen h-screen overflow-auto bg-gradient-to-t from-[#d0cbc5] to-[#C0B2A2]">
+      <div className="flex flex-col items-center justify-center w-screen h-screen overflow-auto background">
         <HomeButton />
         <div
           className="w-[95%] max-w-2xl rounded-md h-10 bg-amber-900/20
